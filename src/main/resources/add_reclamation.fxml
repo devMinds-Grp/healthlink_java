@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.healthlink.Controllers.AddReclamationController"
+      stylesheets="@add_reclamation.css" spacing="20" prefWidth="500" prefHeight="450"
+      styleClass="dialog-container">
+
+    <Label text="Nouvelle Réclamation" styleClass="dialog-title"/>
+
+    <GridPane hgap="10" vgap="15">
+        <!-- Nouveau champ de sélection -->
+        <Label text="Catégorie:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="categoryComboBox" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"/>
+
+        <Label text="Titre:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="titleField" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"/>
+
+        <Label text="Description:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextArea fx:id="descArea" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
+                  GridPane.vgrow="ALWAYS" wrapText="true"/>
+    </GridPane>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Annuler" onAction="#handleCancel" styleClass="cancel-btn"/>
+        <Button text="Enregistrer" onAction="#handleSave" styleClass="save-btn"/>
+    </HBox>
+</VBox>
