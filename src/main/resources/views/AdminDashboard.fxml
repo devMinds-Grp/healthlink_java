@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.healthlink.Controllers.AdminDashboardController"
+      stylesheets="@../styles/admin.css"
+      spacing="10">
+
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="20"/>
+    </padding>
+
+    <Label text="Tableau de bord Admin" styleClass="header-label"/>
+
+    <TabPane>
+        <Tab text="Gestion des Forums">
+            <VBox>
+                <TableView fx:id="pendingForumsTable">
+                    <columns>
+                        <TableColumn fx:id="forumTitleCol" text="Titre" prefWidth="200"/>
+                        <TableColumn fx:id="forumAuthorCol" text="Auteur ID" prefWidth="100"/>
+                        <TableColumn fx:id="forumDateCol" text="Date" prefWidth="150"/>
+                        <TableColumn fx:id="forumStatusCol" text="Statut" prefWidth="100"/>
+                        <TableColumn fx:id="forumActionsCol" text="Actions" prefWidth="350"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+            </VBox>
+        </Tab>
+
+        <Tab fx:id="commentsTab" text="Commentaires">
+            <VBox>
+                <TableView fx:id="commentsTable">
+                    <columns>
+                        <TableColumn fx:id="commentContentCol" text="Contenu" prefWidth="300"/>
+                        <TableColumn fx:id="commentDateCol" text="Date" prefWidth="150"/>
+                        <TableColumn fx:id="commentActionCol" text="Action" prefWidth="100"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+            </VBox>
+        </Tab>
+    </TabPane>
+</VBox>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.healthlink.Controllers.Ajout">
+
+   <!-- Titre de la page -->
+   <Label layoutX="250.0" layoutY="30.0" text="Inscription Médecin" style="-fx-font-weight: bold;">
+      <font>
+         <Font size="20.0"/>
+      </font>
+   </Label>
+
+   <!-- Formulaire en 2 colonnes -->
+   <HBox layoutX="50.0" layoutY="80.0" spacing="40.0">
+      <!-- Colonne gauche -->
+      <VBox spacing="15.0" prefWidth="300.0">
+         <!-- Champ Nom -->
+         <VBox spacing="5.0">
+            <Label text="Nom" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="nomTextField" promptText="Ex. Ameni"/>
+         </VBox>
+
+         <!-- Champ Prénom -->
+         <VBox spacing="5.0">
+            <Label text="Prénom" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="prenomTextField" promptText="Ex. Chakroun"/>
+         </VBox>
+
+         <!-- Champ Email -->
+         <VBox spacing="5.0">
+            <Label text="Email" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="emailTextField" promptText="Ex. amenichakroun62@gmail.com"/>
+         </VBox>
+
+         <!-- Champ Mot de passe -->
+         <VBox spacing="5.0">
+            <Label text="Mot de passe" style="-fx-font-weight: bold;"/>
+            <PasswordField fx:id="motdepasseTextField" promptText="Ex. Ameni.123"/>
+         </VBox>
+      </VBox>
+
+      <!-- Colonne droite -->
+      <VBox spacing="15.0" prefWidth="300.0">
+         <!-- Champ Téléphone -->
+         <VBox spacing="5.0">
+            <Label text="Numéro de téléphone" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="numtelTextField" promptText="Ex. XX XXX XXX"/>
+         </VBox>
+
+         <!-- Champ Adresse -->
+         <VBox spacing="5.0">
+            <Label text="Adresse" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="adresseTextField" promptText="Ex. Ariana"/>
+         </VBox>
+
+         <!-- Champ Spécialité -->
+         <VBox spacing="5.0">
+            <Label text="Spécialité" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="specialiteTextField" promptText="Ex. Généraliste"/>
+         </VBox>
+      </VBox>
+   </HBox>
+
+   <!-- Fichiers à uploader -->
+   <VBox layoutX="50.0" layoutY="320.0" spacing="15.0" prefWidth="600.0">
+      <!-- Champ Diplôme -->
+      <VBox spacing="5.0">
+         <Label text="Diplôme" style="-fx-font-weight: bold;"/>
+         <HBox spacing="10.0" alignment="CENTER_LEFT">
+            <Button fx:id="choisirDiplomeButton" text="Choisir un fichier"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white;"
+                    onAction="#handleChoisirDiplome"/>
+            <Label fx:id="nomDiplomeLabel" text="Aucun fichier choisi"
+                   style="-fx-font-style: italic; -fx-text-fill: #666;"/>
+         </HBox>
+      </VBox>
+
+      <!-- Champ Image de profil -->
+      <VBox spacing="5.0">
+         <Label text="Image de profil" style="-fx-font-weight: bold;"/>
+         <Button fx:id="choisirImageButton" text="Choisir un fichier"
+                 style="-fx-background-color: #3498db; -fx-text-fill: white;"
+                 onAction="#handleChoisirImage"/>
+         <Label fx:id="nomFichierLabel" text="Aucun fichier choisi"
+                style="-fx-font-style: italic; -fx-text-fill: #666;"/>
+      </VBox>
+   </VBox>
+
+   <!-- Boutons -->
+   <HBox layoutX="450.0" layoutY="450.0" spacing="20.0">
+      <Button text="Réinitialiser" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+      <Button text="S'inscrire" style="-fx-background-color: #2ecc71; -fx-text-fill: white;"
+              onAction="#addMedecin"/>
+   </HBox>
+</AnchorPane>

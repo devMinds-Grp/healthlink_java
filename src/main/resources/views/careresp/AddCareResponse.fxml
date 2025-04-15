@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.healthlink.Controllers.CareRespController.AddCareResponseController"
+            stylesheets="@../../css/Care.css">
+
+    <!-- Navbar -->
+    <top>
+        <HBox styleClass="nav-bar" spacing="20">
+            <HBox alignment="CENTER" spacing="15" style="-fx-padding: 5 50;">
+                <ImageView fitWidth="100" fitHeight="90">
+                    <image>
+                        <Image url="@../../assets/logo_siteweb.png"/>
+                    </image>
+                </ImageView>
+            </HBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <HBox alignment="CENTER_RIGHT" spacing="15">
+                <Button text="Home" styleClass="nav-button"/>
+                <Button text="Care" styleClass="nav-button"/>
+                <Button text="Prescription" styleClass="nav-button"/>
+                <Button text="Profile" styleClass="nav-button"/>
+                <Button text="Disconnect" styleClass="nav-button"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- Content -->
+    <center>
+        <StackPane alignment="CENTER">
+            <VBox alignment="TOP_CENTER" styleClass="form-container" maxWidth="800" maxHeight="600">
+                <padding>
+                    <Insets top="30" right="40" bottom="30" left="40"/>
+                </padding>
+                <!-- Header -->
+                <VBox alignment="CENTER" spacing="10">
+                    <HBox alignment="CENTER" spacing="15">
+                        <ImageView fitWidth="50" fitHeight="45">
+                            <image>
+                                <Image url="@../../assets/details.png"/>
+                            </image>
+                        </ImageView>
+                        <Label text="Add Care Response" styleClass="form-title"/>
+                    </HBox>
+                </VBox>
+                <!-- Form -->
+                <GridPane hgap="15" vgap="15" style="-fx-padding: 20 0 0 0;">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="RIGHT" minWidth="100"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                    </columnConstraints>
+                    <Label text="Response Date:" GridPane.rowIndex="0" styleClass="form-label"/>
+                    <DatePicker fx:id="dateRepField" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="form-field"/>
+                    <Label text="Response Content:" GridPane.rowIndex="1" styleClass="form-label"/>
+                    <TextArea fx:id="contenuRepField" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="form-field" wrapText="true"/>
+                    <!-- Buttons -->
+                    <HBox GridPane.rowIndex="2" GridPane.columnIndex="1" spacing="30" alignment="CENTER_RIGHT">
+                        <Button text="Save" onAction="#handleSave" styleClass="primary-button"/>
+                        <Button text="Cancel" onAction="#handleCancel" styleClass="secondary-button"/>
+                    </HBox>
+                </GridPane>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

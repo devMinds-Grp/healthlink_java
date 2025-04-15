@@ -1,0 +1,90 @@
+/* Styles de base */
+.header-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+/* Styles pour les statuts */
+.status-approved {
+    -fx-text-fill: #2ecc71;
+    -fx-font-weight: bold;
+}
+
+.status-pending {
+    -fx-text-fill: #e67e22;
+    -fx-font-weight: bold;
+}
+
+/* Styles pour les boutons */
+.info-btn {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+.success-btn {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+}
+
+.warning-btn {
+    -fx-background-color: #e67e22;
+    -fx-text-fill: white;
+}
+
+.danger-btn {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+}
+
+.button {
+    -fx-padding: 5 10 5 10;
+    -fx-font-size: 12px;
+    -fx-min-width: 80px;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+}
+
+.button:disabled {
+    -fx-opacity: 0.5;
+}
+
+/* Styles du tableau */
+.table-view {
+    -fx-base: #ecf0f1;
+    -fx-control-inner-background: #ecf0f1;
+    -fx-background-color: #ecf0f1;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #3498db;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: transparent transparent derive(-fx-base, 80%) transparent;
+}
+
+.table-view .column-header .label {
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+    -fx-alignment: CENTER_LEFT;
+}
+
+/* Style des onglets */
+.tab-pane {
+    -fx-tab-min-width: 150px;
+}
+
+.tab {
+    -fx-background-insets: 0 1 0 1,0,0;
+}
+
+.tab:selected {
+    -fx-background-color: #3498db;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: white;
+}
