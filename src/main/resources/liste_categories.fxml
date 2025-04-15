@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.healthlink.Controllers.ListCategoriesController"
+      stylesheets="@categories.css" spacing="20" prefHeight="600" prefWidth="800">
+
+    <HBox spacing="20" alignment="CENTER_LEFT">
+        <Label text="Gestion des Catégories" styleClass="title-label"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Ajouter Catégorie" onAction="#handleAddCategory" styleClass="add-button"/>
+    </HBox>
+
+    <TextField fx:id="searchField" promptText="Rechercher..."/>
+
+    <ScrollPane fitToWidth="true">
+        <FlowPane fx:id="categoriesContainer" hgap="20" vgap="20" prefWrapLength="800"/>
+    </ScrollPane>
+</VBox>

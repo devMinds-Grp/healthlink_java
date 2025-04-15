@@ -1,0 +1,118 @@
+/* add-category.css - Version moderne */
+
+/* Style de base pour la boîte de dialogue */
+.dialog-container {
+    -fx-background-color: #f8fafc;
+    -fx-padding: 30px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0.2, 0, 0);
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1.5px;
+    -fx-spacing: 20px;
+}
+
+/* Style du titre */
+.dialog-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b;
+    -fx-padding: 0 0 20px 0;
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* Style des labels */
+.label {
+    -fx-font-size: 15px;
+    -fx-text-fill: #334155;
+    -fx-font-weight: 600;
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* Style du champ de texte */
+.text-field {
+    -fx-pref-height: 40px;
+    -fx-font-size: 14px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 0 12px;
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-border-width: 1.5px;
+}
+
+.text-field:focused {
+    -fx-border-color: #60a5fa;
+    -fx-effect: dropshadow(gaussian, rgba(96,165,250,0.25), 0, 0, 0, 3);
+    -fx-border-width: 1.5px;
+}
+
+/* Style des boutons */
+.button {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 24px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-min-width: 120px;
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0.2, 0, 1);
+    -fx-transition: all 0.2s;
+}
+
+.save-btn {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+}
+
+.save-btn:hover {
+    -fx-background-color: #2563eb;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.3), 8, 0.2, 0, 2);
+}
+
+.save-btn:pressed {
+    -fx-background-color: #1d4ed8;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.2), 4, 0.2, 0, 1);
+    -fx-translate-y: 1px;
+}
+
+.cancel-btn {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #64748b;
+    -fx-border-color: #cbd5e1;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+}
+
+.cancel-btn:hover {
+    -fx-background-color: #e2e8f0;
+    -fx-text-fill: #475569;
+}
+
+.cancel-btn:pressed {
+    -fx-background-color: #cbd5e1;
+    -fx-translate-y: 1px;
+}
+
+/* Style de la grille */
+.grid-pane {
+    -fx-padding: 15px 0;
+    -fx-vgap: 15px;
+    -fx-hgap: 15px;
+}
+
+/* Style de la HBox des boutons */
+.hbox {
+    -fx-padding: 20px 0 0 0;
+    -fx-spacing: 15px;
+    -fx-alignment: center-right;
+}
+
+/* Style pour les messages d'erreur */
+.error-label {
+    -fx-text-fill: #ef4444;
+    -fx-font-size: 13px;
+    -fx-padding: 5px 0 0 5px;
+    -fx-font-weight: 500;
+}
