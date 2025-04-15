@@ -1,0 +1,88 @@
+/* add_reclamation.css - Styles améliorés pour ComboBox */
+
+/* Style de base pour le ComboBox */
+.combo-box {
+    -fx-pref-height: 40px;
+    -fx-font-size: 14px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 6px;
+    -fx-border-width: 1.5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 0, 0, 0, 1);
+    -fx-cursor: hand;
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* Cellule affichée dans le ComboBox */
+.combo-box .list-cell {
+    -fx-padding: 8px 12px;
+    -fx-text-fill: #2d3748;
+    -fx-background-color: transparent;
+}
+
+/* Bouton avec la flèche */
+.combo-box .arrow-button {
+    -fx-background-color: #f1f5f9;
+    -fx-border-radius: 0 5px 5px 0;
+    -fx-border-color: transparent;
+    -fx-padding: 0 10px 0 0;
+}
+
+/* Flèche du ComboBox */
+.combo-box .arrow {
+    -fx-background-color: #4a5568;
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z";
+    -fx-scale-shape: false;
+    -fx-padding: 4px;
+}
+
+/* Popup du ComboBox */
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 6px;
+    -fx-border-width: 1.5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 0);
+    -fx-max-height: 200;
+}
+
+/* Cellules dans le popup */
+.combo-box-popup .list-cell {
+    -fx-padding: 10px 15px;
+    -fx-background-color: transparent;
+    -fx-text-fill: #4a5568;
+    -fx-border-color: transparent;
+    -fx-font-size: 13px;
+}
+
+/* Effet hover sur les cellules */
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #f7fafc;
+    -fx-text-fill: #2d3748;
+}
+
+/* Cellule sélectionnée */
+.combo-box-popup .list-cell:selected,
+.combo-box-popup .list-cell:selected:hover {
+    -fx-background-color: #edf2f7;
+    -fx-text-fill: #1a365d;
+    -fx-font-weight: 600;
+}
+
+/* Style lorsque le ComboBox est désactivé */
+.combo-box:disabled {
+    -fx-opacity: 0.7;
+    -fx-background-color: #f8f9fa;
+}
+
+/* Style lorsque le ComboBox a le focus */
+.combo-box:focused {
+    -fx-border-color: #4299e1;
+    -fx-effect: dropshadow(gaussian, rgba(66,153,225,0.3), 0, 0, 0, 2);
+}
+
+/* Style pour le prompt text */
+.combo-box .prompt-text {
+    -fx-text-fill: #a0aec0;
+    -fx-font-style: italic;
+}
