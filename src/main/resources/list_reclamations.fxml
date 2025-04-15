@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.healthlink.Controllers.ListReclamationsController"
+      stylesheets="@reclamations.css" spacing="20" prefHeight="600" prefWidth="1000">
+
+    <HBox spacing="20" alignment="CENTER_LEFT">
+        <Label text="Gestion des Réclamations" styleClass="title-label"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Ajouter Réclamation" onAction="#handleAddReclamation" styleClass="add-button"/>
+    </HBox>
+
+    <TextField fx:id="searchField" promptText="Rechercher par titre, description ou catégorie..."
+               styleClass="search-field"/>
+
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="scroll-pane">
+        <FlowPane fx:id="cardsContainer" hgap="20" vgap="20" prefWrapLength="980"/>
+    </ScrollPane>
+</VBox>

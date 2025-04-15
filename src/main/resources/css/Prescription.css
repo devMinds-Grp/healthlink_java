@@ -1,0 +1,332 @@
+/* ========== STYLES DE BASE ========== */
+/* Form Container */
+.form-container {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+    -fx-padding: 30;
+    -fx-max-width: 600;
+}
+
+/* ========== TYPOGRAPHIE ========== */
+.form-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.title-separator {
+    -fx-padding: 0 0 15 0;
+    -fx-border-color: #3498db;
+    -fx-border-width: 0 0 2 0;
+}
+
+/* ========== FORMULAIRES ========== */
+.form-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+
+.form-field {
+    -fx-font-size: 14px;
+    -fx-pref-height: 35px;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #bdc3c7;
+    -fx-border-width: 1;
+    -fx-padding: 5 10;
+}
+
+.form-field:focused {
+    -fx-border-color: #3498db;
+    -fx-effect: innershadow(three-pass-box, rgba(52,152,219,0.2), 5, 0, 0, 2);
+}
+
+/* ========== COMPOSANTS ========== */
+/* ComboBox */
+.combo-box {
+    -fx-background-color: white;
+}
+
+.combo-box .list-cell {
+    -fx-padding: 5 10;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #bdc3c7;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+/* ========== BOUTONS GENERIQUES ========== */
+.button {
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1);
+    -fx-translate-y: 0;
+}
+
+.button:hover {
+    -fx-translate-y: -5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 8, 0, 0, 2);
+}
+
+.button:pressed {
+    -fx-translate-y: 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);
+}
+
+/* ========== BOUTONS SPECIFIQUES ========== */
+/* Bouton Primaire */
+.primary-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 12 35;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-min-width: 160px;
+    -fx-min-height: 40px;
+}
+
+.primary-button:hover {
+    -fx-background-color: #2980b9;
+    -fx-effect: dropshadow(three-pass-box, rgba(41,128,185,0.4), 10, 0, 0, 3);
+    -fx-translate-y: -5px;
+}
+
+.primary-button:pressed {
+    -fx-background-color: #1a5276;
+    -fx-translate-y: 0;
+}
+
+/* Bouton Gris */
+.secondaryyy-button {
+    -fx-background-color: #a1a0a0;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 12 35;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-min-width: 160px;
+    -fx-min-height: 40px;
+}
+
+.secondaryyy-button:hover {
+    -fx-background-color: #605e5e;
+    -fx-translate-y: -5px;
+}
+
+.secondaryyy-button:pressed {
+    -fx-background-color: #3d3c3c;
+    -fx-translate-y: 0;
+}
+
+/* Boutons dans le tableau */
+.edit-btn {
+    -fx-background-color: #28a745; /* Vert pour "Modifier" */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-padding: 5 10;
+    -fx-background-radius: 4;
+    -fx-min-width: 70px;
+    -fx-cursor: hand;
+}
+
+.edit-btn:hover {
+    -fx-background-color: #218838; /* Vert plus foncé */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 8, 0, 0, 2);
+}
+
+.edit-btn:pressed {
+    -fx-background-color: #1e7e34;
+}
+
+.delete-btn {
+    -fx-background-color: #dc3545; /* Rouge pour "Supprimer" */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-padding: 5 10;
+    -fx-background-radius: 4;
+    -fx-min-width: 70px;
+    -fx-cursor: hand;
+}
+
+.delete-btn:hover {
+    -fx-background-color: #c82333; /* Rouge plus foncé */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 8, 0, 0, 2);
+}
+
+.delete-btn:pressed {
+    -fx-background-color: #bd2130;
+}
+
+/* ========== NAVBAR ========== */
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10 15;
+    -fx-background-radius: 4;
+    -fx-font-weight: normal;
+    -fx-translate-y: 0;
+}
+
+.nav-button:hover {
+    -fx-background-color: rgba(255,255,255,0.15);
+    -fx-translate-y: -3px;
+}
+
+.nav-button-active {
+    -fx-background-color: rgba(255,255,255,0.2);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-color: white;
+    -fx-border-width: 0 0 2px 0;
+}
+
+/* ========== TABLEAU ========== */
+.styled-table {
+    -fx-background-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.styled-table .column-header {
+    -fx-background-color: #a8ccfa;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
+    -fx-padding: 10 5;
+}
+
+.styled-table .table-row-cell:odd {
+    -fx-background-color: #f9f9f9;
+}
+
+.styled-table .table-row-cell:even {
+    -fx-background-color: white;
+}
+
+.styled-table .table-cell {
+    -fx-font-size: 13px;
+    -fx-text-fill: #050607;
+    -fx-alignment: CENTER;
+}
+
+/* ========== MISE EN PAGE ========== */
+/* Espace entre navbar et contenu */
+BorderPane > .center {
+    -fx-padding: 20 0 0 0;
+}
+
+/* Container spécifique */
+StackPane.container {
+    -fx-padding: 20 0 0 0;
+}
+
+/* Carte de détails */
+.details-card {
+    -fx-padding: 20;
+    -fx-background-color: #f9f9f9;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+}
+
+.detail-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+
+.detail-value {
+    -fx-font-size: 14px;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 5 10;
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 4;
+}
+
+/* Style pour les labels sous les champs */
+.field-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #666;
+    -fx-padding: 0 0 0 5px;
+    -fx-font-weight: bold;
+}
+
+/* Style pour les ComboBox */
+.form-field.combo-box {
+    -fx-pref-width: 200px;
+}
+
+/* Modifiez cette partie dans votre CSS */
+.form-field {
+    -fx-font-size: 14px;
+    -fx-pref-height: 35px;  /* Gardez cette valeur ou réduisez-la si nécessaire */
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #bdc3c7;
+    -fx-border-width: 1;
+    -fx-padding: 5 10;
+    -fx-pref-width: 100px;  /* Ajoutez une largeur fixe ou réduisez-la */
+}
+
+/* Pour les TextArea spécifiquement */
+.form-field.text-area {
+    -fx-pref-height: 60px;  /* Réduisez cette valeur */
+    -fx-pref-width: 100px;  /* Ajoutez une largeur fixe */
+}
+
+/* Style the dialog pane */
+.custom-alert {
+    -fx-background-color: #f0f8ff; /* Light blue background */
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #007bff; /* Blue border */
+    -fx-border-width: 2;
+}
+
+/* Style the content text */
+.custom-alert .content {
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333; /* Dark gray text */
+    -fx-padding: 10 20 10 20;
+}
+
+/* Style the buttons */
+.custom-alert .button {
+    -fx-background-color: #007bff; /* Blue background */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 5 15 5 15;
+}
+
+.custom-alert .button:hover {
+    -fx-background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Style the dialog pane's background */
+.custom-alert .dialog-pane {
+    -fx-background-color: transparent;
+}
+
+/* Optional: Style the header (if you decide to add one later) */
+.custom-alert .header-panel {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 10;
+}

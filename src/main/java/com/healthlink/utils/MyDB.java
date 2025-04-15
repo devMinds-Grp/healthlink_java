@@ -3,6 +3,7 @@ package com.healthlink.utils;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class MyDB {
     private final String url = "jdbc:mysql://localhost:3306/healthlink15";
@@ -14,9 +15,10 @@ public class MyDB {
     // Constructeur privé pour le pattern Singleton
     private MyDB() {
         establishConnection();
+        createCategorieTableIfNotExists(); // Ajout ici
     }
 
-    // Méthode pour établir la connexion initiale
+    // Connexion initiale à la base
     private void establishConnection() {
         try {
             conn = DriverManager.getConnection(url, user, password);
@@ -26,7 +28,24 @@ public class MyDB {
         }
     }
 
-    // Méthode Singleton pour obtenir l'instance
+    // Création automatique de la table categorie si elle n'existe pas
+    private void createCategorieTableIfNotExists() {
+        String sql = """
+            CREATE TABLE IF NOT EXISTS categorie (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                nom VARCHAR(100) NOT NULL
+            )
+        """;
+
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("✅ Table 'categorie' vérifiée/créée avec succès.");
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur lors de la création de la table 'categorie': " + e.getMessage());
+        }
+    }
+
+    // Instance Singleton
     public static synchronized MyDB getInstance() {
         if (instance == null) {
             instance = new MyDB();
@@ -34,16 +53,15 @@ public class MyDB {
         return instance;
     }
 
-    // Méthode pour obtenir la connexion (à utiliser dans vos services)
+    // Fournit la connexion active
     public Connection getConnection() throws SQLException {
-        // Vérifie si la connexion est valide
         if (conn == null || conn.isClosed()) {
             reconnect();
         }
         return conn;
     }
 
-    // Méthode pour reconnecter si la connexion est perdue
+    // Reconnexion
     private void reconnect() throws SQLException {
         try {
             conn = DriverManager.getConnection(url, user, password);
@@ -54,7 +72,7 @@ public class MyDB {
         }
     }
 
-    // Méthode pour fermer proprement la connexion
+    // Fermer proprement la connexion
     public void closeConnection() {
         try {
             if (conn != null && !conn.isClosed()) {

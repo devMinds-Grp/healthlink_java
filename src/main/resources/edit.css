@@ -1,0 +1,60 @@
+/* Style principal du conteneur de dialogue */
+.dialog-container {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);
+}
+
+/* Titre de la fenêtre de dialogue */
+.dialog-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-alignment: center;
+}
+
+/* Style du GridPane (espace entre les éléments) */
+.GridPane {
+    -fx-padding: 10px;
+}
+
+/* Style des labels */
+.GridPane Label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555555;
+}
+
+/* Style du champ de texte */
+#nameField {
+    -fx-font-size: 14px;
+    -fx-padding: 8px;
+    -fx-background-color: #f4f4f4;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+}
+
+/* Style des boutons */
+.Button {
+    -fx-font-size: 14px;
+    -fx-padding: 8px 16px;
+    -fx-border-radius: 5px;
+    -fx-focus-color: transparent;
+    -fx-text-fill: white;
+}
+
+/* Bouton "Annuler" */
+.cancel-btn {
+    -fx-background-color: #d9534f;  /* Rouge */
+}
+
+/* Bouton "Mettre à jour" */
+.save-btn {
+    -fx-background-color: #5bc0de;  /* Bleu clair */
+}
+
+/* Espace entre les boutons */
+.HBox {
+    -fx-padding: 10px 0 0 0;
+}
