@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane stylesheets="@../../css/Prescription.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.healthlink.Controllers.Prescription.ListPrescriptionController">
+
+    <!-- ========== NAVBAR EN HAUT ========== -->
+    <top>
+        <HBox style="-fx-background-color: #007bff; -fx-spacing: 20; -fx-padding: 10 30; -fx-alignment: CENTER_LEFT;">
+            <!-- Logo -->
+            <HBox style="-fx-alignment: CENTER; -fx-spacing: 15; -fx-padding: 5 50;">
+                <ImageView fitHeight="90" fitWidth="100">
+                    <image>
+                        <Image url="@../../assets/logo siteweb.png"/>
+                    </image>
+                </ImageView>
+            </HBox>
+
+            <!-- Espace flexible -->
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Menu de navigation -->
+            <HBox style="-fx-alignment: CENTER_RIGHT; -fx-spacing: 15;">
+                <Button text="Home" styleClass="nav-button" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
+                <Button text="Appointment" styleClass="nav-button" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
+                <Button text="Prescription" styleClass="nav-button" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
+                <Button text="Profile" styleClass="nav-button" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
+                <Button text="Disconnect" styleClass="nav-button" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- ========== CONTENU PRINCIPAL ========== -->
+    <center>
+        <StackPane alignment="CENTER" style="-fx-background-color: #f5f7fa;">
+            <!-- Carte principale - Largeur augmentée à 1100 -->
+            <VBox alignment="TOP_CENTER" styleClass="form-container" style="-fx-max-width: 1100; -fx-min-width: 1100;">
+                <padding>
+                    <Insets bottom="50" left="40" right="40" top="50"/>
+                </padding>
+
+                <!-- En-tête avec icône et titre -->
+                <HBox alignment="CENTER" spacing="15">
+                    <ImageView fitHeight="50" fitWidth="50">
+                        <image>
+                            <Image url="@../../assets/liste.png"/>
+                        </image>
+                    </ImageView>
+                    <Label styleClass="form-title" text="Liste des Prescriptions"/>
+                </HBox>
+
+                <!-- Bouton Créer aligné à droite -->
+                <HBox alignment="CENTER_RIGHT" style="-fx-padding: 0 0 20 0;">
+                    <Button onAction="#showCreateForm" styleClass="primary-button" text="Créer une Prescription"/>
+                </HBox>
+
+                <!-- Tableau des prescriptions - Largeur fixe de 1000px -->
+                <TableView fx:id="appointmentsTable" styleClass="styled-table" style="-fx-min-width: 1000; -fx-max-width: 1700;">
+                    <columns>
+                        <TableColumn fx:id="nomMedicamentColumn" prefWidth="200" text="Nom du médicament">
+                            <cellValueFactory><PropertyValueFactory property="nomMedicament"/></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="dosageColumn" prefWidth="150" text="Dosage">
+                            <cellValueFactory><PropertyValueFactory property="dosage"/></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="dureeColumn" prefWidth="150" text="Durée">
+                            <cellValueFactory><PropertyValueFactory property="duree"/></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="notesColumn" prefWidth="200" text="Notes">
+                            <cellValueFactory><PropertyValueFactory property="notes"/></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="rdvCardIdColumn" prefWidth="150" text="Date de Rendez-vous">
+                            <cellValueFactory><PropertyValueFactory property="rdvCardId"/></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="actionsColumn" prefWidth="200" text="Actions" />
+                    </columns>
+                </TableView>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

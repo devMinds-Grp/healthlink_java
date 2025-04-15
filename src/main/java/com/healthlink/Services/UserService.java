@@ -18,7 +18,7 @@ public class UserService implements InterfaceCRUD<User> {
     }
 
     //Ft pour patient
-    @Override
+    
     public void addPatient(User user) {
         String req = "INSERT INTO user (role_id, nom, prenom, email, mot_de_passe, num_tel,statut,adresse,speciality,categorie_soin,image,imageprofile,reset_code ) " +
                 "VALUES (?, ?, ?, ?, ?, ?,?, ?,?,?,?,?,?)";
@@ -51,7 +51,7 @@ public class UserService implements InterfaceCRUD<User> {
             System.err.println("Erreur lors de l'ajout du patient : " + e.getMessage());
         }
     }
-    @Override
+    
     public List<User> findAllPatients() {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 3";
         List<User> patients = new ArrayList<>();
@@ -140,7 +140,7 @@ public class UserService implements InterfaceCRUD<User> {
 
 
     //Ft medecin
-    @Override
+    
     public void addMedecin(User user) {
         String req = "INSERT INTO user (role_id, nom, prenom, email, mot_de_passe, num_tel, statut, adresse, speciality, categorie_soin, image, imageprofile, reset_code) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -172,7 +172,7 @@ public class UserService implements InterfaceCRUD<User> {
             System.err.println("Erreur lors de l'ajout du médecin : " + e.getMessage());
         }
     }
-    @Override
+    
     public List<User> findAllMedecins() {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 2";
         List<User> medecins = new ArrayList<>();
@@ -263,7 +263,7 @@ public class UserService implements InterfaceCRUD<User> {
 
 
     //Ft soignant
-    @Override
+    
     public void addSoignant(User user) {
         String req = "INSERT INTO user (role_id, nom, prenom, email, mot_de_passe, num_tel, statut, adresse, speciality, categorie_soin, image, imageprofile, reset_code) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -296,7 +296,7 @@ public class UserService implements InterfaceCRUD<User> {
         }
     }
 
-    @Override
+    
     public List<User> findAllSoignants() {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 4";
         List<User> soignants = new ArrayList<>();
@@ -410,7 +410,7 @@ public class UserService implements InterfaceCRUD<User> {
         }
         return null;
     }
-    @Override
+    
     public void add(User user) {
         String req = "INSERT INTO user (role_id, nom, prenom, email, mot_de_passe, num_tel, " +
                 "adresse, speciality, categorie_soin, image, imageprofile, statut, reset_code) " +
@@ -447,7 +447,7 @@ public class UserService implements InterfaceCRUD<User> {
             e.printStackTrace(); // Affichez la stack trace complète pour le débogage
         }
     }
-    @Override
+    
     public void update(User user) {
         String req = "UPDATE user SET " +
                 "role_id = ?, " +
@@ -489,7 +489,7 @@ public class UserService implements InterfaceCRUD<User> {
         }
     }
 
-    @Override
+    
     public void delete(User user) {
         String req = "DELETE FROM `user` WHERE `id` = ?";
         try (PreparedStatement pst = conn.prepareStatement(req)) {
@@ -500,7 +500,7 @@ public class UserService implements InterfaceCRUD<User> {
         }
     }
 
-    @Override
+    
     public List<User> find() {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id";
         List<User> users = new ArrayList<>();
