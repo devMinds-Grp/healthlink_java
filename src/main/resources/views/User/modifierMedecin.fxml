@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.healthlink.Controllers.ModifierMedecin">
+
+    <!-- Titre -->
+    <Label layoutX="220.0" layoutY="60.0" text="Modifier Médecin" style="-fx-font-weight: bold;">
+        <font>
+            <Font size="20.0"/>
+        </font>
+    </Label>
+
+    <!-- Formulaire en 2 colonnes -->
+    <HBox layoutX="50.0" layoutY="110.0" spacing="40.0">
+        <!-- Colonne gauche -->
+        <VBox spacing="15.0" prefWidth="250.0">
+            <VBox spacing="5.0">
+                <Label text="Nom*" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="nomField" promptText="Ex. Dupont"/>
+            </VBox>
+            <VBox spacing="5.0">
+                <Label text="Prénom*" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="prenomField" promptText="Ex. Jean"/>
+            </VBox>
+            <VBox spacing="5.0">
+                <Label text="Email*" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="emailField" promptText="Ex. jean.dupont@example.com"/>
+            </VBox>
+        </VBox>
+
+        <!-- Colonne droite -->
+        <VBox spacing="15.0" prefWidth="250.0">
+            <VBox spacing="5.0">
+                <Label text="Téléphone*" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="telField" promptText="Ex. 0612345678"/>
+            </VBox>
+            <VBox spacing="5.0">
+                <Label text="Spécialité*" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="specialiteField" promptText="Ex. Cardiologue"/>
+            </VBox>
+            <VBox spacing="5.0">
+                <Label text="Adresse" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="adresseField" promptText="Ex. 123 Rue de Paris"/>
+            </VBox>
+        </VBox>
+    </HBox>
+
+    <!-- Boutons -->
+    <HBox layoutX="350.0" layoutY="400.0" spacing="20.0">
+        <Button text="Annuler" onAction="#handleCancel"
+                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 4; -fx-padding: 8 20;"/>
+        <Button text="Enregistrer" onAction="#handleSave"
+                style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-background-radius: 4; -fx-padding: 8 20; -fx-effect: dropshadow(gaussian, rgba(46,204,113,0.3), 5, 0, 0, 1);"/>
+    </HBox>
+</AnchorPane>
