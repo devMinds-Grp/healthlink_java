@@ -10,11 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserService implements InterfaceCRUD<User> {
-    Connection conn;
+    private Connection connection;
 
     public UserService() {
-
-        conn = MyDB.getInstance().getCon();
+        try {
+            this.connection = MyDB.getInstance().getConnection();
+            if (connection == null || connection.isClosed()) {
+                throw new SQLException("La connexion à la base de données a échoué");
+            }
+            System.out.println("PrescriptionService: Database connection established");
+        } catch (SQLException e) {
+            System.err.println("Erreur critique de connexion à la base: " + e.getMessage());
+            throw new RuntimeException("Échec d'initialisation du PrescriptionService", e);
+        }
     }
 
     //Ft pour patient
@@ -23,7 +31,7 @@ public class UserService implements InterfaceCRUD<User> {
         String req = "INSERT INTO user (role_id, nom, prenom, email, mot_de_passe, num_tel,statut,adresse,speciality,categorie_soin,image,imageprofile,reset_code ) " +
                 "VALUES (?, ?, ?, ?, ?, ?,?, ?,?,?,?,?,?)";
 
-        try (PreparedStatement pst = conn.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             pst.setInt(1, user.getRole().getId()); // Rôle du patient (3)
             pst.setString(2, user.getNom());
             pst.setString(3, user.getPrenom());
@@ -56,7 +64,7 @@ public class UserService implements InterfaceCRUD<User> {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 3";
         List<User> patients = new ArrayList<>();
 
-        try (PreparedStatement pst = conn.prepareStatement(req);
+        try (PreparedStatement pst =  connection.prepareStatement(req);
              ResultSet rs = pst.executeQuery()) {
 
             while (rs.next()) {
@@ -86,7 +94,7 @@ public class UserService implements InterfaceCRUD<User> {
     public User findPatientById(int id) {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.id = ? AND u.role_id = 3";
 
-        try (PreparedStatement pst = conn.prepareStatement(req)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setInt(1, id);
 
             try (ResultSet rs = pst.executeQuery()) {
@@ -105,7 +113,7 @@ public class UserService implements InterfaceCRUD<User> {
     public void deletePatient(int id) {
         String req = "DELETE FROM user WHERE id = ? AND role_id = 3";
 
-        try (PreparedStatement pst = conn.prepareStatement(req)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setInt(1, id);
             int affectedRows = pst.executeUpdate();
 
@@ -123,7 +131,7 @@ public class UserService implements InterfaceCRUD<User> {
     public void updatePatient(User patient) {
         String req = "UPDATE user SET nom = ?, prenom = ?, email = ?, num_tel = ? WHERE id = ? AND role_id = 3";
 
-        try (PreparedStatement pst = conn.prepareStatement(req)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setString(1, patient.getNom());
             pst.setString(2, patient.getPrenom());
             pst.setString(3, patient.getEmail());
@@ -145,7 +153,7 @@ public class UserService implements InterfaceCRUD<User> {
         String req = "INSERT INTO user (role_id, nom, prenom, email, mot_de_passe, num_tel, statut, adresse, speciality, categorie_soin, image, imageprofile, reset_code) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement pst = conn.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             pst.setInt(1, user.getRole().getId()); // Rôle du médecin (2)
             pst.setString(2, user.getNom());
             pst.setString(3, user.getPrenom());
@@ -177,7 +185,7 @@ public class UserService implements InterfaceCRUD<User> {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 2";
         List<User> medecins = new ArrayList<>();
 
-        try (PreparedStatement pst = conn.prepareStatement(req);
+        try (PreparedStatement pst =  connection.prepareStatement(req);
              ResultSet rs = pst.executeQuery()) {
 
             while (rs.next()) {
@@ -210,7 +218,7 @@ public class UserService implements InterfaceCRUD<User> {
     public User findMedecinById(int id) {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.id = ? AND u.role_id = 2";
 
-        try (PreparedStatement pst = conn.prepareStatement(req)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setInt(1, id);
 
             try (ResultSet rs = pst.executeQuery()) {
@@ -228,7 +236,7 @@ public class UserService implements InterfaceCRUD<User> {
     public void deleteMedecin(int id) {
         String req = "DELETE FROM user WHERE id = ? AND role_id = 2";
 
-        try (PreparedStatement pst = conn.prepareStatement(req)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setInt(1, id);
             int affectedRows = pst.executeUpdate();
 
@@ -245,7 +253,7 @@ public class UserService implements InterfaceCRUD<User> {
     public void updateMedecin(User medecin) {
         String req = "UPDATE user SET nom = ?, prenom = ?, email = ?, num_tel = ?, speciality = ?, adresse = ? WHERE id = ? AND role_id = 2";
 
-        try (PreparedStatement pst = conn.prepareStatement(req)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setString(1, medecin.getNom());
             pst.setString(2, medecin.getPrenom());
             pst.setString(3, medecin.getEmail());
@@ -268,7 +276,7 @@ public class UserService implements InterfaceCRUD<User> {
         String req = "INSERT INTO user (role_id, nom, prenom, email, mot_de_passe, num_tel, statut, adresse, speciality, categorie_soin, image, imageprofile, reset_code) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement pst = conn.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             pst.setInt(1, user.getRole().getId()); // Rôle du soignant (à définir, par exemple 4)
             pst.setString(2, user.getNom());
             pst.setString(3, user.getPrenom());
@@ -301,7 +309,7 @@ public class UserService implements InterfaceCRUD<User> {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 4";
         List<User> soignants = new ArrayList<>();
 
-        try (PreparedStatement pst = conn.prepareStatement(req);
+        try (PreparedStatement pst =  connection.prepareStatement(req);
              ResultSet rs = pst.executeQuery()) {
 
             while (rs.next()) {
@@ -332,7 +340,7 @@ public class UserService implements InterfaceCRUD<User> {
     public void deleteSoignant(int id) {
         String req = "DELETE FROM user WHERE id = ? AND role_id = 4";
 
-        try (PreparedStatement pst = conn.prepareStatement(req)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setInt(1, id);
             int rowsAffected = pst.executeUpdate();
 
@@ -351,7 +359,7 @@ public class UserService implements InterfaceCRUD<User> {
                 "nom = ?, prenom = ?, email = ?, categorie_soin = ?, image = ?, imageprofile = ? " +
                 "WHERE id = ? AND role_id = 4";
 
-        try (PreparedStatement pst = conn.prepareStatement(req)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setString(1, soignant.getNom());
             pst.setString(2, soignant.getPrenom());
             pst.setString(3, soignant.getEmail());
@@ -375,7 +383,7 @@ public class UserService implements InterfaceCRUD<User> {
     public User findById(int id) {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.id = ?";
 
-        try (PreparedStatement pst = conn.prepareStatement(req)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setInt(1, id);
 
             try (ResultSet rs = pst.executeQuery()) {
@@ -416,7 +424,7 @@ public class UserService implements InterfaceCRUD<User> {
                 "adresse, speciality, categorie_soin, image, imageprofile, statut, reset_code) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"; // 13 paramètres
 
-        try (PreparedStatement pst = conn.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             pst.setInt(1, user.getRole().getId());
             pst.setString(2, user.getNom());
             pst.setString(3, user.getPrenom());
@@ -465,7 +473,7 @@ public class UserService implements InterfaceCRUD<User> {
                 "reset_code = ? " +
                 "WHERE id = ?";
 
-        try (PreparedStatement pst = conn.prepareStatement(req)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req)) {
             int i = 1;
             pst.setInt(i++, user.getRole() != null ? user.getRole().getId() : null);
             pst.setString(i++, user.getNom());
@@ -492,7 +500,7 @@ public class UserService implements InterfaceCRUD<User> {
     
     public void delete(User user) {
         String req = "DELETE FROM `user` WHERE `id` = ?";
-        try (PreparedStatement pst = conn.prepareStatement(req)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setInt(1, user.getId());
             pst.executeUpdate();
         } catch (SQLException e) {
@@ -505,7 +513,7 @@ public class UserService implements InterfaceCRUD<User> {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id";
         List<User> users = new ArrayList<>();
 
-        try (PreparedStatement pst = conn.prepareStatement(req);
+        try (PreparedStatement pst =  connection.prepareStatement(req);
              ResultSet rs = pst.executeQuery()) {
 
             while (rs.next()) {

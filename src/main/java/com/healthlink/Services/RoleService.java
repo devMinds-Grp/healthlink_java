@@ -10,16 +10,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoleService implements InterfaceCRUD<Role> {
-    private Connection conn;
+    private Connection connection;
 
     public RoleService() {
-        conn = MyDB.getInstance().getCon();
+        try {
+            this.connection = MyDB.getInstance().getConnection();
+            if (connection == null || connection.isClosed()) {
+                throw new SQLException("La connexion à la base de données a échoué");
+            }
+            System.out.println("PrescriptionService: Database connection established");
+        } catch (SQLException e) {
+            System.err.println("Erreur critique de connexion à la base: " + e.getMessage());
+            throw new RuntimeException("Échec d'initialisation du PrescriptionService", e);
+        }
     }
 
-    @Override
+     
     public void add(Role role) {
         String req = "INSERT INTO role (nom) VALUES (?)";
-        try (PreparedStatement pst = conn.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             pst.setString(1, role.getNom());
 
             int affectedRows = pst.executeUpdate();
@@ -34,10 +43,10 @@ public class RoleService implements InterfaceCRUD<Role> {
             System.err.println("Erreur lors de l'ajout du rôle : " + e.getMessage());
         }
     }
-    @Override
+     
     public void addPatient(Role role) {
         String req = "INSERT INTO role (nom) VALUES (?)";
-        try (PreparedStatement pst = conn.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             pst.setString(1, role.getNom());
 
             int affectedRows = pst.executeUpdate();
@@ -52,10 +61,10 @@ public class RoleService implements InterfaceCRUD<Role> {
             System.err.println("Erreur lors de l'ajout du rôle : " + e.getMessage());
         }
     }
-    @Override
+     
     public void addSoignant(Role role) {
         String req = "INSERT INTO role (nom) VALUES (?)";
-        try (PreparedStatement pst = conn.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             pst.setString(1, role.getNom());
 
             int affectedRows = pst.executeUpdate();
@@ -70,10 +79,10 @@ public class RoleService implements InterfaceCRUD<Role> {
             System.err.println("Erreur lors de l'ajout du rôle : " + e.getMessage());
         }
     }
-    @Override
+     
     public void addMedecin(Role role) {
         String req = "INSERT INTO role (nom) VALUES (?)";
-        try (PreparedStatement pst = conn.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             pst.setString(1, role.getNom());
 
             int affectedRows = pst.executeUpdate();
@@ -89,10 +98,10 @@ public class RoleService implements InterfaceCRUD<Role> {
         }
     }
 
-    @Override
+     
     public void update(Role role) {
         String req = "UPDATE role SET nom = ? WHERE id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(req)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setString(1, role.getNom());
             pst.setInt(2, role.getId());
             pst.executeUpdate();
@@ -101,10 +110,10 @@ public class RoleService implements InterfaceCRUD<Role> {
         }
     }
 
-    @Override
+     
     public void delete(Role role) {
         String req = "DELETE FROM role WHERE id = ?";
-        try (PreparedStatement pst = conn.prepareStatement(req)) {
+        try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setInt(1, role.getId());
             pst.executeUpdate();
         } catch (SQLException e) {
@@ -112,12 +121,12 @@ public class RoleService implements InterfaceCRUD<Role> {
         }
     }
 
-    @Override
+     
     public List<Role> find() {
         String req = "SELECT * FROM role";
         List<Role> roles = new ArrayList<>();
 
-        try (Statement st = conn.createStatement();
+        try (Statement st =  connection.createStatement();
              ResultSet rs = st.executeQuery(req)) {
 
             while (rs.next()) {
@@ -133,12 +142,12 @@ public class RoleService implements InterfaceCRUD<Role> {
     }
 
 
-    @Override
+     
     public List<User> findAllPatients() {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 3";
         List<User> patients = new ArrayList<>();
 
-        try (PreparedStatement pst = conn.prepareStatement(req);
+        try (PreparedStatement pst =  connection.prepareStatement(req);
              ResultSet rs = pst.executeQuery()) {
 
             while (rs.next()) {
@@ -166,12 +175,12 @@ public class RoleService implements InterfaceCRUD<Role> {
 
         return user;
     }
-    @Override
+     
     public List<User> findAllMedecins() {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 2";
         List<User> medecins = new ArrayList<>();
 
-        try (PreparedStatement pst = conn.prepareStatement(req);
+        try (PreparedStatement pst =  connection.prepareStatement(req);
              ResultSet rs = pst.executeQuery()) {
 
             while (rs.next()) {
@@ -200,12 +209,12 @@ public class RoleService implements InterfaceCRUD<Role> {
 
         return medecin;
     }
-    @Override
+     
     public List<User> findAllSoignants() {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 4";
         List<User> soignants = new ArrayList<>();
 
-        try (PreparedStatement pst = conn.prepareStatement(req);
+        try (PreparedStatement pst =  connection.prepareStatement(req);
              ResultSet rs = pst.executeQuery()) {
 
             while (rs.next()) {
