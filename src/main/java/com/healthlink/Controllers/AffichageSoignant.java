@@ -1,6 +1,6 @@
 package com.healthlink.Controllers;
 
-import com.healthlink.Entites.User;
+import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.UserService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,15 +24,15 @@ import java.util.ResourceBundle;
 public class AffichageSoignant implements Initializable {
 
     private final UserService userService = new UserService();
-    private final ObservableList<User> soignantList = FXCollections.observableArrayList();
+    private final ObservableList<Utilisateur> soignantList = FXCollections.observableArrayList();
 
     // Éléments pour les soignants
-    @FXML private TableView<User> soignantTableView;
-    @FXML private TableColumn<User, String> nomSoignantColumn;
-    @FXML private TableColumn<User, String> prenomSoignantColumn;
-    @FXML private TableColumn<User, String> emailSoignantColumn;
-    @FXML private TableColumn<User, String> categorieSoinColumn;
-    @FXML private TableColumn<User, Void> actionsSoignantColumn;
+    @FXML private TableView<Utilisateur> soignantTableView;
+    @FXML private TableColumn<Utilisateur, String> nomSoignantColumn;
+    @FXML private TableColumn<Utilisateur, String> prenomSoignantColumn;
+    @FXML private TableColumn<Utilisateur, String> emailSoignantColumn;
+    @FXML private TableColumn<Utilisateur, String> categorieSoinColumn;
+    @FXML private TableColumn<Utilisateur, Void> actionsSoignantColumn;
 
     @FXML private MenuItem patientsMenuItem;
     @FXML private MenuItem medecinsMenuItem;
@@ -81,7 +81,7 @@ public class AffichageSoignant implements Initializable {
 
     private void loadSoignants() {
         soignantList.clear();
-        List<User> soignants = userService.findAllSoignants();
+        List<Utilisateur> soignants = userService.findAllSoignants();
         soignantList.addAll(soignants);
         soignantTableView.setItems(soignantList);
     }
@@ -134,7 +134,7 @@ public class AffichageSoignant implements Initializable {
         }
     }
 
-    private void voirSoignant(User soignant) {
+    private void voirSoignant(Utilisateur soignant) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/detailsSoignant.fxml"));
             Parent root = loader.load();
@@ -152,7 +152,7 @@ public class AffichageSoignant implements Initializable {
         }
     }
 
-    private void modifierSoignant(User soignant) {
+    private void modifierSoignant(Utilisateur soignant) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/modifierSoignant.fxml"));
             Parent root = loader.load();
@@ -172,7 +172,7 @@ public class AffichageSoignant implements Initializable {
         }
     }
 
-    private void supprimerSoignant(User soignant) {
+    private void supprimerSoignant(Utilisateur soignant) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation de suppression");
         alert.setHeaderText("Supprimer le soignant");

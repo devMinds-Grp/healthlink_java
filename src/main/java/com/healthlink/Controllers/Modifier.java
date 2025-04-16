@@ -1,6 +1,6 @@
 package com.healthlink.Controllers;
 
-import com.healthlink.Entites.User;
+import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.UserService;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -15,9 +15,9 @@ public class Modifier {
     @FXML private TextField adresseField;
 
     private final UserService userService = new UserService();
-    private User patient;
+    private Utilisateur patient;
 
-    public void initData(User patient) {
+    public void initData(Utilisateur patient) {
         this.patient = patient;
         remplirChamps();
     }

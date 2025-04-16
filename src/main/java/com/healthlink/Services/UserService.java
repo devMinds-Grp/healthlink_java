@@ -1,6 +1,6 @@
 package com.healthlink.Services;
 
-import com.healthlink.Entites.User;
+import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Entites.Role;
 import com.healthlink.Interfaces.InterfaceCRUD;
 import com.healthlink.utils.MyDB;
@@ -9,7 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserService implements InterfaceCRUD<User> {
+public class UserService implements InterfaceCRUD<Utilisateur> {
     private Connection connection;
 
     public UserService() {
@@ -27,23 +27,23 @@ public class UserService implements InterfaceCRUD<User> {
 
     //Ft pour patient
     
-    public void addPatient(User user) {
-        String req = "INSERT INTO user (role_id, nom, prenom, email, mot_de_passe, num_tel,statut,adresse,speciality,categorie_soin,image,imageprofile,reset_code ) " +
+    public void addPatient(Utilisateur utilisateur) {
+        String req = "INSERT INTO utilisateur (role_id, nom, prenom, email, mot_de_passe, num_tel,statut,adresse,speciality,categorie_soin,image,imageprofile,reset_code ) " +
                 "VALUES (?, ?, ?, ?, ?, ?,?, ?,?,?,?,?,?)";
 
         try (PreparedStatement pst =  connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
-            pst.setInt(1, user.getRole().getId()); // Rôle du patient (3)
-            pst.setString(2, user.getNom());
-            pst.setString(3, user.getPrenom());
-            pst.setString(4, user.getEmail());
-            pst.setString(5, user.getMot_de_passe());
-            pst.setInt(6, user.getNum_tel());
+            pst.setInt(1, utilisateur.getRole().getId()); // Rôle du patient (3)
+            pst.setString(2, utilisateur.getNom());
+            pst.setString(3, utilisateur.getPrenom());
+            pst.setString(4, utilisateur.getEmail());
+            pst.setString(5, utilisateur.getMot_de_passe());
+            pst.setInt(6, utilisateur.getNum_tel());
             pst.setString(7, "approuvé");
             pst.setString(8, "");
             pst.setString(9, "");
             pst.setString(10, "");
             pst.setInt(11, 0);
-            pst.setString(12, user.getImageprofile());
+            pst.setString(12, utilisateur.getImageprofile());
             pst.setInt(13, 0);
 
 
@@ -51,7 +51,7 @@ public class UserService implements InterfaceCRUD<User> {
             if (affectedRows > 0) {
                 try (ResultSet rs = pst.getGeneratedKeys()) {
                     if (rs.next()) {
-                        user.setId(rs.getInt(1));
+                        utilisateur.setId(rs.getInt(1));
                     }
                 }
             }
@@ -60,9 +60,9 @@ public class UserService implements InterfaceCRUD<User> {
         }
     }
     
-    public List<User> findAllPatients() {
-        String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 3";
-        List<User> patients = new ArrayList<>();
+    public List<Utilisateur> findAllPatients() {
+        String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM utilisateur u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 3";
+        List<Utilisateur> patients = new ArrayList<>();
 
         try (PreparedStatement pst =  connection.prepareStatement(req);
              ResultSet rs = pst.executeQuery()) {
@@ -75,24 +75,24 @@ public class UserService implements InterfaceCRUD<User> {
         }
         return patients;
     }
-    private User extractPatientFromResultSet(ResultSet rs) throws SQLException {
+    private Utilisateur extractPatientFromResultSet(ResultSet rs) throws SQLException {
         Role role = new Role();
         role.setId(rs.getInt("role_id"));
         role.setNom(rs.getString("role_nom"));
 
-        User user = new User();
-        user.setId(rs.getInt("id"));
-        user.setRole(role);
-        user.setNom(rs.getString("nom"));
-        user.setPrenom(rs.getString("prenom"));
-        user.setEmail(rs.getString("email"));
-        user.setNum_tel(rs.getInt("num_tel"));
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setId(rs.getInt("id"));
+        utilisateur.setRole(role);
+        utilisateur.setNom(rs.getString("nom"));
+        utilisateur.setPrenom(rs.getString("prenom"));
+        utilisateur.setEmail(rs.getString("email"));
+        utilisateur.setNum_tel(rs.getInt("num_tel"));
         // On ne récupère que les champs nécessaires pour l'affichage
 
-        return user;
+        return utilisateur;
     }
-    public User findPatientById(int id) {
-        String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.id = ? AND u.role_id = 3";
+    public Utilisateur findPatientById(int id) {
+        String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM utilisateur u LEFT JOIN role r ON u.role_id = r.id WHERE u.id = ? AND u.role_id = 3";
 
         try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setInt(1, id);
@@ -111,7 +111,7 @@ public class UserService implements InterfaceCRUD<User> {
 
     // Méthode pour supprimer un patient
     public void deletePatient(int id) {
-        String req = "DELETE FROM user WHERE id = ? AND role_id = 3";
+        String req = "DELETE FROM utilisateur WHERE id = ? AND role_id = 3";
 
         try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setInt(1, id);
@@ -128,8 +128,8 @@ public class UserService implements InterfaceCRUD<User> {
     }
 
     // Méthode pour mettre à jour un patient
-    public void updatePatient(User patient) {
-        String req = "UPDATE user SET nom = ?, prenom = ?, email = ?, num_tel = ? WHERE id = ? AND role_id = 3";
+    public void updatePatient(Utilisateur patient) {
+        String req = "UPDATE utilisateur SET nom = ?, prenom = ?, email = ?, num_tel = ? WHERE id = ? AND role_id = 3";
 
         try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setString(1, patient.getNom());
@@ -149,30 +149,30 @@ public class UserService implements InterfaceCRUD<User> {
 
     //Ft medecin
     
-    public void addMedecin(User user) {
-        String req = "INSERT INTO user (role_id, nom, prenom, email, mot_de_passe, num_tel, statut, adresse, speciality, categorie_soin, image, imageprofile, reset_code) " +
+    public void addMedecin(Utilisateur utilisateur) {
+        String req = "INSERT INTO utilisateur (role_id, nom, prenom, email, mot_de_passe, num_tel, statut, adresse, speciality, categorie_soin, image, imageprofile, reset_code) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pst =  connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
-            pst.setInt(1, user.getRole().getId()); // Rôle du médecin (2)
-            pst.setString(2, user.getNom());
-            pst.setString(3, user.getPrenom());
-            pst.setString(4, user.getEmail());
-            pst.setString(5, user.getMot_de_passe());
-            pst.setInt(6, user.getNum_tel());
+            pst.setInt(1, utilisateur.getRole().getId()); // Rôle du médecin (2)
+            pst.setString(2, utilisateur.getNom());
+            pst.setString(3, utilisateur.getPrenom());
+            pst.setString(4, utilisateur.getEmail());
+            pst.setString(5, utilisateur.getMot_de_passe());
+            pst.setInt(6, utilisateur.getNum_tel());
             pst.setString(7, "approuvé");
-            pst.setString(8, user.getAdresse());
-            pst.setString(9, user.getSpeciality()); // Spécialité du médecin
+            pst.setString(8, utilisateur.getAdresse());
+            pst.setString(9, utilisateur.getSpeciality()); // Spécialité du médecin
             pst.setString(10, ""); // Catégorie de soin (peut être vide ou définie)
-            pst.setString(11, user.getImage()); // Image par défaut
-            pst.setString(12, user.getImageprofile()); // Image profile par défaut
+            pst.setString(11, utilisateur.getImage()); // Image par défaut
+            pst.setString(12, utilisateur.getImageprofile()); // Image profile par défaut
             pst.setInt(13, 0); // Reset code par défaut
 
             int affectedRows = pst.executeUpdate();
             if (affectedRows > 0) {
                 try (ResultSet rs = pst.getGeneratedKeys()) {
                     if (rs.next()) {
-                        user.setId(rs.getInt(1));
+                        utilisateur.setId(rs.getInt(1));
                     }
                 }
             }
@@ -181,9 +181,9 @@ public class UserService implements InterfaceCRUD<User> {
         }
     }
     
-    public List<User> findAllMedecins() {
-        String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 2";
-        List<User> medecins = new ArrayList<>();
+    public List<Utilisateur> findAllMedecins() {
+        String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM utilisateur u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 2";
+        List<Utilisateur> medecins = new ArrayList<>();
 
         try (PreparedStatement pst =  connection.prepareStatement(req);
              ResultSet rs = pst.executeQuery()) {
@@ -197,12 +197,12 @@ public class UserService implements InterfaceCRUD<User> {
         return medecins;
     }
 
-    private User extractMedecinFromResultSet(ResultSet rs) throws SQLException {
+    private Utilisateur extractMedecinFromResultSet(ResultSet rs) throws SQLException {
         Role role = new Role();
         role.setId(rs.getInt("role_id"));
         role.setNom(rs.getString("role_nom"));
 
-        User medecin = new User();
+        Utilisateur medecin = new Utilisateur();
         medecin.setId(rs.getInt("id"));
         medecin.setRole(role);
         medecin.setNom(rs.getString("nom"));
@@ -215,8 +215,8 @@ public class UserService implements InterfaceCRUD<User> {
         return medecin;
     }
     // Méthode pour récupérer un médecin par ID
-    public User findMedecinById(int id) {
-        String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.id = ? AND u.role_id = 2";
+    public Utilisateur findMedecinById(int id) {
+        String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM utilisateur u LEFT JOIN role r ON u.role_id = r.id WHERE u.id = ? AND u.role_id = 2";
 
         try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setInt(1, id);
@@ -234,7 +234,7 @@ public class UserService implements InterfaceCRUD<User> {
 
     // Méthode pour supprimer un médecin
     public void deleteMedecin(int id) {
-        String req = "DELETE FROM user WHERE id = ? AND role_id = 2";
+        String req = "DELETE FROM utilisateur WHERE id = ? AND role_id = 2";
 
         try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setInt(1, id);
@@ -250,8 +250,8 @@ public class UserService implements InterfaceCRUD<User> {
         }
     }
     // Méthode pour mettre à jour un médecin
-    public void updateMedecin(User medecin) {
-        String req = "UPDATE user SET nom = ?, prenom = ?, email = ?, num_tel = ?, speciality = ?, adresse = ? WHERE id = ? AND role_id = 2";
+    public void updateMedecin(Utilisateur medecin) {
+        String req = "UPDATE utilisateur SET nom = ?, prenom = ?, email = ?, num_tel = ?, speciality = ?, adresse = ? WHERE id = ? AND role_id = 2";
 
         try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setString(1, medecin.getNom());
@@ -270,32 +270,32 @@ public class UserService implements InterfaceCRUD<User> {
     }
 
 
-    //Ft soignant
+    //Ftnant
     
-    public void addSoignant(User user) {
-        String req = "INSERT INTO user (role_id, nom, prenom, email, mot_de_passe, num_tel, statut, adresse, speciality, categorie_soin, image, imageprofile, reset_code) " +
+    public void addSoignant(Utilisateur utilisateur) {
+        String req = "INSERT INTO utilisateur (role_id, nom, prenom, email, mot_de_passe, num_tel, statut, adresse, speciality, categorie_soin, image, imageprofile, reset_code) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pst =  connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
-            pst.setInt(1, user.getRole().getId()); // Rôle du soignant (à définir, par exemple 4)
-            pst.setString(2, user.getNom());
-            pst.setString(3, user.getPrenom());
-            pst.setString(4, user.getEmail());
-            pst.setString(5, user.getMot_de_passe());
+            pst.setInt(1, utilisateur.getRole().getId()); // Rôle du soignant (à définir, par exemple 4)
+            pst.setString(2, utilisateur.getNom());
+            pst.setString(3, utilisateur.getPrenom());
+            pst.setString(4, utilisateur.getEmail());
+            pst.setString(5, utilisateur.getMot_de_passe());
             pst.setInt(6, 0);
             pst.setString(7, "approuvé"); // Statut par défaut
             pst.setString(8, "");
             pst.setString(9, ""); // Spécialité si applicable
-            pst.setString(10, user.getCategorie_soin()); // Catégorie de soin
-            pst.setString(11, user.getImage()); // Image par défaut
-            pst.setString(12, user.getImageprofile()); // Image profile par défaut
+            pst.setString(10, utilisateur.getCategorie_soin()); // Catégorie de soin
+            pst.setString(11, utilisateur.getImage()); // Image par défaut
+            pst.setString(12, utilisateur.getImageprofile()); // Image profile par défaut
             pst.setInt(13, 0); // Reset code par défaut
 
             int affectedRows = pst.executeUpdate();
             if (affectedRows > 0) {
                 try (ResultSet rs = pst.getGeneratedKeys()) {
                     if (rs.next()) {
-                        user.setId(rs.getInt(1));
+                        utilisateur.setId(rs.getInt(1));
                     }
                 }
             }
@@ -305,9 +305,9 @@ public class UserService implements InterfaceCRUD<User> {
     }
 
     
-    public List<User> findAllSoignants() {
-        String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 4";
-        List<User> soignants = new ArrayList<>();
+    public List<Utilisateur> findAllSoignants() {
+        String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM utilisateur u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 4";
+        List<Utilisateur> soignants = new ArrayList<>();
 
         try (PreparedStatement pst =  connection.prepareStatement(req);
              ResultSet rs = pst.executeQuery()) {
@@ -321,12 +321,12 @@ public class UserService implements InterfaceCRUD<User> {
         return soignants;
     }
 
-    private User extractSoignantFromResultSet(ResultSet rs) throws SQLException {
+    private Utilisateur extractSoignantFromResultSet(ResultSet rs) throws SQLException {
         Role role = new Role();
         role.setId(rs.getInt("role_id"));
         role.setNom(rs.getString("role_nom"));
 
-        User soignant = new User();
+        Utilisateur soignant = new Utilisateur();
         soignant.setId(rs.getInt("id"));
         soignant.setRole(role);
         soignant.setNom(rs.getString("nom"));
@@ -338,7 +338,7 @@ public class UserService implements InterfaceCRUD<User> {
     }
 
     public void deleteSoignant(int id) {
-        String req = "DELETE FROM user WHERE id = ? AND role_id = 4";
+        String req = "DELETE FROM utilisateur WHERE id = ? AND role_id = 4";
 
         try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setInt(1, id);
@@ -354,8 +354,8 @@ public class UserService implements InterfaceCRUD<User> {
         }
     }
 
-    public void updateSoignant(User soignant) {
-        String req = "UPDATE user SET " +
+    public void updateSoignant(Utilisateur soignant) {
+        String req = "UPDATE utilisateur SET " +
                 "nom = ?, prenom = ?, email = ?, categorie_soin = ?, image = ?, imageprofile = ? " +
                 "WHERE id = ? AND role_id = 4";
 
@@ -380,8 +380,8 @@ public class UserService implements InterfaceCRUD<User> {
     }
 
     // Méthode supplémentaire pour trouver un utilisateur par ID
-    public User findById(int id) {
-        String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.id = ?";
+    public Utilisateur findById(int id) {
+        String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM utilisateur u LEFT JOIN role r ON u.role_id = r.id WHERE u.id = ?";
 
         try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setInt(1, id);
@@ -394,23 +394,23 @@ public class UserService implements InterfaceCRUD<User> {
                     role.setNom(rs.getString("role_nom"));
 
                     // Création du User avec tous les champs
-                    User user = new User();
-                    user.setId(rs.getInt("id"));
-                    user.setRole(role);
-                    user.setNom(rs.getString("nom"));
-                    user.setPrenom(rs.getString("prenom"));
-                    user.setEmail(rs.getString("email"));
-                    user.setMot_de_passe(rs.getString("mot_de_passe"));
-                    user.setNum_tel(rs.getInt("num_tel"));
-                    user.setAdresse(rs.getString("adresse"));
-                    user.setSpeciality(rs.getString("speciality"));
-                    user.setCategorie_soin(rs.getString("categorie_soin"));
-                    user.setImage(rs.getString("image"));
-                    user.setImageprofile(rs.getString("imageprofile"));
-                    user.setStatut(rs.getString("statut"));
-                    user.setReset_code(rs.getInt("reset_code"));
+                    Utilisateur utilisateur = new Utilisateur();
+                    utilisateur.setId(rs.getInt("id"));
+                    utilisateur.setRole(role);
+                    utilisateur.setNom(rs.getString("nom"));
+                    utilisateur.setPrenom(rs.getString("prenom"));
+                    utilisateur.setEmail(rs.getString("email"));
+                    utilisateur.setMot_de_passe(rs.getString("mot_de_passe"));
+                    utilisateur.setNum_tel(rs.getInt("num_tel"));
+                    utilisateur.setAdresse(rs.getString("adresse"));
+                    utilisateur.setSpeciality(rs.getString("speciality"));
+                    utilisateur.setCategorie_soin(rs.getString("categorie_soin"));
+                    utilisateur.setImage(rs.getString("image"));
+                    utilisateur.setImageprofile(rs.getString("imageprofile"));
+                    utilisateur.setStatut(rs.getString("statut"));
+                    utilisateur.setReset_code(rs.getInt("reset_code"));
 
-                    return user;
+                    return utilisateur;
                 }
             }
         } catch (SQLException e) {
@@ -419,45 +419,45 @@ public class UserService implements InterfaceCRUD<User> {
         return null;
     }
     
-    public void add(User user) {
-        String req = "INSERT INTO user (role_id, nom, prenom, email, mot_de_passe, num_tel, " +
+    public void add(Utilisateur utilisateur) {
+        String req = "INSERT INTO utilisateur (role_id, nom, prenom, email, mot_de_passe, num_tel, " +
                 "adresse, speciality, categorie_soin, image, imageprofile, statut, reset_code) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"; // 13 paramètres
 
         try (PreparedStatement pst =  connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
-            pst.setInt(1, user.getRole().getId());
-            pst.setString(2, user.getNom());
-            pst.setString(3, user.getPrenom());
-            pst.setString(4, user.getEmail());
-            pst.setString(5, user.getMot_de_passe());
-            pst.setInt(6, user.getNum_tel());
-            pst.setString(7, user.getAdresse());
-            pst.setString(8, user.getSpeciality());
-            pst.setString(9, user.getCategorie_soin());
-            pst.setString(10, user.getImage());
-            pst.setString(11, user.getImageprofile());
-            pst.setString(12, user.getStatut());
-            pst.setInt(13, user.getReset_code());
+            pst.setInt(1, utilisateur.getRole().getId());
+            pst.setString(2, utilisateur.getNom());
+            pst.setString(3, utilisateur.getPrenom());
+            pst.setString(4, utilisateur.getEmail());
+            pst.setString(5, utilisateur.getMot_de_passe());
+            pst.setInt(6, utilisateur.getNum_tel());
+            pst.setString(7, utilisateur.getAdresse());
+            pst.setString(8, utilisateur.getSpeciality());
+            pst.setString(9, utilisateur.getCategorie_soin());
+            pst.setString(10, utilisateur.getImage());
+            pst.setString(11, utilisateur.getImageprofile());
+            pst.setString(12, utilisateur.getStatut());
+            pst.setInt(13, utilisateur.getReset_code());
 
             int affectedRows = pst.executeUpdate();
 
             if (affectedRows > 0) {
                 try (ResultSet rs = pst.getGeneratedKeys()) {
                     if (rs.next()) {
-                        user.setId(rs.getInt(1));
+                        utilisateur.setId(rs.getInt(1));
                     }
                 }
             }
 
-            System.out.println("Utilisateur ajouté avec succès ! ID: " + user.getId());
+            System.out.println("Utilisateur ajouté avec succès ! ID: " + utilisateur.getId());
         } catch (SQLException e) {
             System.err.println("Erreur lors de l'ajout de l'utilisateur : " + e.getMessage());
             e.printStackTrace(); // Affichez la stack trace complète pour le débogage
         }
     }
     
-    public void update(User user) {
-        String req = "UPDATE user SET " +
+    public void update(Utilisateur utilisateur) {
+        String req = "UPDATE utilisateur SET " +
                 "role_id = ?, " +
                 "nom = ?, " +
                 "prenom = ?, " +
@@ -475,20 +475,20 @@ public class UserService implements InterfaceCRUD<User> {
 
         try (PreparedStatement pst =  connection.prepareStatement(req)) {
             int i = 1;
-            pst.setInt(i++, user.getRole() != null ? user.getRole().getId() : null);
-            pst.setString(i++, user.getNom());
-            pst.setString(i++, user.getPrenom());
-            pst.setString(i++, user.getEmail());
-            pst.setString(i++, user.getMot_de_passe());
-            pst.setInt(i++, user.getNum_tel());
-            pst.setString(i++, user.getAdresse());
-            pst.setString(i++, user.getSpeciality());
-            pst.setString(i++, user.getCategorie_soin());
-            pst.setString(i++, user.getImage());
-            pst.setString(i++, user.getImageprofile());
-            pst.setString(i++, user.getStatut());
-            pst.setInt(i++, user.getReset_code());
-            pst.setInt(i++, user.getId());
+            pst.setInt(i++, utilisateur.getRole() != null ? utilisateur.getRole().getId() : null);
+            pst.setString(i++, utilisateur.getNom());
+            pst.setString(i++, utilisateur.getPrenom());
+            pst.setString(i++, utilisateur.getEmail());
+            pst.setString(i++, utilisateur.getMot_de_passe());
+            pst.setInt(i++, utilisateur.getNum_tel());
+            pst.setString(i++, utilisateur.getAdresse());
+            pst.setString(i++, utilisateur.getSpeciality());
+            pst.setString(i++, utilisateur.getCategorie_soin());
+            pst.setString(i++, utilisateur.getImage());
+            pst.setString(i++, utilisateur.getImageprofile());
+            pst.setString(i++, utilisateur.getStatut());
+            pst.setInt(i++, utilisateur.getReset_code());
+            pst.setInt(i++, utilisateur.getId());
 
             int affectedRows = pst.executeUpdate();
             System.out.println(affectedRows + " ligne(s) mise(s) à jour");
@@ -498,10 +498,10 @@ public class UserService implements InterfaceCRUD<User> {
     }
 
     
-    public void delete(User user) {
-        String req = "DELETE FROM `user` WHERE `id` = ?";
+    public void delete(Utilisateur utilisateur) {
+        String req = "DELETE FROM `utilisateur` WHERE `id` = ?";
         try (PreparedStatement pst =  connection.prepareStatement(req)) {
-            pst.setInt(1, user.getId());
+            pst.setInt(1, utilisateur.getId());
             pst.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -509,9 +509,9 @@ public class UserService implements InterfaceCRUD<User> {
     }
 
     
-    public List<User> find() {
-        String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id";
-        List<User> users = new ArrayList<>();
+    public List<Utilisateur> find() {
+        String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM utilisateur u LEFT JOIN role r ON u.role_id = r.id";
+        List<Utilisateur> utilisateurs = new ArrayList<>();
 
         try (PreparedStatement pst =  connection.prepareStatement(req);
              ResultSet rs = pst.executeQuery()) {
@@ -523,28 +523,28 @@ public class UserService implements InterfaceCRUD<User> {
                 role.setNom(rs.getString("role_nom"));
 
                 // Création du User avec tous les champs
-                User user = new User();
-                user.setId(rs.getInt("id"));
-                user.setRole(role);
-                user.setNom(rs.getString("nom"));
-                user.setPrenom(rs.getString("prenom"));
-                user.setEmail(rs.getString("email"));
-                user.setMot_de_passe(rs.getString("mot_de_passe"));
-                user.setNum_tel(rs.getInt("num_tel"));
-                user.setAdresse(rs.getString("adresse"));
-                user.setSpeciality(rs.getString("speciality"));
-                user.setCategorie_soin(rs.getString("categorie_soin"));
-                user.setImage(rs.getString("image"));
-                user.setImageprofile(rs.getString("imageprofile"));
-                user.setStatut(rs.getString("statut"));
-                user.setReset_code(rs.getInt("reset_code"));
+                Utilisateur utilisateur = new Utilisateur();
+                utilisateur.setId(rs.getInt("id"));
+                utilisateur.setRole(role);
+                utilisateur.setNom(rs.getString("nom"));
+                utilisateur.setPrenom(rs.getString("prenom"));
+                utilisateur.setEmail(rs.getString("email"));
+                utilisateur.setMot_de_passe(rs.getString("mot_de_passe"));
+                utilisateur.setNum_tel(rs.getInt("num_tel"));
+                utilisateur.setAdresse(rs.getString("adresse"));
+                utilisateur.setSpeciality(rs.getString("speciality"));
+                utilisateur.setCategorie_soin(rs.getString("categorie_soin"));
+                utilisateur.setImage(rs.getString("image"));
+                utilisateur.setImageprofile(rs.getString("imageprofile"));
+                utilisateur.setStatut(rs.getString("statut"));
+                utilisateur.setReset_code(rs.getInt("reset_code"));
 
-                users.add(user);
+                utilisateurs.add(utilisateur);
             }
         } catch (SQLException e) {
             System.err.println("Erreur lors de la récupération des utilisateurs : " + e.getMessage());
         }
-        return users;
+        return utilisateurs;
     }
 
 

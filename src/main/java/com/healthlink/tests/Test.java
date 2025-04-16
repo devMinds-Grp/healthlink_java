@@ -1,6 +1,6 @@
-﻿package com.healthlink.tests;
+package com.healthlink.tests;
 
-import com.healthlink.Entites.User;
+import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Entites.Role;
 import com.healthlink.Services.UserService;
 import com.healthlink.Services.RoleService;
@@ -53,7 +53,7 @@ public class Test {
     private static void addUser() {
         System.out.println("\nAjout d'un nouvel utilisateur:");
 
-        User newUser = new User();
+        Utilisateur newUtilisateur = new Utilisateur();
 
         // Afficher les rôles disponibles et demander à choisir
         List<Role> roles = roleService.find();
@@ -69,48 +69,48 @@ public class Test {
 
         Role selectedRole = new Role();
         selectedRole.setId(roleId);
-        newUser.setRole(selectedRole);
+        newUtilisateur.setRole(selectedRole);
 
         System.out.print("Nom: ");
-        newUser.setNom(scanner.nextLine());
+        newUtilisateur.setNom(scanner.nextLine());
 
         System.out.print("Prénom: ");
-        newUser.setPrenom(scanner.nextLine());
+        newUtilisateur.setPrenom(scanner.nextLine());
 
         System.out.print("Email: ");
-        newUser.setEmail(scanner.nextLine());
+        newUtilisateur.setEmail(scanner.nextLine());
 
         System.out.print("Mot de passe: ");
-        newUser.setMot_de_passe(scanner.nextLine());
+        newUtilisateur.setMot_de_passe(scanner.nextLine());
 
         System.out.print("Numéro de téléphone: ");
-        newUser.setNum_tel(scanner.nextInt());
+        newUtilisateur.setNum_tel(scanner.nextInt());
         scanner.nextLine();
 
         System.out.print("Adresse: ");
-        newUser.setAdresse(scanner.nextLine());
+        newUtilisateur.setAdresse(scanner.nextLine());
 
         System.out.print("Spécialité: ");
-        newUser.setSpeciality(scanner.nextLine());
+        newUtilisateur.setSpeciality(scanner.nextLine());
 
         System.out.print("Catégorie de soin: ");
-        newUser.setCategorie_soin(scanner.nextLine());
+        newUtilisateur.setCategorie_soin(scanner.nextLine());
 
         System.out.print("Image ID: ");
-        newUser.setImage(scanner.nextLine());
+        newUtilisateur.setImage(scanner.nextLine());
 
         System.out.print("Image Profile ID: ");
-        newUser.setImageprofile(scanner.nextLine());
+        newUtilisateur.setImageprofile(scanner.nextLine());
         scanner.nextLine();
 
         System.out.print("Statut: ");
-        newUser.setStatut(scanner.nextLine());
+        newUtilisateur.setStatut(scanner.nextLine());
 
         System.out.print("Reset Code: ");
-        newUser.setReset_code(scanner.nextInt());
+        newUtilisateur.setReset_code(scanner.nextInt());
         scanner.nextLine();
 
-        userService.add(newUser);
+        userService.add(newUtilisateur);
         System.out.println("Utilisateur ajouté avec succès!");
     }
 
@@ -123,8 +123,8 @@ public class Test {
         scanner.nextLine();
 
         // Récupérer l'utilisateur existant
-        User existingUser = userService.findById(id);
-        if (existingUser == null) {
+        Utilisateur existingUtilisateur = userService.findById(id);
+        if (existingUtilisateur == null) {
             System.out.println("Utilisateur non trouvé!");
             return;
         }
@@ -140,82 +140,82 @@ public class Test {
         if (!roleInput.isEmpty()) {
             Role newRole = new Role();
             newRole.setId(Integer.parseInt(roleInput));
-            existingUser.setRole(newRole);
+            existingUtilisateur.setRole(newRole);
         }
 
-        System.out.print("Nouveau nom (" + existingUser.getNom() + ") : ");
+        System.out.print("Nouveau nom (" + existingUtilisateur.getNom() + ") : ");
         String nom = scanner.nextLine();
         if (!nom.isEmpty()) {
-            existingUser.setNom(nom);
+            existingUtilisateur.setNom(nom);
         }
 
-        System.out.print("Nouveau prénom (" + existingUser.getPrenom() + ") : ");
+        System.out.print("Nouveau prénom (" + existingUtilisateur.getPrenom() + ") : ");
         String prenom = scanner.nextLine();
         if (!prenom.isEmpty()) {
-            existingUser.setPrenom(prenom);
+            existingUtilisateur.setPrenom(prenom);
         }
 
-        System.out.print("Nouvel email (" + existingUser.getEmail() + ") : ");
+        System.out.print("Nouvel email (" + existingUtilisateur.getEmail() + ") : ");
         String email = scanner.nextLine();
         if (!email.isEmpty()) {
-            existingUser.setEmail(email);
+            existingUtilisateur.setEmail(email);
         }
 
         System.out.print("Nouveau mot de passe: ");
         String password = scanner.nextLine();
         if (!password.isEmpty()) {
-            existingUser.setMot_de_passe(password);
+            existingUtilisateur.setMot_de_passe(password);
         }
 
-        System.out.print("Nouveau numéro de téléphone (" + existingUser.getNum_tel() + ") : ");
+        System.out.print("Nouveau numéro de téléphone (" + existingUtilisateur.getNum_tel() + ") : ");
         String telInput = scanner.nextLine();
         if (!telInput.isEmpty()) {
-            existingUser.setNum_tel(Integer.parseInt(telInput));
+            existingUtilisateur.setNum_tel(Integer.parseInt(telInput));
         }
 
-        System.out.print("Nouvelle adresse (" + existingUser.getAdresse() + ") : ");
+        System.out.print("Nouvelle adresse (" + existingUtilisateur.getAdresse() + ") : ");
         String adresse = scanner.nextLine();
         if (!adresse.isEmpty()) {
-            existingUser.setAdresse(adresse);
+            existingUtilisateur.setAdresse(adresse);
         }
 
-        System.out.print("Nouvelle spécialité (" + existingUser.getSpeciality() + ") : ");
+        System.out.print("Nouvelle spécialité (" + existingUtilisateur.getSpeciality() + ") : ");
         String speciality = scanner.nextLine();
         if (!speciality.isEmpty()) {
-            existingUser.setSpeciality(speciality);
+            existingUtilisateur.setSpeciality(speciality);
         }
 
-        System.out.print("Nouvelle catégorie de soin (" + existingUser.getCategorie_soin() + ") : ");
+        System.out.print("Nouvelle catégorie de soin (" + existingUtilisateur.getCategorie_soin() + ") : ");
         String categorieSoin = scanner.nextLine();
         if (!categorieSoin.isEmpty()) {
-            existingUser.setCategorie_soin(categorieSoin);
+            existingUtilisateur.setCategorie_soin(categorieSoin);
         }
 
-        System.out.print("Nouvel Image ID (" + existingUser.getImage() + ") : ");
+        System.out.print("Nouvel Image ID (" + existingUtilisateur.getImage() + ") : ");
         String imageInput = scanner.nextLine();
         if (!imageInput.isEmpty()) {
-            existingUser.setImage(imageInput);
+            existingUtilisateur.setImage(imageInput);
         }
 
-        System.out.print("Nouvel Image Profile ID (" + existingUser.getImageprofile() + ") : ");
+        System.out.print("Nouvel Image Profile ID (" + existingUtilisateur.getImageprofile() + ") : ");
         String imageProfileInput = scanner.nextLine();
         if (!imageProfileInput.isEmpty()) {
-            existingUser.setImageprofile(imageProfileInput);
+            existingUtilisateur.setImageprofile(imageProfileInput);
         }
 
-        System.out.print("Nouveau statut (" + existingUser.getStatut() + ") : ");
+        System.out.print("Nouveau statut (" + existingUtilisateur.getStatut() + ") : ");
         String statut = scanner.nextLine();
         if (!statut.isEmpty()) {
-            existingUser.setStatut(statut);
+            existingUtilisateur.setStatut(statut);
         }
 
-        System.out.print("Nouveau reset code (" + existingUser.getReset_code() + ") : ");
+        System.out.print("Nouveau reset code (" + existingUtilisateur.getReset_code() + ") : ");
         String resetCodeInput = scanner.nextLine();
         if (!resetCodeInput.isEmpty()) {
-            existingUser.setReset_code(Integer.parseInt(resetCodeInput));
+            existingUtilisateur.setReset_code(Integer.parseInt(resetCodeInput));
         }
 
-        userService.update(existingUser);
+        userService.update(existingUtilisateur);
         System.out.println("Utilisateur modifié avec succès!");
     }
 
@@ -227,21 +227,21 @@ public class Test {
         int id = scanner.nextInt();
         scanner.nextLine();
 
-        User userToDelete = userService.findById(id);
-        if (userToDelete == null) {
+        Utilisateur utilisateurToDelete = userService.findById(id);
+        if (utilisateurToDelete == null) {
             System.out.println("Utilisateur non trouvé!");
             return;
         }
 
-        userService.delete(userToDelete);
+        userService.delete(utilisateurToDelete);
         System.out.println("Utilisateur supprimé avec succès!");
     }
 
     private static void displayUsers() {
         System.out.println("\n=== LISTE DES UTILISATEURS ===");
-        List<User> users = userService.find();
+        List<Utilisateur> utilisateurs = userService.find();
 
-        if (users.isEmpty()) {
+        if (utilisateurs.isEmpty()) {
             System.out.println("Aucun utilisateur trouvé.");
         } else {
             // En-tête du tableau
@@ -249,21 +249,21 @@ public class Test {
             System.out.println("| ID |        Nom          |       Prénom        |        Email        |        Rôle         |      Spécialité     |");
             System.out.println("+----+---------------------+---------------------+---------------------+---------------------+---------------------+");
 
-            for (User user : users) {
-                String roleName = (user.getRole() != null) ? user.getRole().getNom() : "Non défini";
-                String speciality = (user.getSpeciality() != null) ? user.getSpeciality() : "N/A";
+            for (Utilisateur utilisateur : utilisateurs) {
+                String roleName = (utilisateur.getRole() != null) ? utilisateur.getRole().getNom() : "Non défini";
+                String speciality = (utilisateur.getSpeciality() != null) ? utilisateur.getSpeciality() : "N/A";
 
                 System.out.printf("| %-2d | %-19s | %-19s | %-19s | %-19s | %-19s |%n",
-                        user.getId(),
-                        truncate(user.getNom(), 19),
-                        truncate(user.getPrenom(), 19),
-                        truncate(user.getEmail(), 19),
+                        utilisateur.getId(),
+                        truncate(utilisateur.getNom(), 19),
+                        truncate(utilisateur.getPrenom(), 19),
+                        truncate(utilisateur.getEmail(), 19),
                         truncate(roleName, 19),
                         truncate(speciality, 19));
             }
 
             System.out.println("+----+---------------------+---------------------+---------------------+---------------------+---------------------+");
-            System.out.println("Total: " + users.size() + " utilisateur(s)");
+            System.out.println("Total: " + utilisateurs.size() + " utilisateur(s)");
         }
     }
 

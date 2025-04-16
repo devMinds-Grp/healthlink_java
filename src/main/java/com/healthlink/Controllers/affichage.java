@@ -1,6 +1,6 @@
 package com.healthlink.Controllers;
 
-import com.healthlink.Entites.User;
+import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.UserService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,36 +26,36 @@ public class affichage implements Initializable {
 
     private UserService userService = new UserService();
 
-    private final ObservableList<User> patientList = FXCollections.observableArrayList();
-    private final ObservableList<User> medecinList = FXCollections.observableArrayList();
-    private final ObservableList<User> soignantList = FXCollections.observableArrayList();
+    private final ObservableList<Utilisateur> patientList = FXCollections.observableArrayList();
+    private final ObservableList<Utilisateur> medecinList = FXCollections.observableArrayList();
+    private final ObservableList<Utilisateur> soignantList = FXCollections.observableArrayList();
 
     // Éléments pour les patients
-    @FXML private TableView<User> patientTableView;
-    @FXML private TableColumn<User, String> nomPatientColumn;
-    @FXML private TableColumn<User, String> prenomPatientColumn;
-    @FXML private TableColumn<User, String> emailPatientColumn;
-    @FXML private TableColumn<User, Integer> numTelPatientColumn;
-    @FXML private TableColumn<User, Void> actionsPatientColumn;
+    @FXML private TableView<Utilisateur> patientTableView;
+    @FXML private TableColumn<Utilisateur, String> nomPatientColumn;
+    @FXML private TableColumn<Utilisateur, String> prenomPatientColumn;
+    @FXML private TableColumn<Utilisateur, String> emailPatientColumn;
+    @FXML private TableColumn<Utilisateur, Integer> numTelPatientColumn;
+    @FXML private TableColumn<Utilisateur, Void> actionsPatientColumn;
 
 
     // Éléments pour les médecins
-    @FXML private TableView<User> medecinTableView;
-    @FXML private TableColumn<User, String> nomMedecinColumn;
-    @FXML private TableColumn<User, String> prenomMedecinColumn;
-    @FXML private TableColumn<User, String> emailMedecinColumn;
-    @FXML private TableColumn<User, Integer> numTelMedecinColumn;
-    @FXML private TableColumn<User, String> specialiteColumn;
-    @FXML private TableColumn<User, String> adresseColumn;
-    @FXML private TableColumn<User, Void> actionsMedecinColumn;
+    @FXML private TableView<Utilisateur> medecinTableView;
+    @FXML private TableColumn<Utilisateur, String> nomMedecinColumn;
+    @FXML private TableColumn<Utilisateur, String> prenomMedecinColumn;
+    @FXML private TableColumn<Utilisateur, String> emailMedecinColumn;
+    @FXML private TableColumn<Utilisateur, Integer> numTelMedecinColumn;
+    @FXML private TableColumn<Utilisateur, String> specialiteColumn;
+    @FXML private TableColumn<Utilisateur, String> adresseColumn;
+    @FXML private TableColumn<Utilisateur, Void> actionsMedecinColumn;
 
     // Éléments pour les soignants
-    @FXML private TableView<User> soignantTableView;
-    @FXML private TableColumn<User, String> nomSoignantColumn;
-    @FXML private TableColumn<User, String> prenomSoignantColumn;
-    @FXML private TableColumn<User, String> emailSoignantColumn;
-    @FXML private TableColumn<User, String> categorieSoinColumn;
-    @FXML private TableColumn<User, Void> actionsSoignantColumn;
+    @FXML private TableView<Utilisateur> soignantTableView;
+    @FXML private TableColumn<Utilisateur, String> nomSoignantColumn;
+    @FXML private TableColumn<Utilisateur, String> prenomSoignantColumn;
+    @FXML private TableColumn<Utilisateur, String> emailSoignantColumn;
+    @FXML private TableColumn<Utilisateur, String> categorieSoinColumn;
+    @FXML private TableColumn<Utilisateur, Void> actionsSoignantColumn;
 
 
 
@@ -109,17 +109,17 @@ public class affichage implements Initializable {
 
                 // Actions des boutons
                 btnVoir.setOnAction(event -> {
-                    User patient = getTableView().getItems().get(getIndex());
+                    Utilisateur patient = getTableView().getItems().get(getIndex());
                     voirPatient(patient);
                 });
 
                 btnModifier.setOnAction(event -> {
-                    User patient = getTableView().getItems().get(getIndex());
+                    Utilisateur patient = getTableView().getItems().get(getIndex());
                     modifierPatient(patient);
                 });
 
                 btnSupprimer.setOnAction(event -> {
-                    User patient = getTableView().getItems().get(getIndex());
+                    Utilisateur patient = getTableView().getItems().get(getIndex());
                     supprimerPatient(patient);
                 });
             }
@@ -135,7 +135,7 @@ public class affichage implements Initializable {
 
 
 
-    private void voirPatient(User patient) {
+    private void voirPatient(Utilisateur patient) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/details.fxml"));
             Parent root = loader.load();
@@ -153,7 +153,7 @@ public class affichage implements Initializable {
         }
     }
 
-    private void modifierPatient(User patient) {
+    private void modifierPatient(Utilisateur patient) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/modifier.fxml"));
             Parent root = loader.load();
@@ -173,7 +173,7 @@ public class affichage implements Initializable {
         }
     }
 
-    private void supprimerPatient(User patient) {
+    private void supprimerPatient(Utilisateur patient) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation de suppression");
         alert.setHeaderText("Supprimer le patient");
@@ -224,21 +224,21 @@ public class affichage implements Initializable {
 
     private void loadPatients() {
         patientList.clear();
-        List<User> patients = userService.findAllPatients();
+        List<Utilisateur> patients = userService.findAllPatients();
         patientList.addAll(patients);
         patientTableView.setItems(patientList);
     }
 
     private void loadMedecins() {
         medecinList.clear();
-        List<User> medecins = userService.findAllMedecins();
+        List<Utilisateur> medecins = userService.findAllMedecins();
         medecinList.addAll(medecins);
         medecinTableView.setItems(medecinList);
     }
 
     private void loadSoignants() {
         soignantList.clear();
-        List<User> soignants = userService.findAllSoignants();
+        List<Utilisateur> soignants = userService.findAllSoignants();
         soignantList.addAll(soignants);
         soignantTableView.setItems(soignantList);
     }
@@ -364,7 +364,7 @@ public class affichage implements Initializable {
     }
 
     private void setupMedecinActionsColumn() {
-        actionsMedecinColumn.setCellFactory(param -> new TableCell<User, Void>() {
+        actionsMedecinColumn.setCellFactory(param -> new TableCell<Utilisateur, Void>() {
             private final Button btnVoir = new Button("Voir");
             private final Button btnModifier = new Button("Modifier");
             private final Button btnSupprimer = new Button("Supprimer");
@@ -378,17 +378,17 @@ public class affichage implements Initializable {
                 btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
 
                 btnVoir.setOnAction(event -> {
-                    User medecin = getTableView().getItems().get(getIndex());
+                    Utilisateur medecin = getTableView().getItems().get(getIndex());
                     voirMedecin(medecin);
                 });
 
                 btnModifier.setOnAction(event -> {
-                    User medecin = getTableView().getItems().get(getIndex());
+                    Utilisateur medecin = getTableView().getItems().get(getIndex());
                     modifierMedecin(medecin);
                 });
 
                 btnSupprimer.setOnAction(event -> {
-                    User medecin = getTableView().getItems().get(getIndex());
+                    Utilisateur medecin = getTableView().getItems().get(getIndex());
                     supprimerMedecin(medecin);
                 });
             }
@@ -401,7 +401,7 @@ public class affichage implements Initializable {
         });
     }
 
-    private void voirMedecin(User medecin) {
+    private void voirMedecin(Utilisateur medecin) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/detailsMedecin.fxml"));
             Parent root = loader.load();
@@ -419,7 +419,7 @@ public class affichage implements Initializable {
         }
     }
 
-    private void modifierMedecin(User medecin) {
+    private void modifierMedecin(Utilisateur medecin) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/modifierMedecin.fxml"));
             Parent root = loader.load();
@@ -439,7 +439,7 @@ public class affichage implements Initializable {
         }
     }
 
-    private void supprimerMedecin(User medecin) {
+    private void supprimerMedecin(Utilisateur medecin) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation de suppression");
         alert.setHeaderText("Supprimer le médecin");

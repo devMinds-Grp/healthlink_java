@@ -1,7 +1,7 @@
 package com.healthlink.Services;
 
 import com.healthlink.Entites.Role;
-import com.healthlink.Entites.User;
+import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Interfaces.InterfaceCRUD;
 import com.healthlink.utils.MyDB;
 
@@ -143,9 +143,9 @@ public class RoleService implements InterfaceCRUD<Role> {
 
 
      
-    public List<User> findAllPatients() {
+    public List<Utilisateur> findAllPatients() {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 3";
-        List<User> patients = new ArrayList<>();
+        List<Utilisateur> patients = new ArrayList<>();
 
         try (PreparedStatement pst =  connection.prepareStatement(req);
              ResultSet rs = pst.executeQuery()) {
@@ -159,26 +159,26 @@ public class RoleService implements InterfaceCRUD<Role> {
         return patients;
     }
 
-    private User extractPatientFromResultSet(ResultSet rs) throws SQLException {
+    private Utilisateur extractPatientFromResultSet(ResultSet rs) throws SQLException {
         Role role = new Role();
         role.setId(rs.getInt("role_id"));
         role.setNom(rs.getString("role_nom"));
 
-        User user = new User();
-        user.setId(rs.getInt("id"));
-        user.setRole(role);
-        user.setNom(rs.getString("nom"));
-        user.setPrenom(rs.getString("prenom"));
-        user.setEmail(rs.getString("email"));
-        user.setNum_tel(rs.getInt("num_tel"));
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setId(rs.getInt("id"));
+        utilisateur.setRole(role);
+        utilisateur.setNom(rs.getString("nom"));
+        utilisateur.setPrenom(rs.getString("prenom"));
+        utilisateur.setEmail(rs.getString("email"));
+        utilisateur.setNum_tel(rs.getInt("num_tel"));
         // On ne récupère que les champs nécessaires pour l'affichage
 
-        return user;
+        return utilisateur;
     }
      
-    public List<User> findAllMedecins() {
+    public List<Utilisateur> findAllMedecins() {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 2";
-        List<User> medecins = new ArrayList<>();
+        List<Utilisateur> medecins = new ArrayList<>();
 
         try (PreparedStatement pst =  connection.prepareStatement(req);
              ResultSet rs = pst.executeQuery()) {
@@ -192,12 +192,12 @@ public class RoleService implements InterfaceCRUD<Role> {
         return medecins;
     }
 
-    private User extractMedecinFromResultSet(ResultSet rs) throws SQLException {
+    private Utilisateur extractMedecinFromResultSet(ResultSet rs) throws SQLException {
         Role role = new Role();
         role.setId(rs.getInt("role_id"));
         role.setNom(rs.getString("role_nom"));
 
-        User medecin = new User();
+        Utilisateur medecin = new Utilisateur();
         medecin.setId(rs.getInt("id"));
         medecin.setRole(role);
         medecin.setNom(rs.getString("nom"));
@@ -210,9 +210,9 @@ public class RoleService implements InterfaceCRUD<Role> {
         return medecin;
     }
      
-    public List<User> findAllSoignants() {
+    public List<Utilisateur> findAllSoignants() {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM user u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 4";
-        List<User> soignants = new ArrayList<>();
+        List<Utilisateur> soignants = new ArrayList<>();
 
         try (PreparedStatement pst =  connection.prepareStatement(req);
              ResultSet rs = pst.executeQuery()) {
@@ -226,12 +226,12 @@ public class RoleService implements InterfaceCRUD<Role> {
         return soignants;
     }
 
-    private User extractSoignantFromResultSet(ResultSet rs) throws SQLException {
+    private Utilisateur extractSoignantFromResultSet(ResultSet rs) throws SQLException {
         Role role = new Role();
         role.setId(rs.getInt("role_id"));
         role.setNom(rs.getString("role_nom"));
 
-        User soignant = new User();
+        Utilisateur soignant = new Utilisateur();
         soignant.setId(rs.getInt("id"));
         soignant.setRole(role);
         soignant.setNom(rs.getString("nom"));

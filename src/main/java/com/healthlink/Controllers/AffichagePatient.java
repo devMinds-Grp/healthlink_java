@@ -1,6 +1,6 @@
 package com.healthlink.Controllers;
 
-import com.healthlink.Entites.User;
+import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.UserService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,15 +24,15 @@ import java.util.ResourceBundle;
 public class AffichagePatient implements Initializable {
 
     private final UserService userService = new UserService();
-    private final ObservableList<User> patientList = FXCollections.observableArrayList();
+    private final ObservableList<Utilisateur> patientList = FXCollections.observableArrayList();
 
     // Éléments pour les patients
-    @FXML private TableView<User> patientTableView;
-    @FXML private TableColumn<User, String> nomPatientColumn;
-    @FXML private TableColumn<User, String> prenomPatientColumn;
-    @FXML private TableColumn<User, String> emailPatientColumn;
-    @FXML private TableColumn<User, Integer> numTelPatientColumn;
-    @FXML private TableColumn<User, Void> actionsPatientColumn;
+    @FXML private TableView<Utilisateur> patientTableView;
+    @FXML private TableColumn<Utilisateur, String> nomPatientColumn;
+    @FXML private TableColumn<Utilisateur, String> prenomPatientColumn;
+    @FXML private TableColumn<Utilisateur, String> emailPatientColumn;
+    @FXML private TableColumn<Utilisateur, Integer> numTelPatientColumn;
+    @FXML private TableColumn<Utilisateur, Void> actionsPatientColumn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -77,12 +77,12 @@ public class AffichagePatient implements Initializable {
 
     private void loadPatients() {
         patientList.clear();
-        List<User> patients = userService.findAllPatients();
+        List<Utilisateur> patients = userService.findAllPatients();
         patientList.addAll(patients);
         patientTableView.setItems(patientList);
     }
 
-    private void voirPatient(User patient) {
+    private void voirPatient(Utilisateur patient) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/details.fxml"));
             Parent root = loader.load();
@@ -100,7 +100,7 @@ public class AffichagePatient implements Initializable {
         }
     }
 
-    private void modifierPatient(User patient) {
+    private void modifierPatient(Utilisateur patient) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/modifier.fxml"));
             Parent root = loader.load();
@@ -120,7 +120,7 @@ public class AffichagePatient implements Initializable {
         }
     }
 
-    private void supprimerPatient(User patient) {
+    private void supprimerPatient(Utilisateur patient) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation de suppression");
         alert.setHeaderText("Supprimer le patient");

@@ -2,7 +2,7 @@ package com.healthlink.Entites;
 
 import java.util.Objects;
 
-public class User {
+public class Utilisateur {
     private int id;
     private Role role;
     private String nom;
@@ -18,9 +18,9 @@ public class User {
     private String statut;
     private int reset_code;
 
-    public User() {}
+    public Utilisateur() {}
 
-    public User(int id, Role role, String nom, String prenom, String email, String mot_de_passe, int num_tel, String adresse, String speciality, String categorie_soin, String image, String imageprofile, String statut, int reset_code) {
+    public Utilisateur(int id, Role role, String nom, String prenom, String email, String mot_de_passe, int num_tel, String adresse, String speciality, String categorie_soin, String image, String imageprofile, String statut, int reset_code) {
         this.id = id;
         this.role = role;
         this.nom = nom;
@@ -37,7 +37,7 @@ public class User {
         this.reset_code = reset_code;
     }
 
-    public User(int id,  String nom, String prenom, String email, String mot_de_passe, int num_tel) {
+    public Utilisateur(int id, String nom, String prenom, String email, String mot_de_passe, int num_tel) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -45,7 +45,7 @@ public class User {
         this.mot_de_passe = mot_de_passe;
         this.num_tel = num_tel;
     }
-    public User(String nom, String prenom, String email, String mot_de_passe, int num_tel, Role role) {
+    public Utilisateur(String nom, String prenom, String email, String mot_de_passe, int num_tel, Role role) {
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
@@ -54,7 +54,7 @@ public class User {
         this.role = role;
     }
 
-    public User(Role role, String nom, String prenom, String email, String mot_de_passe, int num_tel, String adresse, String speciality, String categorie_soin, String image, String imageprofile, String statut, int reset_code) {
+    public Utilisateur(Role role, String nom, String prenom, String email, String mot_de_passe, int num_tel, String adresse, String speciality, String categorie_soin, String image, String imageprofile, String statut, int reset_code) {
         this.role = role;
         this.nom = nom;
         this.prenom = prenom;
@@ -206,21 +206,21 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.id &&
-                num_tel == user.num_tel &&
-                image == user.image &&
-                imageprofile == user.imageprofile &&
-                reset_code == user.reset_code &&
-                Objects.equals(role, user.role) && // Modification ici
-                Objects.equals(nom, user.nom) &&
-                Objects.equals(prenom, user.prenom) &&
-                Objects.equals(email, user.email) &&
-                Objects.equals(mot_de_passe, user.mot_de_passe) &&
-                Objects.equals(adresse, user.adresse) &&
-                Objects.equals(speciality, user.speciality) &&
-                Objects.equals(categorie_soin, user.categorie_soin) &&
-                Objects.equals(statut, user.statut);
+        Utilisateur utilisateur = (Utilisateur) o;
+        return id == utilisateur.id &&
+                num_tel == utilisateur.num_tel &&
+                image == utilisateur.image &&
+                imageprofile == utilisateur.imageprofile &&
+                reset_code == utilisateur.reset_code &&
+                Objects.equals(role, utilisateur.role) && // Modification ici
+                Objects.equals(nom, utilisateur.nom) &&
+                Objects.equals(prenom, utilisateur.prenom) &&
+                Objects.equals(email, utilisateur.email) &&
+                Objects.equals(mot_de_passe, utilisateur.mot_de_passe) &&
+                Objects.equals(adresse, utilisateur.adresse) &&
+                Objects.equals(speciality, utilisateur.speciality) &&
+                Objects.equals(categorie_soin, utilisateur.categorie_soin) &&
+                Objects.equals(statut, utilisateur.statut);
     }
 
     @Override

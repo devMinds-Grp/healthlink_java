@@ -1,7 +1,7 @@
 package com.healthlink.Controllers;
 
 import com.healthlink.Entites.Role;
-import com.healthlink.Entites.User;
+import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.UserService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,8 +10,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 
 public class Ajout {
 
@@ -88,29 +86,29 @@ public class Ajout {
             return;
         }
         try {
-            User user = new User();
-            user.setNom(nomTextField.getText());
-            user.setPrenom(prenomTextField.getText());
-            user.setEmail(emailTextField.getText());
-            user.setMot_de_passe(motdepasseTextField.getText());
-            user.setNum_tel(Integer.parseInt(numtelTextField.getText()));
+            Utilisateur utilisateur = new Utilisateur();
+            utilisateur.setNom(nomTextField.getText());
+            utilisateur.setPrenom(prenomTextField.getText());
+            utilisateur.setEmail(emailTextField.getText());
+            utilisateur.setMot_de_passe(motdepasseTextField.getText());
+            utilisateur.setNum_tel(Integer.parseInt(numtelTextField.getText()));
 
             // Gestion de l'image de profil
             if (fichierImage != null) {
                 // Sauvegarder le chemin de l'image
-                user.setImageprofile(fichierImage.getAbsolutePath());
+                utilisateur.setImageprofile(fichierImage.getAbsolutePath());
 
                 // Optionnel: Copier l'image dans un dossier spécifique
                 String destinationPath = saveProfileImage(fichierImage);
-                user.setImageprofile(destinationPath);
+                utilisateur.setImageprofile(destinationPath);
             }
             // Affecter le rôle "Patient"
             Role rolePatient = new Role();
             rolePatient.setId(3);
-            user.setRole(rolePatient);
+            utilisateur.setRole(rolePatient);
 
             UserService userService = new UserService();
-            userService.addPatient(user);
+            userService.addPatient(utilisateur);
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Succès");
@@ -170,35 +168,35 @@ public class Ajout {
             return;
         }
         try {
-            User user = new User();
-            user.setNom(nomTextField.getText());
-            user.setPrenom(prenomTextField.getText());
-            user.setEmail(emailTextField.getText());
-            user.setMot_de_passe(motdepasseTextField.getText());
-            user.setNum_tel(Integer.parseInt(numtelTextField.getText()));
-            user.setAdresse(adresseTextField.getText());
-            user.setSpeciality(specialiteTextField.getText()); // Utilisation du champ diplôme comme spécialité
+            Utilisateur utilisateur = new Utilisateur();
+            utilisateur.setNom(nomTextField.getText());
+            utilisateur.setPrenom(prenomTextField.getText());
+            utilisateur.setEmail(emailTextField.getText());
+            utilisateur.setMot_de_passe(motdepasseTextField.getText());
+            utilisateur.setNum_tel(Integer.parseInt(numtelTextField.getText()));
+            utilisateur.setAdresse(adresseTextField.getText());
+            utilisateur.setSpeciality(specialiteTextField.getText()); // Utilisation du champ diplôme comme spécialité
 
             // Gestion de l'image de profil
             if (fichierImage != null) {
                 // Sauvegarder le chemin de l'image
-                user.setImageprofile(fichierImage.getAbsolutePath());
+                utilisateur.setImageprofile(fichierImage.getAbsolutePath());
 
                 // Optionnel: Copier l'image dans un dossier spécifique
                 String destinationPath = saveProfileImage(fichierImage);
-                user.setImageprofile(destinationPath);
+                utilisateur.setImageprofile(destinationPath);
             }
             if (fichierDiplome != null) {
                 String diplomePath = saveDiplome(fichierDiplome);
-                user.setImage(diplomePath); // Utilisez la variable diplomePath qui vient d'être créée
+                utilisateur.setImage(diplomePath); // Utilisez la variable diplomePath qui vient d'être créée
             }
             // Affecter le rôle "Médecin"
             Role roleMedecin = new Role();
             roleMedecin.setId(2); // ID 2 pour médecin
-            user.setRole(roleMedecin);
+            utilisateur.setRole(roleMedecin);
 
             UserService userService = new UserService();
-            userService.addMedecin(user);
+            userService.addMedecin(utilisateur);
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Succès");
@@ -238,22 +236,22 @@ public class Ajout {
         }
         try {
             // Création de l'objet User avec les données du formulaire
-            User user = new User();
-            user.setNom(nomTextField.getText());
-            user.setPrenom(prenomTextField.getText());
-            user.setEmail(emailTextField.getText());
-            user.setMot_de_passe(motdepasseTextField.getText());
-            user.setCategorie_soin(specialiteComboBox.getValue());
+            Utilisateur utilisateur = new Utilisateur();
+            utilisateur.setNom(nomTextField.getText());
+            utilisateur.setPrenom(prenomTextField.getText());
+            utilisateur.setEmail(emailTextField.getText());
+            utilisateur.setMot_de_passe(motdepasseTextField.getText());
+            utilisateur.setCategorie_soin(specialiteComboBox.getValue());
 
 
             // Gestion de l'image de profil
             if (fichierImage != null) {
                 // Sauvegarder le chemin de l'image
-                user.setImageprofile(fichierImage.getAbsolutePath());
+                utilisateur.setImageprofile(fichierImage.getAbsolutePath());
 
                 // Optionnel: Copier l'image dans un dossier spécifique
                 String destinationPath = saveProfileImage(fichierImage);
-                user.setImageprofile(destinationPath);
+                utilisateur.setImageprofile(destinationPath);
             }
 
             // Gestion du diplôme
@@ -265,18 +263,18 @@ public class Ajout {
 //            }
             if (fichierDiplome != null) {
                 String diplomePath = saveDiplome(fichierDiplome);
-                user.setImage(diplomePath); // Utilisez la variable diplomePath qui vient d'être créée
+                utilisateur.setImage(diplomePath); // Utilisez la variable diplomePath qui vient d'être créée
             }
 
 
             // Définition du rôle Soignant (ID 4)
             Role roleSoignant = new Role();
             roleSoignant.setId(4);
-            user.setRole(roleSoignant);
+            utilisateur.setRole(roleSoignant);
 
             // Appel du service pour ajouter le soignant
             UserService userService = new UserService();
-            userService.addSoignant(user);
+            userService.addSoignant(utilisateur);
 
             // Affichage du message de succès
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

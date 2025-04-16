@@ -1,6 +1,6 @@
 package com.healthlink.Controllers;
 
-import com.healthlink.Entites.User;
+import com.healthlink.Entites.Utilisateur;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Alert;
@@ -14,7 +14,7 @@ public class DetailsMedecin {
     @FXML private Label specialiteLabel;
     @FXML private Label adresseLabel;
     @FXML private Label nomDiplomeLabel;
-    public void initData(User medecin) {
+    public void initData(Utilisateur medecin) {
         try {
             nomLabel.setText(medecin.getNom());
             prenomLabel.setText(medecin.getPrenom());

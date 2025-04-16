@@ -1,5 +1,4 @@
 package com.healthlink.Interfaces;
-import com.healthlink.Entites.User;
 
 import java.util.List;
 

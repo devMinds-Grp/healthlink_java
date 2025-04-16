@@ -23,7 +23,7 @@ public class MainFX extends Application {
         }
 
         // Load FXML
-        Parent root = FXMLLoader.load(getClass().getResource("/Liste_categories.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/views/Prescription/list_prescription.fxml"));
         primaryStage.setTitle("Care Management System");
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();

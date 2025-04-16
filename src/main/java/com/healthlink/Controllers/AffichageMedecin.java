@@ -1,6 +1,6 @@
 package com.healthlink.Controllers;
 
-import com.healthlink.Entites.User;
+import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.UserService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,17 +24,17 @@ import java.util.ResourceBundle;
 public class AffichageMedecin implements Initializable {
 
     private final UserService userService = new UserService();
-    private final ObservableList<User> medecinList = FXCollections.observableArrayList();
+    private final ObservableList<Utilisateur> medecinList = FXCollections.observableArrayList();
 
     // Éléments pour les médecins
-    @FXML private TableView<User> medecinTableView;
-    @FXML private TableColumn<User, String> nomMedecinColumn;
-    @FXML private TableColumn<User, String> prenomMedecinColumn;
-    @FXML private TableColumn<User, String> emailMedecinColumn;
-    @FXML private TableColumn<User, Integer> numTelMedecinColumn;
-    @FXML private TableColumn<User, String> specialiteColumn;
-    @FXML private TableColumn<User, String> adresseColumn;
-    @FXML private TableColumn<User, Void> actionsMedecinColumn;
+    @FXML private TableView<Utilisateur> medecinTableView;
+    @FXML private TableColumn<Utilisateur, String> nomMedecinColumn;
+    @FXML private TableColumn<Utilisateur, String> prenomMedecinColumn;
+    @FXML private TableColumn<Utilisateur, String> emailMedecinColumn;
+    @FXML private TableColumn<Utilisateur, Integer> numTelMedecinColumn;
+    @FXML private TableColumn<Utilisateur, String> specialiteColumn;
+    @FXML private TableColumn<Utilisateur, String> adresseColumn;
+    @FXML private TableColumn<Utilisateur, Void> actionsMedecinColumn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -82,7 +82,7 @@ public class AffichageMedecin implements Initializable {
 
     private void loadMedecins() {
         medecinList.clear();
-        List<User> medecins = userService.findAllMedecins();
+        List<Utilisateur> medecins = userService.findAllMedecins();
         medecinList.addAll(medecins);
         medecinTableView.setItems(medecinList);
     }
@@ -154,7 +154,7 @@ public class AffichageMedecin implements Initializable {
         }
     }
 
-    private void voirMedecin(User medecin) {
+    private void voirMedecin(Utilisateur medecin) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/detailsMedecin.fxml"));
             Parent root = loader.load();
@@ -172,7 +172,7 @@ public class AffichageMedecin implements Initializable {
         }
     }
 
-    private void modifierMedecin(User medecin) {
+    private void modifierMedecin(Utilisateur medecin) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/modifierMedecin.fxml"));
             Parent root = loader.load();
@@ -192,7 +192,7 @@ public class AffichageMedecin implements Initializable {
         }
     }
 
-    private void supprimerMedecin(User medecin) {
+    private void supprimerMedecin(Utilisateur medecin) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation de suppression");
         alert.setHeaderText("Supprimer le médecin");
