@@ -3,11 +3,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.shape.Rectangle?>
-
+<?import javafx.scene.text.Font?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <AnchorPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.healthlink.Controllers.ModifierSoignant">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.healthlink.Controllers.User.ModifierSoignant">
 
     <!-- Titre -->
     <Label layoutX="220.0" layoutY="60.0" text="Modifier Soignant" style="-fx-font-weight: bold;">
@@ -36,15 +36,50 @@
             <TextField fx:id="emailField" promptText="Ex. amenichakroun62@gmail.com"/>
         </VBox>
 
+        <VBox spacing="5.0">
+            <Label text="Mot de passe" style="-fx-font-weight: bold;"/>
+            <PasswordField fx:id="motdepasseTextField" promptText="Ex. Amení:123"/>
+        </VBox>
+
         <!-- Champ Catégorie -->
         <VBox spacing="5.0">
-            <Label text="Catégorie de soin*" style="-fx-font-weight: bold;"/>
-            <TextField fx:id="categorieField" promptText="Ex. Kinésithérapeute"/>
+            <Label text="Categorie soin" style="-fx-font-weight: bold;"/>
+            <ComboBox fx:id="specialiteComboBox" promptText="Choisir une spécialité">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Kiné"/>
+                        <String fx:value="Infirmier"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+        </VBox>
+
+        <!-- Champ Diplôme -->
+        <VBox spacing="5.0">
+            <Label text="Diplôme" style="-fx-font-weight: bold;"/>
+            <HBox spacing="10.0" alignment="CENTER_LEFT">
+                <Button fx:id="choisirDiplomeButton" text="Choisir un fichier"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white;"
+                        onAction="#handleChoisirDiplome"/>
+                <Label fx:id="nomDiplomeLabel" text="Aucun fichier choisi"
+                       style="-fx-font-style: italic; -fx-text-fill: #666;"/>
+            </HBox>
+        </VBox>
+
+        <!-- Champ Image de profil -->
+        <VBox spacing="5.0">
+            <Label text="Image de profil" style="-fx-font-weight: bold;"/>
+            <Button fx:id="choisirImageButton" text="Choisir un fichier"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white;"
+                    onAction="#handleChoisirImage"/>
+            <Label fx:id="nomFichierLabel" text="Aucun fichier choisi"
+                   style="-fx-font-style: italic; -fx-text-fill: #666;"/>
         </VBox>
 
 
-        <!-- Boutons -->
-        <HBox spacing="20.0" alignment="CENTER_RIGHT" style="-fx-padding: 20 0 0 0;">
+
+    <!-- Boutons -->
+        <HBox  spacing="20.0" alignment="CENTER_RIGHT" style="-fx-padding: 20 20 60 50;">
             <Button text="Annuler" onAction="#handleCancel"
                     style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 4; -fx-padding: 8 20;"/>
             <Button text="Enregistrer" onAction="#handleSave"

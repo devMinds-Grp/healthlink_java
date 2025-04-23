@@ -129,14 +129,16 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
 
     // Méthode pour mettre à jour un patient
     public void updatePatient(Utilisateur patient) {
-        String req = "UPDATE utilisateur SET nom = ?, prenom = ?, email = ?, num_tel = ? WHERE id = ? AND role_id = 3";
+        String req = "UPDATE utilisateur SET nom = ?, prenom = ?, email = ?, num_tel = ?,mot_de_passe = ?, imageprofile = ?  WHERE id = ? AND role_id = 3";
 
         try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setString(1, patient.getNom());
             pst.setString(2, patient.getPrenom());
             pst.setString(3, patient.getEmail());
             pst.setInt(4, patient.getNum_tel());
-            pst.setInt(5, patient.getId());
+            pst.setString(5, patient.getMot_de_passe());
+            pst.setString(6, patient.getImageprofile());
+            pst.setInt(7, patient.getId());
 
             int affectedRows = pst.executeUpdate();
             System.out.println(affectedRows + " ligne(s) mise(s) à jour");
@@ -251,7 +253,7 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
     }
     // Méthode pour mettre à jour un médecin
     public void updateMedecin(Utilisateur medecin) {
-        String req = "UPDATE utilisateur SET nom = ?, prenom = ?, email = ?, num_tel = ?, speciality = ?, adresse = ? WHERE id = ? AND role_id = 2";
+        String req = "UPDATE utilisateur SET nom = ?, prenom = ?, email = ?, num_tel = ?, speciality = ?, adresse = ?,imageprofile =? ,image=?,mot_de_passe=? WHERE id = ? AND role_id = 2";
 
         try (PreparedStatement pst =  connection.prepareStatement(req)) {
             pst.setString(1, medecin.getNom());
@@ -260,7 +262,10 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
             pst.setInt(4, medecin.getNum_tel());
             pst.setString(5, medecin.getSpeciality());
             pst.setString(6, medecin.getAdresse());
-            pst.setInt(7, medecin.getId());
+            pst.setString(7, medecin.getImageprofile());
+            pst.setString(8, medecin.getImage());
+            pst.setString(9, medecin.getMot_de_passe());
+            pst.setInt(10, medecin.getId());
 
             int affectedRows = pst.executeUpdate();
             System.out.println(affectedRows + " ligne(s) mise(s) à jour");
@@ -356,7 +361,7 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
 
     public void updateSoignant(Utilisateur soignant) {
         String req = "UPDATE utilisateur SET " +
-                "nom = ?, prenom = ?, email = ?, categorie_soin = ?, image = ?, imageprofile = ? " +
+                "nom = ?, prenom = ?, email = ?, categorie_soin = ?,imageprofile =? ,image=?,mot_de_passe=?" +
                 "WHERE id = ? AND role_id = 4";
 
         try (PreparedStatement pst =  connection.prepareStatement(req)) {
@@ -364,9 +369,10 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
             pst.setString(2, soignant.getPrenom());
             pst.setString(3, soignant.getEmail());
             pst.setString(4, soignant.getCategorie_soin());
-            pst.setString(5, soignant.getImage());
-            pst.setString(6, soignant.getImageprofile());
-            pst.setInt(7, soignant.getId());
+            pst.setString(5, soignant.getImageprofile());
+            pst.setString(6, soignant.getImage());
+            pst.setString(7, soignant.getMot_de_passe());
+            pst.setInt(8, soignant.getId());
 
             int rowsAffected = pst.executeUpdate();
             if (rowsAffected > 0) {
@@ -546,6 +552,69 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
         }
         return utilisateurs;
     }
+    public List<Utilisateur> findEnAttente() {
+        String req = "SELECT u.*, r.id as role_id, r.nom as role_nom " +
+                "FROM utilisateur u " +
+                "LEFT JOIN role r ON u.role_id = r.id " +
+                "WHERE u.statut = 'en attente'";
+
+        List<Utilisateur> utilisateurs = new ArrayList<>();
+
+        try (PreparedStatement pst = connection.prepareStatement(req);
+             ResultSet rs = pst.executeQuery()) {
+
+            while (rs.next()) {
+                // Création du Role
+                Role role = new Role();
+                role.setId(rs.getInt("role_id"));
+                role.setNom(rs.getString("role_nom"));
+
+                // Création du User
+                Utilisateur utilisateur = new Utilisateur();
+                utilisateur.setId(rs.getInt("id"));
+                utilisateur.setRole(role);
+                utilisateur.setNom(rs.getString("nom"));
+                utilisateur.setPrenom(rs.getString("prenom"));
+                utilisateur.setEmail(rs.getString("email"));
+                utilisateur.setMot_de_passe(rs.getString("mot_de_passe"));
+                utilisateur.setNum_tel(rs.getInt("num_tel"));
+                utilisateur.setAdresse(rs.getString("adresse"));
+                utilisateur.setSpeciality(rs.getString("speciality"));
+                utilisateur.setCategorie_soin(rs.getString("categorie_soin"));
+                utilisateur.setImage(rs.getString("image"));
+                utilisateur.setImageprofile(rs.getString("imageprofile"));
+                utilisateur.setStatut(rs.getString("statut"));
+                utilisateur.setReset_code(rs.getInt("reset_code"));
+
+                utilisateurs.add(utilisateur);
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération des utilisateurs en attente : " + e.getMessage());
+        }
+
+        return utilisateurs;
+    }
+
+    public void updateStatut(int userId, String newStatut) throws SQLException {
+        String req = "UPDATE utilisateur SET statut = ? WHERE id = ?";
+        try (PreparedStatement pst = connection.prepareStatement(req)) {
+            pst.setString(1, newStatut);
+            pst.setInt(2, userId);
+            pst.executeUpdate();
+        }
+    }
+
+    public void delete(int userId) throws SQLException {
+        String req = "DELETE FROM utilisateur WHERE id = ?";
+        try (PreparedStatement pst = connection.prepareStatement(req)) {
+            pst.setInt(1, userId);
+            pst.executeUpdate();
+        }
+    }
+
+
+
+
 
 
 }

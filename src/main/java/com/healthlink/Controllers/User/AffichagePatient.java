@@ -1,4 +1,4 @@
-package com.healthlink.Controllers;
+package com.healthlink.Controllers.User;
 
 import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.UserService;
@@ -143,8 +143,7 @@ public class AffichagePatient implements Initializable {
     }
 
     @FXML private MenuItem patientsMenuItem;
-    @FXML private MenuItem medecinsMenuItem;
-    @FXML private MenuItem soignantsMenuItem;
+
 
     // Méthode appelée quand on clique sur "Patients"
     @FXML
@@ -162,6 +161,11 @@ public class AffichagePatient implements Initializable {
     private void showSoignantView() {
         loadView("/views/User/listSoignant.fxml");
     }
+    @FXML
+    private void showAttenteView() {
+        loadView("/views/User/enattente.fxml");
+    }
+
 
     // Méthode pour charger les différentes vues
     private void loadView(String fxmlPath) {

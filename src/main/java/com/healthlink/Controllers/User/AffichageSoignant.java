@@ -1,4 +1,4 @@
-package com.healthlink.Controllers;
+package com.healthlink.Controllers.User;
 
 import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.UserService;
@@ -121,6 +121,10 @@ public class AffichageSoignant implements Initializable {
         loadView("/views/User/listSoignant.fxml");
     }
 
+    @FXML
+    private void showAttenteView() {
+        loadView("/views/User/enattente.fxml");
+    }
     private void loadView(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));

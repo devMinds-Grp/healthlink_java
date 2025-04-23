@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.healthlink.Controllers.User.Authentification.ConfirmationController">
+    <AnchorPane prefWidth="800.0" prefHeight="600.0" style="-fx-background-color: linear-gradient(to bottom right, #4CAF50, #2E7D32);">
+        <VBox alignment="CENTER" spacing="15.0" layoutX="200.0" layoutY="130.0" prefWidth="400.0" style="-fx-background-color: rgba(0,0,0,0.8); -fx-padding: 30px; -fx-background-radius: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 4);">
+            <Label text="Inscription réussie ! ✅" textFill="white" style="-fx-font-size: 22px; -fx-font-weight: bold;" wrapText="true" />
+            <Label text="Votre demande a été envoyée avec succès." textFill="white" style="-fx-font-size: 14px;" wrapText="true" />
+            <Label text="Veuillez vérifier votre boîte mail." textFill="white" style="-fx-font-size: 14px;" wrapText="true" />
+
+            <ProgressIndicator prefWidth="40" prefHeight="40" />
+
+            <Button text="Retour à l'inscription" onAction="#handleRetour" style="-fx-background-color: white; -fx-text-fill: #2E7D32; -fx-font-weight: bold; -fx-padding: 10px 20px; -fx-background-radius: 5px;" />
+        </VBox>
+    </AnchorPane>
+</AnchorPane>

@@ -1,27 +1,26 @@
-package com.healthlink.Controllers;
-
+package com.healthlink.Controllers.User;
 import com.healthlink.Entites.Utilisateur;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
-public class DetailsSoignant {
+public class Details {
     @FXML private Label nomLabel;
     @FXML private Label prenomLabel;
     @FXML private Label emailLabel;
-    //@FXML private Label telLabel;
-    @FXML private Label categorieLabel;
-    //@FXML private Label statutLabel;
+    @FXML private Label telLabel;
+    @FXML private Label adresseLabel;
+    @FXML private Label statutLabel;
 
-    public void initData(Utilisateur soignant) {
+    public void initData(Utilisateur patient) {
         try {
-            nomLabel.setText(soignant.getNom());
-            prenomLabel.setText(soignant.getPrenom());
-            emailLabel.setText(soignant.getEmail());
-            //telLabel.setText(String.valueOf(soignant.getNum_tel()));
-            categorieLabel.setText(soignant.getCategorie_soin());
-            //statutLabel.setText(soignant.getStatut() != null ? soignant.getStatut() : "Inconnu");
+            nomLabel.setText(patient.getNom());
+            prenomLabel.setText(patient.getPrenom());
+            emailLabel.setText(patient.getEmail());
+            telLabel.setText(String.valueOf(patient.getNum_tel()));
+            adresseLabel.setText(patient.getAdresse() != null ? patient.getAdresse() : "Non renseignée");
+            statutLabel.setText(patient.getStatut() != null ? patient.getStatut() : "Inconnu");
         } catch (Exception e) {
             showAlert(AlertType.ERROR, "Erreur", "Impossible d'afficher les détails: " + e.getMessage());
         }

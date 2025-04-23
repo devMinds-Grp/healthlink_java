@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.healthlink.Controllers.HomeController"
+            prefHeight="600.0" prefWidth="800.0">
+
+    <!-- Navbar en haut -->
+    <!-- Navbar en haut -->
+    <HBox style="-fx-background-color: #2a52be; -fx-alignment: center-left; -fx-pref-height: 80;"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+
+
+    <!-- Logo dans le coin gauche -->
+        <ImageView fitHeight="70.0" fitWidth="70.0" preserveRatio="true">
+            <image>
+                <Image url="@../img/logo_siteweb.png" />
+            </image>
+        </ImageView>
+
+        <!-- Espace entre le logo et les liens -->
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <!-- Liens de navigation -->
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Button text="Home" style="-fx-text-fill: white; -fx-background-color: transparent;" onAction="#handleHome"/>
+            <Button fx:id="dashboardButton" text="Dashboard" style="-fx-text-fill: white; -fx-background-color: transparent;" onAction="#handleDashboard"/>
+            <Button text="Profile" style="-fx-text-fill: white; -fx-background-color: transparent;" onAction="#handleProfile"/>
+            <Button text="Deconnexion" style="-fx-text-fill: white; -fx-background-color: transparent;" onAction="#handleLogout"/>
+        </HBox>
+    </HBox>
+
+    <!-- Image de fond pour la section principale -->
+    <ImageView fitHeight="500.0" fitWidth="800.0" preserveRatio="false"
+               AnchorPane.topAnchor="80.0" AnchorPane.bottomAnchor="0.0"
+               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <image >
+            <Image url="@../img/banner.png" /> <!-- Remplacez par votre image de fond -->
+        </image>
+
+    </ImageView>
+
+    <!-- Overlay semi-transparent pour améliorer la lisibilité du texte -->
+    <Pane style="-fx-background-color: rgba(42, 82, 190, 0.3);"
+          AnchorPane.topAnchor="60.0" AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
+
+    <!-- Contenu principal centré -->
+    <VBox alignment="TOP_LEFT" spacing="15"
+          AnchorPane.topAnchor="200.0" AnchorPane.bottomAnchor="150.0"
+          AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+
+        <!-- Titre principal -->
+        <Text text="THE BEST MEDICAL CENTER"
+              style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-fill: #2a52be; -fx-font-family: 'Arial';"/>
+
+        <!-- Slogan avec saut de ligne -->
+        <Text text="Bringing health\nto life for the whole family."
+              style="-fx-font-size: 22px; -fx-fill: #333333; -fx-text-alignment: center; -fx-font-family: 'Arial';"/>
+
+        <!-- Bouton Discover More -->
+        <Button text="Discover More"
+                style="-fx-background-color: #2a52be; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10 30; -fx-background-radius: 5;"/>
+    </VBox>
+
+</AnchorPane>

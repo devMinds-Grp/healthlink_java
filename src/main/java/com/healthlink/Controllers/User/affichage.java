@@ -1,4 +1,4 @@
-package com.healthlink.Controllers;
+package com.healthlink.Controllers.User;
 
 import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.UserService;

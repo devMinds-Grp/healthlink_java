@@ -14,7 +14,7 @@
 <?import java.lang.String?>
 <?import javafx.collections.FXCollections?>
 <AnchorPane prefHeight="550.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.healthlink.Controllers.Ajout">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.healthlink.Controllers.User.Ajout">
 
    <!-- Titre de la page -->
    <Label layoutX="230.0" layoutY="30.0" text="Inscription Soignant" style="-fx-font-weight: bold;">
@@ -91,10 +91,10 @@
 
    <!-- Bouton d'action -->
 
-   <HBox layoutX="450.0" layoutY="450.0" spacing="20.0">
-      <Button text="Réinitialiser" style="-fx-background-color: #e74c3c; -fx-text-fill: white; "/>
+   <HBox layoutX="400.0" layoutY="450.0" spacing="20.0" style="-fx-padding: 0 0 0 0;">
+      <Button text="Réinitialiser" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 4; -fx-padding: 8 20;"/>
       <Button layoutX="500.0" layoutY="470.0" mnemonicParsing="false"
-              text="Ajouter" style="-fx-background-color: #2ecc71; -fx-text-fill: white"
+              text="Ajouter" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-background-radius: 4; -fx-padding: 8 20; -fx-effect: dropshadow(gaussian, rgba(46,204,113,0.3), 5, 0, 0, 1);"
               onAction="#addSoignant"/>
    </HBox>
 

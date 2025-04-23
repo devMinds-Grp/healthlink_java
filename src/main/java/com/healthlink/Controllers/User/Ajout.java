@@ -1,4 +1,4 @@
-package com.healthlink.Controllers;
+package com.healthlink.Controllers.User;
 
 import com.healthlink.Entites.Role;
 import com.healthlink.Entites.Utilisateur;
@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -115,6 +116,17 @@ public class Ajout {
             alert.setHeaderText(null);
             alert.setContentText("Patient ajouté avec succès !");
             alert.show();
+            nomTextField.clear();
+            prenomTextField.clear();
+            emailTextField.clear();
+            motdepasseTextField.clear();
+            numtelTextField.clear();
+
+            // Réinitialiser les labels des fichiers
+            nomFichierLabel.setText("Aucun fichier choisi");
+
+            // Réinitialiser les fichiers sélectionnés
+            fichierImage = null;
         } catch (Exception e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -145,7 +157,7 @@ public class Ajout {
                     java.nio.file.StandardCopyOption.REPLACE_EXISTING
             );
 
-            return destination.getAbsolutePath();
+            return nomFichier;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -204,14 +216,21 @@ public class Ajout {
             alert.setContentText("Médecin ajouté avec succès !");
             alert.show();
 
-            // Optionnel: vider les champs après l'ajout
-//            nomTextField.clear();
-//            prenomTextField.clear();
-//            emailTextField.clear();
-//            motdepasseTextField.clear();
-//            numtelTextField.clear();
-//            adresseTextField.clear();
-//            diplomeTextField.clear();
+             //Optionnel: vider les champs après l'ajout
+            nomTextField.clear();
+            prenomTextField.clear();
+            emailTextField.clear();
+            motdepasseTextField.clear();
+            numtelTextField.clear();
+            adresseTextField.clear();
+            specialiteTextField.clear();
+            // Réinitialiser les labels des fichiers
+            nomDiplomeLabel.setText("Aucun fichier choisi");
+            nomFichierLabel.setText("Aucun fichier choisi");
+
+            // Réinitialiser les fichiers sélectionnés
+            fichierDiplome = null;
+            fichierImage = null;
         } catch (Exception e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -283,14 +302,18 @@ public class Ajout {
             alert.setContentText("Soignant ajouté avec succès !");
             alert.showAndWait();
 
-//            // Réinitialisation des champs
-//            nomTextField.clear();
-//            prenomTextField.clear();
-//            emailTextField.clear();
-//            motdepasseTextField.clear();
-//            categorieSoinTextField.clear();
-//            //diplomeTextField.clear();
-//            imageTextField.clear();
+            // Réinitialisation des champs
+            nomTextField.clear();
+            prenomTextField.clear();
+            emailTextField.clear();
+            motdepasseTextField.clear();
+            // Réinitialiser les labels des fichiers
+            nomDiplomeLabel.setText("Aucun fichier choisi");
+            nomFichierLabel.setText("Aucun fichier choisi");
+
+            // Réinitialiser les fichiers sélectionnés
+            fichierDiplome = null;
+            fichierImage = null;
 
         } catch (Exception e) {
             // Gestion des erreurs
@@ -311,8 +334,7 @@ public class Ajout {
 
         // Filtres pour les types de fichiers (PDF, images, etc.)
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("PDF", "*.pdf"),
-                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg"),
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif"),
                 new FileChooser.ExtensionFilter("Tous les fichiers", "*.*")
         );
 
@@ -345,7 +367,7 @@ public class Ajout {
                     java.nio.file.StandardCopyOption.REPLACE_EXISTING
             );
 
-            return destination.getAbsolutePath();
+            return nomFichier;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -409,6 +431,7 @@ public class Ajout {
         }
         return true;
     }
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -416,6 +439,7 @@ public class Ajout {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
     // Ajoutez cette annotation au-dessus de votre contrôleur
     @FXML
     private Button submitButton;
