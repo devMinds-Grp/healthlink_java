@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="$CONTROLLER_NAME$"
-            prefHeight="400.0" prefWidth="600.0" >
+<HBox fx:id="navbar" styleClass="nav-bar" spacing="20" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.healthlink.Controllers.NavbarController" stylesheets="@../css/Navbar.css">
+    <HBox alignment="CENTER" spacing="15" styleClass="nav-logo">
+        <ImageView fitWidth="100" fitHeight="90">
+            <image>
+                <Image url="@../assets/logo_siteweb.png"/>
+            </image>
+        </ImageView>
+    </HBox>
+    <Region HBox.hgrow="ALWAYS"/>
+    <HBox alignment="CENTER_RIGHT" spacing="15">
+        <Button fx:id="homeButton" text="Home" styleClass="nav-button" onAction="#navigateToHome"/>
+        <Button fx:id="careButton" text="Care" styleClass="nav-button" onAction="#navigateToCare"/>
+        <Button fx:id="prescriptionButton" text="Prescription" styleClass="nav-button" onAction="#navigateToPrescription"/>
+        <Button fx:id="appointmentButton" text="Appointments" styleClass="nav-button" onAction="#navigateToAppointment"/>
+        <Button fx:id="donButton" text="Donation" styleClass="nav-button" onAction="#navigateToDon"/>
+        <Button fx:id="ForumButton" text="Forum" styleClass="nav-button" onAction="#navigateToForum"/>
+        <Button fx:id="ReclamationButton" text="Reclamations" styleClass="nav-button" onAction="#navigateToReclamations"/>
+        <Button fx:id="profileButton" text="Profile" styleClass="nav-button" onAction="#navigateToProfile"/>
+        <Button fx:id="disconnectButton" text="Disconnect" styleClass="nav-button" onAction="#navigateToDisconnect"/>
 
-</AnchorPane>
+
+    </HBox>
+</HBox>

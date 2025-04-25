@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class MyDB {
-    private final String url = "jdbc:mysql://localhost:3306/healthlinktest1";
+    private final String url = "jdbc:mysql://localhost:3306/healthlink15";
     private final String user = "root";
     private final String password = "";
     private Connection conn;
