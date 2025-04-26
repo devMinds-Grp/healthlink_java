@@ -1,5 +1,7 @@
 package com.healthlink.Controllers;
 
+import com.healthlink.Entites.Utilisateur;
+import com.healthlink.Services.AuthService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,8 +16,66 @@ public class NavbarController {
     @FXML private Button homeButton;
     @FXML private Button careButton;
     @FXML private Button prescriptionButton;
+    @FXML private Button appointmentButton;
+    @FXML private Button donButton;
+    @FXML private Button ForumButton;
+    @FXML private Button ReclamationButton;
     @FXML private Button profileButton;
     @FXML private Button disconnectButton;
+    @FXML private Button dashboardButton;
+
+
+    @FXML
+    public void initialize() {
+        // Récupère l'utilisateur connecté depuis AuthService
+        Utilisateur utilisateur = AuthService.getConnectedUtilisateur();
+
+        // Vérifie si l'utilisateur est connecté
+        if (utilisateur == null) {
+            // Cacher tous les boutons si aucun utilisateur n'est connecté
+            setButtonVisibility(false, homeButton, careButton, prescriptionButton, appointmentButton,
+                    donButton, ForumButton, ReclamationButton, profileButton, disconnectButton,
+                    dashboardButton);
+            return;
+        }
+
+        // Par défaut, cacher tous les boutons
+        setButtonVisibility(false, homeButton, careButton, prescriptionButton, appointmentButton,
+                donButton, ForumButton, ReclamationButton, profileButton, disconnectButton,
+                dashboardButton);
+
+        // Afficher les boutons en fonction du rôle de l'utilisateur
+        switch (utilisateur.getRole().getId()) {
+            case 1: // Admin
+                setButtonVisibility(true, homeButton, dashboardButton,  disconnectButton);
+                break;
+            case 2: // Doctor
+                setButtonVisibility(true, homeButton, prescriptionButton, ForumButton, ReclamationButton,
+                        profileButton, disconnectButton);
+                break;
+            case 3: // Patient
+                setButtonVisibility(true, homeButton, appointmentButton, donButton, ForumButton,
+                        ReclamationButton, profileButton, disconnectButton);
+                break;
+            case 4: // Soignant
+                setButtonVisibility(true, homeButton, careButton, ForumButton, ReclamationButton,
+                        profileButton, disconnectButton);
+                break;
+            default:
+                // Aucun bouton visible pour les rôles non reconnus
+                break;
+        }
+    }
+
+    // Méthode utilitaire pour gérer la visibilité et l'espace des boutons
+    private void setButtonVisibility(boolean visible, Button... buttons) {
+        for (Button button : buttons) {
+            if (button != null) {
+                button.setVisible(visible);
+                button.setManaged(visible); // Empêche de laisser l’espace vide
+            }
+        }
+    }
 
     private void navigateTo(String fxmlPath, String title) {
         try {
@@ -49,34 +109,45 @@ public class NavbarController {
     private void navigateToPrescription() {
         navigateTo("/views/Prescription/list_prescription.fxml", "Liste des Prescriptions");
     }
+
     @FXML
     private void navigateToAppointment() {
         navigateTo("/views/Appointment/list_appointments.fxml", "Liste des Rendez-vous");
     }
 
     @FXML
-    private void navigateToProfile() {
-        navigateTo("/views/Profile.fxml", "Profil");
-    }
-
-    @FXML
-    private void navigateToDisconnect() {
-        // Implement logout logic (e.g., clear session, redirect to login)
-        navigateTo("/views/Login.fxml", "Connexion");
-    }
-    @FXML
     private void navigateToDon() {
         navigateTo("/views/list_don.fxml", "Donation");
     }
+
     @FXML
     private void navigateToForum() {
         navigateTo("/views/MainView.fxml", "Forum");
     }
+
     @FXML
     private void navigateToReclamations() {
         navigateTo("/list_reclamations.fxml", "Reclamations");
     }
 
+    @FXML
+    private void navigateToDashboard() {
+        navigateTo("/views/User/list.fxml", "Tableau de bord");
+    }
+
+    @FXML
+    private void navigateToProfile() {
+        navigateTo("/views/User/Auth/Profile.fxml", "Profil");
+    }
+
+
+
+    @FXML
+    private void navigateToDisconnect() {
+        // Implement logout logic (e.g., clear session, redirect to login)
+        AuthService.logout();
+        navigateTo("/views/User/Auth/Login.fxml", "Connexion");
+    }
 
     private void showAlert(String title, String message) {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);

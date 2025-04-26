@@ -22,6 +22,7 @@
         <Button fx:id="donButton" text="Donation" styleClass="nav-button" onAction="#navigateToDon"/>
         <Button fx:id="ForumButton" text="Forum" styleClass="nav-button" onAction="#navigateToForum"/>
         <Button fx:id="ReclamationButton" text="Reclamations" styleClass="nav-button" onAction="#navigateToReclamations"/>
+        <Button fx:id="dashboardButton" text="Dashboard" styleClass="nav-button" onAction="#navigateToDashboard"/>
         <Button fx:id="profileButton" text="Profile" styleClass="nav-button" onAction="#navigateToProfile"/>
         <Button fx:id="disconnectButton" text="Disconnect" styleClass="nav-button" onAction="#navigateToDisconnect"/>
 
