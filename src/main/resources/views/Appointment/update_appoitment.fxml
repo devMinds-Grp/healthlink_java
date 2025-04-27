@@ -13,24 +13,9 @@
             stylesheets="@../../css/Appointment.css">
 
     <top>
-        <HBox style="-fx-background-color: #007bff; -fx-spacing: 20; -fx-padding: 10 30; -fx-alignment: CENTER_LEFT;">
-            <HBox style="-fx-alignment: CENTER; -fx-spacing: 15; -fx-padding: 5 50;">
-                <ImageView fitWidth="100" fitHeight="90">
-                    <image>
-                        <Image url="@../../assets/logo siteweb.png"/>
-                    </image>
-                </ImageView>
-            </HBox>
-            <Region HBox.hgrow="ALWAYS"/>
-            <HBox style="-fx-alignment: CENTER_RIGHT; -fx-spacing: 15;">
-                <Button text="Home" styleClass="nav-button" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
-                <Button text="Appointment" styleClass="nav-button" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
-                <Button text="Prescription" styleClass="nav-button" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
-                <Button text="Profile" styleClass="nav-button" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
-                <Button text="Disconnect" styleClass="nav-button" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
-            </HBox>
-        </HBox>
+        <fx:include source="../Navbar.fxml"/>
     </top>
+
 
     <center>
         <StackPane alignment="CENTER" style="-fx-background-color: #f5f7fa; -fx-padding: 30;">

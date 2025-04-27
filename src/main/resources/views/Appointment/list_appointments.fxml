@@ -16,24 +16,9 @@
 
 <BorderPane stylesheets="@../../css/Appointment.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.healthlink.Controllers.Appoitment.List_appointmentController">
     <top>
-        <HBox style="-fx-background-color: #007bff; -fx-spacing: 20; -fx-padding: 10 30; -fx-alignment: CENTER_LEFT;">
-            <HBox style="-fx-alignment: CENTER; -fx-spacing: 15; -fx-padding: 5 50;">
-                <ImageView fitHeight="90" fitWidth="100">
-                    <image>
-                        <Image url="@../../assets/logo siteweb.png"/>
-                    </image>
-                </ImageView>
-            </HBox>
-            <Region HBox.hgrow="ALWAYS"/>
-            <HBox style="-fx-alignment: CENTER_RIGHT; -fx-spacing: 15;">
-                <Button styleClass="nav-button" text="Home"/>
-                <Button styleClass="nav-button" text="Appointment"/>
-                <Button styleClass="nav-button" text="Prescription"/>
-                <Button styleClass="nav-button" text="Profile"/>
-                <Button styleClass="nav-button" text="Disconnect"/>
-            </HBox>
-        </HBox>
+        <fx:include source="../Navbar.fxml"/>
     </top>
+
     <center>
         <StackPane alignment="CENTER" style="-fx-background-color: #f5f7fa;">
             <VBox alignment="TOP_CENTER" styleClass="form-container" style="-fx-max-width: 1200; -fx-min-width: 1200;">

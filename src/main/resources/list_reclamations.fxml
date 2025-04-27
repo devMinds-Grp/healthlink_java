@@ -2,22 +2,45 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.healthlink.Controllers.ListReclamationsController"
-      stylesheets="@reclamations.css" spacing="20" prefHeight="600" prefWidth="1000">
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.healthlink.Controllers.ListReclamationsController"
+            stylesheets="@/reclamations.css">
 
-    <HBox spacing="20" alignment="CENTER_LEFT">
-        <Label text="Gestion des Réclamations" styleClass="title-label"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Button text="Ajouter Réclamation" onAction="#handleAddReclamation" styleClass="add-button"/>
-    </HBox>
+    <!-- Navbar -->
+    <top>
+        <fx:include source="/views/Navbar.fxml"/>
+    </top>
 
-    <TextField fx:id="searchField" promptText="Rechercher par titre, description ou catégorie..."
-               styleClass="search-field"/>
+    <!-- Main Content -->
+    <center>
+        <VBox styleClass="form-background" BorderPane.alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
+            <padding>
+                <Insets top="30" bottom="30" left="20" right="20"/>
+            </padding>
 
-    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="scroll-pane">
-        <FlowPane fx:id="cardsContainer" hgap="20" vgap="20" prefWrapLength="980"/>
-    </ScrollPane>
-</VBox>
+            <!-- Header -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Gestion des Réclamations" styleClass="header-label"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="addReclamationButton" text="Ajouter Réclamation" styleClass="create-button" onAction="#handleAddReclamation"/>
+            </HBox>
+
+            <!-- Search Field -->
+            <TextField fx:id="searchField" promptText="Rechercher par titre, description ou catégorie..." styleClass="search-field" VBox.margin="$x1"/>
+            <VBox.margin>
+                <Insets top="20"/>
+            </VBox.margin>
+
+            <!-- Reclamations List -->
+            <ScrollPane fitToWidth="true" styleClass="edge-to-edge" VBox.vgrow="ALWAYS">
+                <content>
+                    <FlowPane fx:id="cardsContainer" hgap="20" vgap="20" prefWrapLength="960"/>
+                </content>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+</BorderPane>

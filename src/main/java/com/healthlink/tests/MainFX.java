@@ -26,6 +26,8 @@ public class MainFX extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/views/User/Auth/login.fxml"));
         primaryStage.setTitle("Care Management System");
         primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.setMaximized(true);
+        primaryStage.setResizable(true);
         primaryStage.show();
     }
 
