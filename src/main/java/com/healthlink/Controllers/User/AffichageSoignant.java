@@ -4,6 +4,7 @@ import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.UserService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -124,6 +125,10 @@ public class AffichageSoignant implements Initializable {
     @FXML
     private void showAttenteView() {
         loadView("/views/User/enattente.fxml");
+    }
+    @FXML
+    public void showDashView(ActionEvent actionEvent) {
+        loadView("/views/User/Dashboard.fxml");
     }
     private void loadView(String fxmlPath) {
         try {

@@ -31,7 +31,7 @@ public class HomeController {
     }
     @FXML
     private void handleProfile(ActionEvent event) {
-        loadView("/views/User/Auth/profile.fxml", event);
+        loadView("/views/User/Auth/Profile.fxml", event);
     }
     @FXML
     private void handleDashboard(ActionEvent event) {

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.web.WebView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.Separator?>
+<?import java.net.URL?>
+
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.healthlink.Controllers.User.DashboardController">
+    <!-- Style CSS intégré -->
+    <stylesheets>
+        <URL value="@/css/styles.css" />
+    </stylesheets>
+
+    <!-- Barre de titre bleue -->
+    <Rectangle AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" height="60.0" fill="#3498db" />
+
+    <!-- Logo HealthLink dans le coin -->
+    <Label layoutX="25.0" layoutY="10.0" text="HealthLink" style="-fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 2, 0.5, 0, 1);">
+        <font>
+            <Font size="22.0" name="System Bold"/>
+        </font>
+    </Label>
+
+    <!-- Sidebar blanche -->
+    <VBox AnchorPane.leftAnchor="0" AnchorPane.topAnchor="60.0" AnchorPane.bottomAnchor="0" prefWidth="200" style="-fx-background-color: white; -fx-border-color: #ecf0f1; -fx-border-width: 0 1 0 0;">
+        <children>
+            <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold; -fx-padding: 20 0 15 25;" text="Menu">
+                <font>
+                    <Font size="16.0" name="Arial"/>
+                </font>
+            </Label>
+            <Separator style="-fx-background-color: #bdc3c7; -fx-padding: 0 10 0 10;"/>
+
+            <!-- Menu Gestion utilisateurs amélioré -->
+            <MenuButton style="-fx-background-color: transparent; -fx-text-fill: #34495e; -fx-font-size: 14; -fx-alignment: center-left; -fx-padding: 10 25;" text="Gestion utilisateurs">
+                <items>
+                    <MenuItem fx:id="patientsMenuItem" text="Patients" style="-fx-text-fill: black; -fx-font-size: 14;" onAction="#showPatientsView"/>
+                    <MenuItem fx:id="medecinsMenuItem" text="Médecins" style="-fx-text-fill: black; -fx-font-size: 14;" onAction="#showMedecinsView"/>
+                    <MenuItem fx:id="soignantsMenuItem" text="Soignants" style="-fx-text-fill: black; -fx-font-size: 14;" onAction="#showSoignantView"/>
+                    <MenuItem text="Utilisateurs en attente" style="-fx-text-fill: black; -fx-font-size: 14;" onAction="#showAttenteView"/>
+                    <MenuItem text="Statistiques utilisateur" style="-fx-text-fill: black; -fx-font-size: 14;" onAction="#showDashView"/>
+                </items>
+            </MenuButton>
+        </children>
+    </VBox>
+
+    <!-- Barre bleue de séparation -->
+    <Rectangle layoutX="200.0" AnchorPane.topAnchor="60.0" AnchorPane.bottomAnchor="0" width="2.0" fill="#3498db" />
+
+    <!-- Contenu principal avec WebView -->
+    <VBox AnchorPane.leftAnchor="202.0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="60.0" AnchorPane.bottomAnchor="0" style="-fx-padding: 20;">
+        <WebView fx:id="webView" VBox.vgrow="ALWAYS" />
+    </VBox>
+</AnchorPane>

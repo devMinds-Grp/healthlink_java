@@ -26,7 +26,7 @@
     </stylesheets>
 
     <!-- Barre de titre bleue -->
-    <Rectangle layoutX="0" layoutY="0" width="900.0" height="60.0" fill="#3498db" />
+    <Rectangle AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" height="60.0" fill="#3498db" />
 
     <!-- Logo HealthLink dans le coin -->
     <Label layoutX="25.0" layoutY="10.0" text="HealthLink" style="-fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 2, 0.5, 0, 1);">
@@ -36,7 +36,7 @@
     </Label>
 
     <!-- Sidebar blanche -->
-    <VBox layoutX="0" layoutY="60.0" prefHeight="550" prefWidth="200" style="-fx-background-color: white; -fx-border-color: #ecf0f1; -fx-border-width: 0 1 0 0;">
+    <VBox AnchorPane.leftAnchor="0" AnchorPane.topAnchor="60.0" AnchorPane.bottomAnchor="0" prefWidth="200" style="-fx-background-color: white; -fx-border-color: #ecf0f1; -fx-border-width: 0 1 0 0;">
         <children>
             <Label style="-fx-text-fill: #34495e; -fx-font-weight: bold; -fx-padding: 20 0 15 25;" text="Menu">
                 <font>
@@ -52,16 +52,18 @@
                     <MenuItem fx:id="medecinsMenuItem" text="Médecins" style="-fx-text-fill: black; -fx-font-size: 14;" onAction="#showMedecinsView"/>
                     <MenuItem fx:id="soignantsMenuItem" text="Soignants" style="-fx-text-fill: black; -fx-font-size: 14;" onAction="#showSoignantView"/>
                     <MenuItem text="Utilisateurs en attente" style="-fx-text-fill: black; -fx-font-size: 14;"/>
+                    <MenuItem text="Statistiques utilisateur" style="-fx-text-fill: black; -fx-font-size: 14;" onAction="#showDashView"/>
+
                 </items>
             </MenuButton>
         </children>
     </VBox>
 
     <!-- Barre bleue de séparation -->
-    <Rectangle layoutX="200.0" layoutY="60.0" width="2.0" height="550.0" fill="#3498db" />
+    <Rectangle layoutX="200.0" AnchorPane.topAnchor="60.0" AnchorPane.bottomAnchor="0" width="2.0" fill="#3498db" />
 
     <!-- Contenu principal -->
-    <VBox layoutX="200.0" layoutY="80.0" spacing="20.0" prefWidth="698" style="-fx-padding: 0 20 20 20;">
+    <VBox AnchorPane.leftAnchor="202.0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="60.0" AnchorPane.bottomAnchor="0" spacing="20.0" style="-fx-padding: 20;">
         <!-- Titre avec séparateur -->
         <VBox spacing="5">
             <Label text="Utilisateurs en attente de validation" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
@@ -69,7 +71,7 @@
         </VBox>
 
         <!-- Tableau des utilisateurs en attente -->
-        <TableView fx:id="tableUtilisateurs" prefHeight="400.0" prefWidth="700.0" style="-fx-background-color: #ffffff; -fx-border-color: #ecf0f1; -fx-border-radius: 4; -fx-background-radius: 4; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0, 0, 1);">
+        <TableView fx:id="tableUtilisateurs" style="-fx-background-color: #ffffff; -fx-border-color: #ecf0f1; -fx-border-radius: 4; -fx-background-radius: 4; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0, 0, 1);" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="colNom" prefWidth="140.0" text="Nom" style="-fx-alignment: CENTER_LEFT; -fx-font-size: 14px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;"/>
                 <TableColumn fx:id="colPrenom" prefWidth="140.0" text="Prénom" style="-fx-alignment: CENTER_LEFT; -fx-font-size: 14px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;"/>

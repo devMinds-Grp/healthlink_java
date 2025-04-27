@@ -54,10 +54,9 @@
                 <HBox spacing="5" alignment="TOP_RIGHT">
                     <children>
                         <Label text="G" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
-                        <Label text="S'inscrire avec Google" style="-fx-font-weight: bold;"/>
+                        <Button text="S'inscrire avec Google" fx:id="googleSignInButton" onAction="#handleGoogleSignIn" style="-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 5;-fx-font-weight: bold;"/>
                     </children>
                 </HBox>
-
                 <Separator/>
 
                 <!-- Choix de rôle -->
