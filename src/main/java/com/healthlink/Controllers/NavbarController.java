@@ -47,7 +47,7 @@ public class NavbarController {
         // Afficher les boutons en fonction du rôle de l'utilisateur
         switch (utilisateur.getRole().getId()) {
             case 1: // Admin
-                setButtonVisibility(true, homeButton, dashboardButton,  disconnectButton);
+                setButtonVisibility(true, homeButton, dashboardButton,prescriptionButton, ForumButton,profileButton,ReclamationButton,donButton,disconnectButton);
                 break;
             case 2: // Doctor
                 setButtonVisibility(true, homeButton, prescriptionButton, ForumButton, ReclamationButton,
@@ -137,7 +137,7 @@ public class NavbarController {
 
     @FXML
     private void navigateToProfile() {
-        navigateTo("/views/User/Auth/Profile.fxml", "Profil");
+        navigateTo("/views/User/Profile.fxml", "Profil");
     }
 
 

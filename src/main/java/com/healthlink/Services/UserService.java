@@ -823,7 +823,10 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
     }
     public Utilisateur getUtilisateurByEmail(String email) {
         Utilisateur utilisateur = null;
-        String req = "SELECT * FROM utilisateur WHERE email = ?";
+        String req = "SELECT u.*, r.id as role_id, r.nom as role_nom " +
+                "FROM utilisateur u " +
+                "LEFT JOIN role r ON u.role_id = r.id " +
+                "WHERE u.email = ?";
 
         try {
             PreparedStatement ps = connection.prepareStatement(req);
@@ -836,8 +839,22 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
                 utilisateur.setNom(rs.getString("nom"));
                 utilisateur.setPrenom(rs.getString("prenom"));
                 utilisateur.setEmail(rs.getString("email"));
-                utilisateur.setMot_de_passe(rs.getString("motdepasse"));
+                utilisateur.setMot_de_passe(rs.getString("mot_de_passe"));
+                utilisateur.setNum_tel(rs.getInt("num_tel"));
+                utilisateur.setAdresse(rs.getString("adresse"));
+                utilisateur.setSpeciality(rs.getString("speciality"));
+                utilisateur.setCategorie_soin(rs.getString("categorie_soin"));
+                utilisateur.setImage(rs.getString("image"));
+                utilisateur.setImageprofile(rs.getString("imageprofile"));
+                utilisateur.setStatut(rs.getString("statut"));
+                utilisateur.setReset_code(rs.getInt("reset_code"));
 
+                // Création du Role
+                Role role = new Role();
+                role.setId(rs.getInt("role_id"));
+                role.setNom(rs.getString("role_nom"));
+
+                utilisateur.setRole(role);
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors de la récupération de l'utilisateur par email : " + e.getMessage());
@@ -845,6 +862,7 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
 
         return utilisateur;
     }
+
 
 
 

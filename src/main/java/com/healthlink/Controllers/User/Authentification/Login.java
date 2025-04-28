@@ -8,6 +8,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import com.healthlink.Entites.Role;
 import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.AuthService;
 import com.healthlink.Services.GoogleAuthService;
@@ -382,15 +383,23 @@ public class Login {
 
             // Récupérer les infos de l'utilisateur
             Map<String, Object> userInfo = getGoogleUserInfo(accessToken);
-
             String email = (String) userInfo.get("email");
 
             // Vérifier si l'utilisateur existe dans la base
-            if (emailExisteDansLaBase(email)) {
-                // Utilisateur trouvé => le connecter
+            Utilisateur utilisateur = userService.getUtilisateurByEmail(email);
+
+            if (utilisateur != null) {
+                // Utilisateur trouvé => récupérer le rôle
+                //Utilisateur utilisateur = userService.getUtilisateurByEmail(email);
+                Role role = utilisateur.getRole();
+                System.out.println(role.getNom());
+
+
+                // Stocker en session (optionnel mais utile si tu veux suivre l'utilisateur connecté)
+                AuthService.setConnectedUtilisateur(utilisateur);
+
                 Platform.runLater(() -> {
-                    // Ici tu peux rediriger vers la page d'accueil, ou enregistrer l'utilisateur en session
-                    showAlert("Succès", "Connexion réussie avec Google pour : " + email, Alert.AlertType.INFORMATION);
+                    showAlert("Succès", "Connexion réussie avec Google pour : " + email + "\nRôle: " + role, Alert.AlertType.INFORMATION);
                     allerALaPageAccueil();
                 });
             } else {
@@ -405,8 +414,9 @@ public class Login {
             showAlert("Erreur", "Erreur lors de la connexion Google : " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
     private boolean emailExisteDansLaBase(String email) {
-        // TODO : remplacer par une vraie requête SQL
+
         Utilisateur utilisateur = userService.getUtilisateurByEmail(email);
         return utilisateur != null;
     }

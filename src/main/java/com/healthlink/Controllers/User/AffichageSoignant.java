@@ -15,7 +15,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
+import javafx.scene.web.WebView;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -26,7 +26,8 @@ public class AffichageSoignant implements Initializable {
 
     private final UserService userService = new UserService();
     private final ObservableList<Utilisateur> soignantList = FXCollections.observableArrayList();
-
+    @FXML
+    private WebView webView;
     // Éléments pour les soignants
     @FXML private TableView<Utilisateur> soignantTableView;
     @FXML private TableColumn<Utilisateur, String> nomSoignantColumn;
@@ -201,5 +202,18 @@ public class AffichageSoignant implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    @FXML
+    private void onArrowClicked() {
+        // Redirection quand on clique sur la flèche
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Home.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) webView.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

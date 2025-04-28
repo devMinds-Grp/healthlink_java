@@ -16,14 +16,16 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
+import javafx.scene.web.WebView;
 public class AffichagePatient implements Initializable {
-
+    @FXML
+    private WebView webView;
     private final UserService userService = new UserService();
     private final ObservableList<Utilisateur> patientList = FXCollections.observableArrayList();
 
@@ -217,4 +219,7 @@ public class AffichagePatient implements Initializable {
     public void showDashView(ActionEvent actionEvent) {
         loadView("/views/User/Dashboard.fxml");
     }
+
+
+
 }
