@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.healthlink.Controllers.User.Authentification.Profile"
+            prefHeight="600.0" prefWidth="800.0">
+
+    <!-- Navbar en haut -->
+    <top>
+        <fx:include source="../Navbar.fxml"/>
+    </top>
+
+    <center>
+        <AnchorPane>
+            <HBox spacing="40" alignment="CENTER"
+                  AnchorPane.topAnchor="50.0"
+                  AnchorPane.bottomAnchor="50.0"
+                  AnchorPane.leftAnchor="50.0"
+                  AnchorPane.rightAnchor="50.0">
+
+                <!-- Carte profil à gauche -->
+                <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 4);-fx-padding: 20;"
+                      spacing="20" alignment="CENTER"
+                      prefHeight="400" prefWidth="250"
+                      >
+
+                    <StackPane>
+                        <!-- Cercle comme masque pour l'image -->
+                        <Circle radius="50" style="-fx-fill: #5B21B6;" visible="false"/>
+
+                        <!-- ImageView pour la photo de profil -->
+                        <ImageView fx:id="profileImageView"
+                                   fitHeight="100"
+                                   fitWidth="100"
+                                   preserveRatio="true">
+                            <clip>
+                                <Circle radius="50" centerX="50" centerY="50"/>
+                            </clip>
+                        </ImageView>
+                    </StackPane>
+
+                    <Label fx:id="usernameLabel" text="ela ela"
+                           style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+                </VBox>
+
+                <!-- Infos utilisateur à droite -->
+                <VBox spacing="15"
+                      style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 4);-fx-padding: 30;"
+                      prefWidth="450" prefHeight="400"
+                      >
+
+                    <Label text="Nom"/>
+                    <TextField fx:id="nomField" editable="false"
+                               style="-fx-background-color: #e5e7eb;"/>
+
+                    <Label text="Prénom"/>
+                    <TextField fx:id="prenomField" editable="false"
+                               style="-fx-background-color: #e5e7eb;"/>
+
+                    <Label text="Email"/>
+                    <TextField fx:id="emailField" editable="false"
+                               style="-fx-background-color: #e5e7eb;"/>
+
+                    <Button text="Modifier le profil"
+                            style="-fx-background-color: #2563eb; -fx-text-fill: white;"
+                            onAction="#handleEditProfile"/>
+
+                    <Label fx:id="connexionLabel"
+                           text="Vous êtes connecté en tant que ela@gmail.com"
+                           style="-fx-text-fill: #6b7280;"/>
+
+                    <Hyperlink text="Déconnexion"/>
+                </VBox>
+            </HBox>
+        </AnchorPane>
+    </center>
+</BorderPane>

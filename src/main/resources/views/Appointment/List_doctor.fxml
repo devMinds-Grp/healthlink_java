@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane stylesheets="@../../css/Doctor.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.healthlink.Controllers.Appoitment.List_doctorController">
+    <top>
+        <fx:include source="../Navbar.fxml"/>
+    </top>
+    <center>
+        <BorderPane style="-fx-background-color: #f5f7fa;">
+            <center>
+                <HBox spacing="30" style="-fx-padding: 30;" alignment="TOP_CENTER">
+                    <!-- Filter Section -->
+                    <VBox spacing="15" styleClass="filter-container" style="-fx-min-width: 300; -fx-max-width: 300;">
+                        <TextField fx:id="searchField" promptText="Rechercher un médecin..." styleClass="search-field" style="-fx-min-width: 280; -fx-pref-height: 35;"/>
+                        <VBox spacing="15" styleClass="filter-box">
+                            <Label text="Filtres" styleClass="filter-title"/>
+                            <VBox spacing="8">
+                                <Label text="Spécialités" styleClass="filter-label"/>
+                                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-max-height: 150;">
+                                    <VBox fx:id="specialtiesFilter" styleClass="filter-box" style="-fx-padding: 8;"/>
+                                </ScrollPane>
+                            </VBox>
+                            <VBox spacing="8">
+                                <Label text="Adresse" styleClass="filter-label"/>
+                                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-max-height: 150;">
+                                    <VBox fx:id="addressFilter" styleClass="filter-box" style="-fx-padding: 8;"/>
+                                </ScrollPane>
+                            </VBox>
+                        </VBox>
+                        <HBox alignment="CENTER">
+                            <Button fx:id="resetFiltersButton" onAction="#resetFilters" styleClass="reset-button" text="Réinitialiser les filtres" style="-fx-pref-height: 35;"/>
+                        </HBox>
+                    </VBox>
+                    <!-- Doctor List Section -->
+                    <VBox alignment="TOP_CENTER" styleClass="form-container" style="-fx-max-width: 800; -fx-min-width: 800;">
+                        <padding>
+                            <Insets bottom="30" left="50" right="50" top="30"/>
+                        </padding>
+                        <HBox alignment="CENTER" spacing="20" style="-fx-padding: 0 0 40 0;">
+                            <ImageView fitHeight="60" fitWidth="60">
+                                <image>
+                                    <Image url="@../../assets/liste.png"/>
+                                </image>
+                            </ImageView>
+                            <Label styleClass="form-title" text="Liste de Médecins"/>
+                        </HBox>
+                        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+                            <VBox fx:id="doctorList" spacing="25" style="-fx-padding: 0 0 30 0;"/>
+                        </ScrollPane>
+                    </VBox>
+                </HBox>
+            </center>
+        </BorderPane>
+    </center>
+</BorderPane>

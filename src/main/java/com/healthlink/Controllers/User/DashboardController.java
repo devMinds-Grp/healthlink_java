@@ -11,6 +11,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -22,7 +23,7 @@ public class DashboardController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         WebEngine webEngine = webView.getEngine();
-        String powerBiUrl = "https://app.powerbi.com/view?r=eyJrIjoiYzc4ZjcwZTgtMzVlMy00YTY1LWI3NTQtOGY0ZWM0MzA0MzI0IiwidCI6ImRiZDY2NjRkLTRlYjktNDZlYi05OWQ4LTVjNDNiYTE1M2M2MSIsImMiOjl9";
+        String powerBiUrl = "https://app.powerbi.com/view?r=eyJrIjoiNzAyNWFjMDItODIxOC00NGI0LTkyNWYtNmQwMDdlZjEzNzM2IiwidCI6ImRiZDY2NjRkLTRlYjktNDZlYi05OWQ4LTVjNDNiYTE1M2M2MSIsImMiOjl9";
         webEngine.load(powerBiUrl);
     }
     @FXML
@@ -47,6 +48,20 @@ public class DashboardController implements Initializable {
     public void showDashView(ActionEvent actionEvent) {
         loadView("/views/User/Dashboard.fxml");
     }
+    @FXML
+    private void onArrowClicked() {
+        // Redirection quand on clique sur la flèche
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Home.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) webView.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     // Méthode pour charger les différentes vues
     private void loadView(String fxmlPath) {

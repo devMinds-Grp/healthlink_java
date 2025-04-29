@@ -2,58 +2,69 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
-<?import java.net.URL?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.healthlink.Controllers.EditForumController"
-      styleClass="form-background" spacing="15">
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.healthlink.Controllers.EditForumController"
+            stylesheets="@/styles/forum.css">
 
-    <!-- En-tête de la page avec un fond bleu -->
-    <StackPane styleClass="header-container">
-        <Label text="Forum" styleClass="header-label-white"/>
-        <padding>
-            <Insets top="50" right="20" bottom="50" left="20"/>
-        </padding>
-    </StackPane>
+    <!-- ========== NAVBAR EN HAUT ========== -->
+    <top>
+        <fx:include source="../views/Navbar.fxml"/>
+    </top>
 
-    <!-- Container principal du formulaire -->
-    <VBox styleClass="form-container" spacing="15">
-        <padding>
-            <Insets top="20" right="20" bottom="20" left="20"/>
-        </padding>
+    <!-- ========== CONTENU PRINCIPAL ========== -->
+    <center>
+        <StackPane alignment="CENTER" style="-fx-background-color: #f5f7fa; -fx-padding: 30;">
+            <!-- Carte du formulaire -->
+            <VBox alignment="CENTER" styleClass="form-container" maxWidth="400">
+                <padding>
+                    <Insets top="30" right="40" bottom="30" left="40"/>
+                </padding>
 
-        <Label text="Edit Forum" styleClass="header-label"/>
+                <!-- En-tête formulaire -->
+                <VBox alignment="CENTER" spacing="10">
+                    <HBox alignment="CENTER" spacing="15">
+                        <ImageView fitWidth="52" fitHeight="52">
+                            <image>
+                                <Image url="@/img/edit.png"/>
+                            </image>
+                        </ImageView>
+                        <Label text="Edit Forum" styleClass="form-title"/>
+                    </HBox>
+                    <Separator styleClass="separator"/>
+                </VBox>
 
-        <GridPane hgap="15" vgap="8">
-            <columnConstraints>
-                <ColumnConstraints minWidth="100" prefWidth="120"/>
-                <ColumnConstraints hgrow="ALWAYS" minWidth="300"/>
-            </columnConstraints>
+                <!-- Formulaire -->
+                <VBox spacing="15" style="-fx-padding: 20 0 0 0;">
+                    <!-- Champ Titre -->
+                    <VBox spacing="5">
+                        <Label text="Title" styleClass="form-label"/>
+                        <TextField fx:id="titleField" styleClass="text-field"
+                                   promptText="Enter the title (min 5 characters)"/>
+                        <Label fx:id="titleErrorLabel" styleClass="error-label"/>
+                    </VBox>
 
-            <!-- Titre -->
-            <Label text="Title:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
-            <TextField fx:id="titleField" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="text-field"/>
-            <Label fx:id="titleErrorLabel" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="error-label"/>
+                    <!-- Champ Description -->
+                    <VBox spacing="5">
+                        <Label text="Description" styleClass="form-label"/>
+                        <TextArea fx:id="descriptionArea" styleClass="text-area"
+                                  wrapText="true" prefRowCount="3"
+                                  promptText="Enter the description (min 10 characters)"/>
+                        <Label fx:id="descriptionErrorLabel" styleClass="error-label"/>
+                    </VBox>
 
-            <!-- Description -->
-            <Label text="Description:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
-            <TextArea fx:id="descriptionArea" wrapText="true" GridPane.rowIndex="2" GridPane.columnIndex="1"
-                      prefHeight="150" styleClass="text-area"/>
-            <Label fx:id="descriptionErrorLabel" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="error-label"/>
-        </GridPane>
-
-        <!-- Boutons d'action -->
-        <HBox spacing="10" alignment="CENTER_RIGHT">
-            <Button text="Cancel" onAction="#handleCancel" styleClass="secondary-button"/>
-            <Button text="Update" onAction="#handleSave" styleClass="primary-button"/>
-        </HBox>
-    </VBox>
-
-    <!-- Ajout d'espace en bas si nécessaire -->
-    <Pane VBox.vgrow="ALWAYS" />
-
-    <stylesheets>
-        <URL value="@/styles/forum.css"/>
-    </stylesheets>
-</VBox>
+                    <!-- Boutons d'action -->
+                    <HBox styleClass="button-bar" alignment="CENTER_RIGHT" spacing="10" style="-fx-padding: 20 0 0 0;">
+                        <Button text="Cancel" onAction="#handleCancel" styleClass="secondary-button"/>
+                        <Button text="ENREGISTRER" onAction="#handleSave" styleClass="primary-button" defaultButton="true"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

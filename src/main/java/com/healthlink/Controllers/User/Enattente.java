@@ -148,7 +148,7 @@ public class Enattente implements Initializable {
             Parent root = loader.load();
 
             // 2. Récupérer la fenêtre actuelle
-            Stage stage = (Stage) patientsMenuItem.getParentPopup().getOwnerWindow();
+            Stage stage = (Stage) tableUtilisateurs.getScene().getWindow();
 
             // 3. Changer la scène
             stage.setScene(new Scene(root));
@@ -157,6 +157,10 @@ public class Enattente implements Initializable {
             e.printStackTrace();
             System.out.println("Erreur lors du chargement de la vue: " + fxmlPath);
         }
+    }
+    @FXML
+    private void showForumView() {
+        loadView("/views/admindashboard.fxml");
     }
     // Méthode appelée quand on clique sur "Patients"
     @FXML
@@ -179,3 +183,4 @@ public class Enattente implements Initializable {
         loadView("/views/User/Dashboard.fxml");
     }
 }
+

@@ -10,6 +10,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
+import javafx.event.ActionEvent;
+import java.io.IOException;
 
 import java.sql.Date;
 import java.util.Optional;
@@ -259,6 +268,24 @@ public class AdminDashboardController {
             if (selectedForum != null) {
                 loadCommentsForForum(selectedForum.getId());
             }
+        }
+    }
+
+    @FXML
+    private void returnToUserList(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/list.fxml"));
+            Parent root = loader.load();
+
+            // Obtenir la fenêtre actuelle
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // Changer la scène
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Vous pouvez ajouter ici une alerte d'erreur si besoin
         }
     }
 }

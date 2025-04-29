@@ -1,0 +1,52 @@
+.fact-check-result {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dadce0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-padding: 10px;
+    -fx-spacing: 5px;
+}
+
+.fact-check-rating {
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a73e8;
+}
+
+.unverified-claim {
+    -fx-border-color: #fbbc04;
+    -fx-border-width: 2px;
+    -fx-border-radius: 4px;
+    -fx-background-color: #fff8e1;
+    -fx-padding: 5px;
+}
+
+.false-claim {
+    -fx-border-color: #FF0000; /* Rouge */
+    -fx-border-width: 2px;
+    -fx-border-radius: 4px;
+    -fx-background-color: #FFEBEE; /* Fond rouge clair */
+    -fx-padding: 5px;
+}
+.verify-button {
+    -fx-background-color: #4285F4;
+    -fx-text-fill: white;
+    -fx-padding: 5 15;
+    -fx-font-weight: bold;
+}
+.label.unverified-claim {
+    -fx-border-color: #fbbc04; /* Jaune */
+    -fx-border-width: 2px;
+    -fx-border-style: solid; /* Ajouter pour forcer l'affichage de la bordure */
+    -fx-border-radius: 4px;
+    -fx-background-color: #fff8e1;
+    -fx-padding: 5px;
+}
+
+.label.false-claim {
+    -fx-border-color: #FF0000; /* Rouge */
+    -fx-border-width: 2px;
+    -fx-border-style: solid; /* Ajouter pour forcer l'affichage de la bordure */
+    -fx-border-radius: 4px;
+    -fx-background-color: #FFEBEE;
+    -fx-padding: 5px;
+}

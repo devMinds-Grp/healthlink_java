@@ -1,7 +1,5 @@
 package com.healthlink.Controllers;
 
-import com.healthlink.Entities.ChatMessage;
-import com.healthlink.Entities.Notification;
 import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.AuthService;
 import com.healthlink.Services.ChatService;
@@ -28,6 +26,8 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class NavbarController {
 
@@ -35,7 +35,11 @@ public class NavbarController {
     @FXML private Button careButton;
     @FXML private Button prescriptionButton;
     @FXML private Button appointmentButton;
+    @FXML private Button doctorButton;
+    @FXML private Button myAppointmentsButton;
     @FXML private Button donButton;
+    @FXML private Button donationResponseButton;
+    @FXML private Button hospitalsButton;
     @FXML private Button ForumButton;
     @FXML private Button ReclamationButton;
     @FXML private Button profileButton;
@@ -60,6 +64,36 @@ public class NavbarController {
             throw new RuntimeException("Failed to initialize services", e);
         }
     }
+    // Map to store navigation details
+    private static final Map<String, NavigationTarget> NAVIGATION_MAP = new HashMap<>();
+
+    static {
+        NAVIGATION_MAP.put("home", new NavigationTarget("/views/Home.fxml", "Accueil"));
+        NAVIGATION_MAP.put("care", new NavigationTarget("/views/care/ListCare.fxml", "Liste des Soins"));
+        NAVIGATION_MAP.put("prescription", new NavigationTarget("/views/Prescription/list_prescription.fxml", "Liste des Prescriptions"));
+        NAVIGATION_MAP.put("appointment", new NavigationTarget("/views/Appointment/list_appointments.fxml", "Liste des Rendez-vous"));
+        NAVIGATION_MAP.put("doctors", new NavigationTarget("/views/Appointment/list_doctor.fxml", "Liste des Médecins"));
+        NAVIGATION_MAP.put("myAppointments", new NavigationTarget("/views/Appointment/my_appointments.fxml", "Mes Rendez-vous"));
+        NAVIGATION_MAP.put("don", new NavigationTarget("/views/list_don.fxml", "Donation"));
+        NAVIGATION_MAP.put("donationResponse", new NavigationTarget("/views/list_reponse_don.fxml", "Donation Response List"));
+        NAVIGATION_MAP.put("hospitals", new NavigationTarget("/views/map_view.fxml", "Find Nearby Hospitals"));
+        NAVIGATION_MAP.put("forum", new NavigationTarget("/views/MainView.fxml", "Forum"));
+        NAVIGATION_MAP.put("reclamations", new NavigationTarget("/list_reclamations.fxml", "Reclamations"));
+        NAVIGATION_MAP.put("dashboard", new NavigationTarget("/views/User/list.fxml", "Tableau de bord"));
+        NAVIGATION_MAP.put("profile", new NavigationTarget("/views/User/Profile.fxml", "Profil"));
+        NAVIGATION_MAP.put("disconnect", new NavigationTarget("/views/User/Auth/Login.fxml", "Connexion"));
+    }
+
+    // Static class to hold navigation target details
+    private static class NavigationTarget {
+        String fxmlPath;
+        String title;
+
+        NavigationTarget(String fxmlPath, String title) {
+            this.fxmlPath = fxmlPath;
+            this.title = title;
+        }
+    }
 
     @FXML
     public void initialize() {
@@ -68,6 +102,12 @@ public class NavbarController {
         if (currentUser != null && currentUser.getRole().getId() > 2) {
             System.out.println("Current user: ID=" + currentUser.getId() + ", Role=" + currentUser.getRole().getId());
             updateNotificationBadge();
+        Utilisateur utilisateur = AuthService.getConnectedUtilisateur();
+        Button[] allButtons = {
+                homeButton, careButton, prescriptionButton, appointmentButton, doctorButton,
+                myAppointmentsButton, donButton, donationResponseButton, hospitalsButton,
+                ForumButton, ReclamationButton, profileButton, disconnectButton, dashboardButton
+        };
 
             if (notificationIcon == null) {
                 System.err.println("ERROR: notificationIcon is null - Check fx:id in Navbar.fxml");
@@ -103,9 +143,19 @@ public class NavbarController {
             setButtonVisibility(false, homeButton, careButton, prescriptionButton, appointmentButton,
                     donButton, ForumButton, ReclamationButton, profileButton, disconnectButton,
                     dashboardButton);
+        // Hide all buttons by default
+        setButtonVisibility(false, allButtons);
+
+        // If no user is logged in, return early
+        if (utilisateur == null) {
             return;
         }
 
+        // Show buttons based on user role
+        switch (utilisateur.getRole().getId()) {
+            case 1: // Admin
+                setButtonVisibility(true, homeButton, dashboardButton, prescriptionButton,
+                        ForumButton, profileButton, ReclamationButton, donButton, disconnectButton);
         setButtonVisibility(false, homeButton, careButton, prescriptionButton, appointmentButton,
                 donButton, ForumButton, ReclamationButton, profileButton, disconnectButton,
                 dashboardButton);
@@ -117,16 +167,27 @@ public class NavbarController {
             case 2:
                 setButtonVisibility(true, homeButton, prescriptionButton, ForumButton, ReclamationButton,
                         profileButton, disconnectButton);
+            case 2: // Doctor
+                setButtonVisibility(true, homeButton, prescriptionButton, myAppointmentsButton,
+                        hospitalsButton, ForumButton, ReclamationButton, profileButton, disconnectButton);
                 break;
             case 3:
                 setButtonVisibility(true, homeButton, careButton, appointmentButton, donButton, ForumButton,
                         ReclamationButton, profileButton, disconnectButton);
+            case 3: // Patient
+                setButtonVisibility(true, homeButton, appointmentButton, doctorButton, donButton,
+                        donationResponseButton, hospitalsButton, ForumButton, ReclamationButton,
+                        profileButton, disconnectButton);
                 break;
+            case 4: // Soignant
+                setButtonVisibility(true, homeButton, careButton, hospitalsButton,
+                        ForumButton, ReclamationButton, profileButton, disconnectButton);
             case 4:
                 setButtonVisibility(true, homeButton, careButton, ForumButton, ReclamationButton,
                         profileButton, disconnectButton);
                 break;
             default:
+                // No buttons visible for unrecognized roles
                 break;
         }
     }
@@ -406,6 +467,7 @@ public class NavbarController {
         }
     }
 
+    // Utility method to set button visibility and managed property
     private void setButtonVisibility(boolean visible, Button... buttons) {
         for (Button button : buttons) {
             if (button != null) {
@@ -415,49 +477,54 @@ public class NavbarController {
         }
     }
 
+    // Centralized navigation method
+    private void navigateTo(String targetKey) {
+        NavigationTarget target = NAVIGATION_MAP.get(targetKey);
+        if (target == null) {
+            showAlert("Erreur", "Cible de navigation inconnue.");
+            return;
+        }
+
     private void navigateTo(String fxmlPath, String title) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(target.fxmlPath));
             Parent root = loader.load();
             Stage stage = (Stage) homeButton.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle(title);
+            stage.setTitle(target.title);
             stage.setMaximized(true);
             java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
             stage.setWidth(screenSize.getWidth());
             stage.setHeight(screenSize.getHeight());
             stage.setResizable(true);
             stage.show();
+
+            // Handle logout for disconnect action
+            if ("disconnect".equals(targetKey)) {
+                AuthService.logout();
+            }
         } catch (IOException e) {
             showAlert("Erreur", "Impossible de charger la page : " + e.getMessage());
         }
     }
 
-    @FXML
-    private void navigateToHome() {
-        navigateTo("/views/Home.fxml", "Accueil");
-    }
+    // Navigation methods
+    @FXML private void navigateToHome() { navigateTo("home"); }
+    @FXML private void navigateToCare() { navigateTo("care"); }
+    @FXML private void navigateToPrescription() { navigateTo("prescription"); }
+    @FXML private void navigateToAppointment() { navigateTo("appointment"); }
+    @FXML private void navigateToDoctors() { navigateTo("doctors"); }
+    @FXML private void navigateToMyAppointments() { navigateTo("myAppointments"); }
+    @FXML private void navigateToDon() { navigateTo("don"); }
+    @FXML private void navigateToDonationResponse() { navigateTo("donationResponse"); }
+    @FXML private void navigateToHospitals() { navigateTo("hospitals"); }
+    @FXML private void navigateToForum() { navigateTo("forum"); }
+    @FXML private void navigateToReclamations() { navigateTo("reclamations"); }
+    @FXML private void navigateToDashboard() { navigateTo("dashboard"); }
+    @FXML private void navigateToProfile() { navigateTo("profile"); }
+    @FXML private void navigateToDisconnect() { navigateTo("disconnect"); }
 
-    @FXML
-    private void navigateToCare() {
-        navigateTo("/views/care/ListCare.fxml", "Liste des Soins");
-    }
-
-    @FXML
-    private void navigateToPrescription() {
-        navigateTo("/views/Prescription/list_prescription.fxml", "Liste des Prescriptions");
-    }
-
-    @FXML
-    private void navigateToAppointment() {
-        navigateTo("/views/Appointment/list_appointments.fxml", "Liste des Rendez-vous");
-    }
-
-    @FXML
-    private void navigateToDon() {
-        navigateTo("/views/list_don.fxml", "Donation");
-    }
-
+    // Utility method to show error alerts
     @FXML
     private void navigateToForum() {
         navigateTo("/views/MainView.fxml", "Forum");

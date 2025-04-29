@@ -5,7 +5,6 @@ import com.healthlink.Services.PrescriptionService;
 import com.healthlink.Services.AppointmentService;
 import com.healthlink.Entities.Appointment;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +14,6 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class UpdatePrescriptionController {
@@ -24,16 +22,18 @@ public class UpdatePrescriptionController {
     @FXML private TextField dosageField;
     @FXML private TextField dureeField;
     @FXML private TextArea notesArea;
-    @FXML private ComboBox<Integer> rdvCardIdCombo; // Changed from appointmentDateCombo
+    @FXML private Label rdvDateLabel; // Changed from ComboBox to Label
 
     private Prescription currentPrescription;
+    private ListPrescriptionController listPrescriptionController;
     private final PrescriptionService prescriptionService = new PrescriptionService();
     private final AppointmentService appointmentService = new AppointmentService();
-    private List<Appointment> appointments; // Store appointments for mapping
+    private List<Appointment> appointments;
 
     @FXML
     public void initialize() {
-        setupRdvCardIdComboBox();
+        // No need for ComboBox setup anymore
+        appointments = appointmentService.getAllAppointments();
     }
 
     public void setPrescription(Prescription prescription) {
@@ -43,62 +43,25 @@ public class UpdatePrescriptionController {
             dosageField.setText(prescription.getDosage());
             dureeField.setText(prescription.getDuree());
             notesArea.setText(prescription.getNotes());
-            rdvCardIdCombo.getSelectionModel().select(prescription.getRdvCardId());
+            // Set the appointment date in the label
+            if (prescription.getRdvCardId() != 0 && appointments != null) {
+                Appointment appointment = appointments.stream()
+                        .filter(a -> a.getId() == prescription.getRdvCardId())
+                        .findFirst()
+                        .orElse(null);
+                if (appointment != null) {
+                    rdvDateLabel.setText(appointment.getDate());
+                } else {
+                    rdvDateLabel.setText("ID: " + prescription.getRdvCardId());
+                }
+            } else {
+                rdvDateLabel.setText("Non défini");
+            }
         }
     }
 
-    private void setupRdvCardIdComboBox() {
-        List<Integer> appointmentIds = new ArrayList<>();
-        appointmentIds.add(null); // Allow null selection
-        appointments = appointmentService.getAllAppointments();
-        for (Appointment appointment : appointments) {
-            appointmentIds.add(appointment.getId());
-        }
-        rdvCardIdCombo.setItems(FXCollections.observableArrayList(appointmentIds));
-
-        // Custom cell factory to display the date alongside the ID
-        rdvCardIdCombo.setCellFactory(param -> new ListCell<>() {
-            @Override
-            protected void updateItem(Integer item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    Appointment appointment = appointments.stream()
-                            .filter(a -> a.getId() == item)
-                            .findFirst()
-                            .orElse(null);
-                    if (appointment != null) {
-                        setText( appointment.getDate() );
-                    } else {
-                        setText("ID: " + item);
-                    }
-                }
-            }
-        });
-
-        // Ensure the button cell (the displayed value when not expanded) also shows the date
-        rdvCardIdCombo.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(Integer item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    Appointment appointment = appointments.stream()
-                            .filter(a -> a.getId() == item)
-                            .findFirst()
-                            .orElse(null);
-                    if (appointment != null) {
-                        setText(  appointment.getDate() );
-                    } else {
-                        setText("ID: " + item);
-                    }
-                }
-            }
-        });
-
-        rdvCardIdCombo.getSelectionModel().selectFirst();
+    public void setListPrescriptionController(ListPrescriptionController controller) {
+        this.listPrescriptionController = controller;
     }
 
     @FXML
@@ -119,6 +82,9 @@ public class UpdatePrescriptionController {
 
             if (success) {
                 showAlert("Succès", "Prescription mise à jour avec succès", Alert.AlertType.INFORMATION);
+                if (listPrescriptionController != null) {
+                    listPrescriptionController.refreshPrescriptions();
+                }
                 navigateToListView();
             } else {
                 showAlert("Erreur", "Échec de la mise à jour de la prescription.", Alert.AlertType.ERROR);
@@ -187,7 +153,8 @@ public class UpdatePrescriptionController {
         String dosage = dosageField.getText().trim();
         String duree = dureeField.getText().trim();
         String notes = notesArea.getText().trim();
-        Integer rdvCardId = rdvCardIdCombo.getValue();
+        // Use the existing rdvCardId from the current prescription
+        Integer rdvCardId = currentPrescription.getRdvCardId();
 
         return new Prescription(nomMedicament, dosage, duree, notes, rdvCardId);
     }
@@ -196,6 +163,8 @@ public class UpdatePrescriptionController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Prescription/list_prescription.fxml"));
             Parent root = loader.load();
+            ListPrescriptionController controller = loader.getController();
+            setListPrescriptionController(controller);
             Stage stage = (Stage) nomMedicamentField.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Liste des Prescriptions");
@@ -213,7 +182,7 @@ public class UpdatePrescriptionController {
 
             DialogPane dialogPane = alert.getDialogPane();
             dialogPane.getStylesheets().add(
-                    getClass().getResource("/css/Appointment.css").toExternalForm()
+                    getClass().getResource("/css/Prescription.css").toExternalForm()
             );
             dialogPane.getStyleClass().add("custom-alert");
 

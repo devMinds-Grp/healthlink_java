@@ -37,11 +37,42 @@
     -fx-border-color: #bdc3c7;
     -fx-border-width: 1;
     -fx-padding: 5 10;
+    -fx-pref-width: 100px;
 }
 
 .form-field:focused {
     -fx-border-color: #3498db;
     -fx-effect: innershadow(three-pass-box, rgba(52,152,219,0.2), 5, 0, 0, 2);
+}
+
+/* Style for Labels used as fields (e.g., for non-editable date) */
+.form-field.label {
+    -fx-background-color: #f9f9f9;
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 14px;
+    -fx-padding: 5 10;
+}
+
+/* ========== RECHERCHE ========== */
+.search-field {
+    -fx-pref-height: 40px;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #bdc3c7;
+    -fx-border-width: 1.5;
+    -fx-padding: 5 20;
+    -fx-background-color: #f9f9f9;
+    -fx-font-size: 14px;
+    -fx-font-family: "Arial";
+    -fx-prompt-text-fill: #95a5a6;
+    -fx-text-fill: #2c3e50;
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);
+}
+
+.search-field:focused {
+    -fx-border-color: #3498db;
+    -fx-background-color: white;
+    -fx-effect: innershadow(gaussian, rgba(52,152,219,0.3), 5, 0, 0, 2);
 }
 
 /* ========== COMPOSANTS ========== */
@@ -128,6 +159,28 @@
     -fx-translate-y: 0;
 }
 
+/* Bouton de Tri (Ascending/Descending) */
+.sort-button {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 8 15;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-min-width: 80px;
+    -fx-min-height: 35px;
+}
+
+.sort-button:hover {
+    -fx-background-color: #5a6268;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 8, 0, 0, 2);
+}
+
+.sort-button:pressed {
+    -fx-background-color: #495057;
+}
+
 /* Boutons dans le tableau */
 .edit-btn {
     -fx-background-color: #28a745; /* Vert pour "Modifier" */
@@ -167,6 +220,26 @@
 
 .delete-btn:pressed {
     -fx-background-color: #bd2130;
+}
+
+.send-btn {
+    -fx-background-color: #007bff; /* Bleu pour "Envoyer" */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-padding: 5 10;
+    -fx-background-radius: 4;
+    -fx-min-width: 70px;
+    -fx-cursor: hand;
+}
+
+.send-btn:hover {
+    -fx-background-color: #0056b3; /* Bleu plus foncé */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 8, 0, 0, 2);
+}
+
+.send-btn:pressed {
+    -fx-background-color: #004085;
 }
 
 /* ========== NAVBAR ========== */
@@ -217,7 +290,7 @@
 }
 
 .styled-table .table-cell {
-    -fx-font-size: 13px;
+    -fx-font-size: 15px;
     -fx-text-fill: #050607;
     -fx-alignment: CENTER;
 }
@@ -268,30 +341,18 @@ StackPane.container {
     -fx-pref-width: 200px;
 }
 
-/* Modifiez cette partie dans votre CSS */
-.form-field {
-    -fx-font-size: 14px;
-    -fx-pref-height: 35px;  /* Gardez cette valeur ou réduisez-la si nécessaire */
-    -fx-background-radius: 5;
-    -fx-border-radius: 5;
-    -fx-border-color: #bdc3c7;
-    -fx-border-width: 1;
-    -fx-padding: 5 10;
-    -fx-pref-width: 100px;  /* Ajoutez une largeur fixe ou réduisez-la */
-}
-
 /* Pour les TextArea spécifiquement */
 .form-field.text-area {
-    -fx-pref-height: 60px;  /* Réduisez cette valeur */
-    -fx-pref-width: 100px;  /* Ajoutez une largeur fixe */
+    -fx-pref-height: 60px;
+    -fx-pref-width: 100px;
 }
 
 /* Style the dialog pane */
 .custom-alert {
-    -fx-background-color: #f0f8ff; /* Light blue background */
+    -fx-background-color: #f0f8ff;
     -fx-background-radius: 10;
     -fx-border-radius: 10;
-    -fx-border-color: #007bff; /* Blue border */
+    -fx-border-color: #007bff;
     -fx-border-width: 2;
 }
 
@@ -300,13 +361,13 @@ StackPane.container {
     -fx-font-family: "Arial";
     -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-text-fill: #333333; /* Dark gray text */
+    -fx-text-fill: #333333;
     -fx-padding: 10 20 10 20;
 }
 
 /* Style the buttons */
 .custom-alert .button {
-    -fx-background-color: #007bff; /* Blue background */
+    -fx-background-color: #007bff;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 5;
@@ -314,7 +375,7 @@ StackPane.container {
 }
 
 .custom-alert .button:hover {
-    -fx-background-color: #0056b3; /* Darker blue on hover */
+    -fx-background-color: #0056b3;
 }
 
 /* Style the dialog pane's background */
@@ -322,11 +383,23 @@ StackPane.container {
     -fx-background-color: transparent;
 }
 
-/* Optional: Style the header (if you decide to add one later) */
+/* Optional: Style the header */
 .custom-alert .header-panel {
     -fx-background-color: #007bff;
     -fx-text-fill: white;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-padding: 10;
+}
+
+.send-btn {
+    -fx-background-color: #3498db; /* Blue color */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 5 10;
+    -fx-cursor: hand;
+}
+
+.send-btn:hover {
+    -fx-background-color: #2980b9;
 }

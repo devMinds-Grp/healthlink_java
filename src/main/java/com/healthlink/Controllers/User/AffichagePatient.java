@@ -15,15 +15,18 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.scene.Node;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.scene.web.WebView;
 
 public class AffichagePatient implements Initializable {
-
+    @FXML
+    private WebView webView;
     private final UserService userService = new UserService();
     private final ObservableList<Utilisateur> patientList = FXCollections.observableArrayList();
 
@@ -34,6 +37,7 @@ public class AffichagePatient implements Initializable {
     @FXML private TableColumn<Utilisateur, String> emailPatientColumn;
     @FXML private TableColumn<Utilisateur, Integer> numTelPatientColumn;
     @FXML private TableColumn<Utilisateur, Void> actionsPatientColumn;
+    @FXML private MenuItem patientsMenuItem;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -47,7 +51,6 @@ public class AffichagePatient implements Initializable {
         prenomPatientColumn.setCellValueFactory(new PropertyValueFactory<>("prenom"));
         emailPatientColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         numTelPatientColumn.setCellValueFactory(new PropertyValueFactory<>("num_tel"));
-        // Configuration des actions si nécessaire
     }
 
     private void setupActionsColumn() {
@@ -88,7 +91,6 @@ public class AffichagePatient implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/details.fxml"));
             Parent root = loader.load();
 
-            // Passez le patient au contrôleur des détails si nécessaire
             Details controller = loader.getController();
             controller.initData(patient);
 
@@ -112,9 +114,8 @@ public class AffichagePatient implements Initializable {
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Modifier Patient");
-            stage.showAndWait(); // Attend la fermeture de la fenêtre
+            stage.showAndWait();
 
-            // Rafraîchir la table après modification
             loadPatients();
         } catch (IOException e) {
             e.printStackTrace();
@@ -130,7 +131,7 @@ public class AffichagePatient implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             userService.deletePatient(patient.getId());
-            loadPatients(); // Rafraîchir la liste
+            loadPatients();
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Patient supprimé avec succès");
         }
     }
@@ -143,78 +144,79 @@ public class AffichagePatient implements Initializable {
         alert.showAndWait();
     }
 
-    @FXML private MenuItem patientsMenuItem;
-
-
-    // Méthode appelée quand on clique sur "Patients"
     @FXML
     private void showPatientsView() {
         loadView("/views/User/list.fxml");
     }
 
-    // Méthode appelée quand on clique sur "Médecins"
     @FXML
     private void showMedecinsView() {
         loadView("/views/User/listMedecin.fxml");
     }
-    // Méthode appelée quand on clique sur "Médecins"
+
     @FXML
     private void showSoignantView() {
         loadView("/views/User/listSoignant.fxml");
     }
+
     @FXML
     private void showAttenteView() {
         loadView("/views/User/enattente.fxml");
     }
 
+    @FXML
+    private void showDashView(ActionEvent actionEvent) {
+        loadView("/views/User/Dashboard.fxml");
+    }
 
-    // Méthode pour charger les différentes vues
+    @FXML
+    private void showForumView() {
+        loadView("/views/admindashboard.fxml");
+    }
+
     private void loadView(String fxmlPath) {
         try {
-            // 1. Charger le fichier FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
-
-            // 2. Récupérer la fenêtre actuelle
-            Stage stage = (Stage) patientsMenuItem.getParentPopup().getOwnerWindow();
-
-            // 3. Changer la scène
+            // Obtenir la fenêtre actuelle à partir de n'importe quel nœud de la scène
+            Stage stage = (Stage) patientTableView.getScene().getWindow(); // ou tout autre nœud
             stage.setScene(new Scene(root));
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erreur lors du chargement de la vue: " + fxmlPath);
         }
     }
+
     @FXML
     private void openAddPatientForm() {
         try {
-            // Charger le fichier FXML du formulaire
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/ajout.fxml"));
             Parent root = loader.load();
-
-            // Créer une nouvelle scène
             Stage stage = new Stage();
             stage.setTitle("Ajouter un nouveau patient");
             stage.setScene(new Scene(root));
-
-            // Configurer comme fenêtre modale
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
-
-            // Afficher la fenêtre et attendre sa fermeture
             stage.showAndWait();
-
-            // Rafraîchir la table après fermeture du formulaire
-            //refreshPatientTable();
-
         } catch (Exception e) {
             e.printStackTrace();
-            // Gérer l'erreur (afficher un message à l'utilisateur)
         }
     }
     @FXML
-    public void showDashView(ActionEvent actionEvent) {
-        loadView("/views/User/Dashboard.fxml");
+    private void returnToHome(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Home.fxml"));
+            Parent root = loader.load();
+
+            // Obtenir la fenêtre actuelle
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // Changer la scène
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger la page d'accueil");
+        }
     }
 }

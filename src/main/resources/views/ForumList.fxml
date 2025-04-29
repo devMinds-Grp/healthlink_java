@@ -5,8 +5,10 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.*?>
 <?import java.net.URL?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane styleClass="main-background" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.healthlink.Controllers.ForumListController"
             stylesheets="@/styles/forum.css">
 
@@ -54,11 +56,25 @@
             </VBox>
 
             <!-- Forums List Section -->
-            <VBox spacing="20" VBox.vgrow="ALWAYS">
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <Label text="Forum List" styleClass="subheader-label"/>
-                    <Region HBox.hgrow="ALWAYS"/>
-                    <Button fx:id="newForumButton" text="Create New" styleClass="create-button"/>
+            <VBox spacing="20" VBox.vgrow="ALWAYS" styleClass="form-container" style="-fx-max-width: 1100; -fx-min-width: 1100;">
+                <padding>
+                    <Insets bottom="50" left="40" right="40" top="50"/>
+                </padding>
+
+                <!-- En-tête avec icône et titre -->
+                <HBox alignment="CENTER" spacing="15">
+                    <ImageView fitHeight="50" fitWidth="50">
+                        <image>
+                            <Image url="@/img/liste.png"/>
+                        </image>
+                    </ImageView>
+                    <Label styleClass="form-title" text="Forum List"/>
+                </HBox>
+
+                <!-- Boutons alignés à droite -->
+                <HBox alignment="CENTER_RIGHT" style="-fx-padding: 0 0 20 0;" spacing="10">
+                    <Button fx:id="newForumButton" text="Create New" styleClass="primary-button"/>
+                    <Button text="Générer un Forum" styleClass="primary-button" onAction="#handleGenerateForumClick"/>
                 </HBox>
 
                 <!-- Custom Forum List Container -->

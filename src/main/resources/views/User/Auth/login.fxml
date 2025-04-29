@@ -38,6 +38,12 @@
                   style="-fx-background-color: #e0e0e0; -fx-text-fill: #3f51b5; -fx-font-weight: bold; -fx-background-radius: 5;" />
       </children>
   </HBox>
+                        <HBox spacing="10" alignment="TOP_RIGHT">
+                        <Button fx:id="faceLoginButton" text="Déverrouiller avec Face ID"
+                                onAction="#handleFaceLogin"
+                                style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" />
+                        </HBox>
+
 
   <Separator />
 

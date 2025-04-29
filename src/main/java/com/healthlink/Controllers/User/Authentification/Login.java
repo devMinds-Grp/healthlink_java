@@ -8,10 +8,12 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import com.healthlink.Entites.Role;
 import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.AuthService;
 import com.healthlink.Services.GoogleAuthService;
 import com.healthlink.Services.UserService;
+import com.healthlink.utils.FaceRecognitionUtils;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,13 +30,27 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.Node;
-
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.core.*;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.objdetect.CascadeClassifier;
+import org.opencv.videoio.VideoCapture;
+import javafx.scene.control.Alert;
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
+//ajouter par majd
+import com.healthlink.Services.UserService;
+import java.sql.Connection; // Pour la connexion à la base de données
+import java.sql.PreparedStatement; // Pour les requêtes préparées
+import java.sql.ResultSet; // Pour les résultats des requêtes
+import java.sql.SQLException; // Pour gérer les exceptions SQL
+import java.sql.Timestamp; // Pour gérer banned_until
+import com.healthlink.utils.MyDB; // Import pour MyDB
 
 public class Login {
 
@@ -86,27 +102,29 @@ public class Login {
             showAlert(Alert.AlertType.WARNING, "Champs vides", "Veuillez remplir tous les champs.");
             return;
         }
-        // Vérifier le token reCAPTCHA
-//        if (recaptchaHandler.getLastToken() == null) {
-//            showAlert(Alert.AlertType.WARNING, "Validation requise", "Veuillez valider que vous n'êtes pas un robot.");
-//            return;
-//        }
-//
-//        try {
-//            if (!RecaptchaHandler.isTokenValid(recaptchaHandler.getLastToken())) {
-//                showAlert(Alert.AlertType.WARNING, "Validation requise", "Veuillez valider que vous n'êtes pas un robot.");
-//                return;
-//            }
-//        } catch (IOException e) {
-//            showAlert(Alert.AlertType.ERROR, "Erreur réseau", "Impossible de vérifier reCAPTCHA : " + e.getMessage());
-//            return;
-//        }
-
-
-
-        try {
+         try {
             Utilisateur utilisateur = AuthService.login(email, password);
             if (utilisateur != null) {
+                //ajouter par majd
+                // Vérifier si l'utilisateur est banni
+                UserService userService = new UserService();
+                if (userService.isUserBanned(utilisateur.getId())) {
+                    // Récupérer la date de fin de bannissement pour l'afficher dans le message
+                    String req = "SELECT banned_until FROM utilisateur WHERE id = ?";
+                    try (Connection conn = MyDB.getInstance().getConnection();
+                         PreparedStatement pst = conn.prepareStatement(req)) {
+                        pst.setInt(1, utilisateur.getId());
+                        ResultSet rs = pst.executeQuery();
+                        if (rs.next()) {
+                            Timestamp bannedUntil = rs.getTimestamp("banned_until");
+                            showAlert(Alert.AlertType.ERROR, "Compte banni",
+                                    "Votre compte est banni jusqu'au " + bannedUntil + ".");
+                        }
+                    } catch (SQLException e) {
+                        showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de la vérification du bannissement : " + e.getMessage());
+                    }
+                    return;
+                }//
                 if (!"approuvé".equalsIgnoreCase(utilisateur.getStatut())) {
                     // Afficher une page ou alerte pour statut non approuvé
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/Auth/NonApprouve.fxml"));
@@ -382,15 +400,23 @@ public class Login {
 
             // Récupérer les infos de l'utilisateur
             Map<String, Object> userInfo = getGoogleUserInfo(accessToken);
-
             String email = (String) userInfo.get("email");
 
             // Vérifier si l'utilisateur existe dans la base
-            if (emailExisteDansLaBase(email)) {
-                // Utilisateur trouvé => le connecter
+            Utilisateur utilisateur = userService.getUtilisateurByEmail(email);
+
+            if (utilisateur != null) {
+                // Utilisateur trouvé => récupérer le rôle
+                //Utilisateur utilisateur = userService.getUtilisateurByEmail(email);
+                Role role = utilisateur.getRole();
+                System.out.println(role.getNom());
+
+
+                // Stocker en session (optionnel mais utile si tu veux suivre l'utilisateur connecté)
+                AuthService.setConnectedUtilisateur(utilisateur);
+
                 Platform.runLater(() -> {
-                    // Ici tu peux rediriger vers la page d'accueil, ou enregistrer l'utilisateur en session
-                    showAlert("Succès", "Connexion réussie avec Google pour : " + email, Alert.AlertType.INFORMATION);
+                    showAlert("Succès", "Connexion réussie avec Google pour : " + email + "\nRôle: " + role, Alert.AlertType.INFORMATION);
                     allerALaPageAccueil();
                 });
             } else {
@@ -405,8 +431,9 @@ public class Login {
             showAlert("Erreur", "Erreur lors de la connexion Google : " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
     private boolean emailExisteDansLaBase(String email) {
-        // TODO : remplacer par une vraie requête SQL
+
         Utilisateur utilisateur = userService.getUtilisateurByEmail(email);
         return utilisateur != null;
     }
@@ -445,4 +472,135 @@ public class Login {
         return jsonFactory.fromString(jsonResponse, Map.class);
     }
 
+    @FXML
+    private Button faceLoginButton;
+
+    @FXML
+    private void handleFaceLogin(ActionEvent event) throws IOException {
+        System.out.println("Démarrage du processus de connexion par visage");
+        try {
+            // Charger le classifieur en cascade
+            System.out.println("Chargement du fichier XML de détection de visage");
+            CascadeClassifier faceDetector = new CascadeClassifier("C:\\opencv\\sources\\data\\haarcascades\\haarcascade_frontalface_default.xml");
+            if (faceDetector.empty()) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger le fichier haarcascade.");
+                return;
+            }
+
+            // Capturer l'image de la webcam
+            System.out.println("Ouverture de la webcam");
+            VideoCapture camera = new VideoCapture(0);
+            if (!camera.isOpened()) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir la webcam.");
+                return;
+            }
+
+            Mat frame = new Mat();
+            MatOfRect faceDetections = new MatOfRect();
+            boolean faceDetected = false;
+            int maxAttempts = 10; // Nombre maximum de tentatives
+            for (int i = 0; i < maxAttempts; i++) {
+                camera.read(frame);
+                System.out.println("Tentative de capture " + (i + 1));
+
+                // Sauvegarder l'image pour débogage
+                Imgcodecs.imwrite("debug_captured_frame_" + i + ".jpg", frame);
+                System.out.println("Image capturée sauvegardée pour débogage : debug_captured_frame_" + i + ".jpg");
+
+                // Convertir en niveaux de gris et normaliser
+                Mat grayFrame = new Mat();
+                Imgproc.cvtColor(frame, grayFrame, Imgproc.COLOR_BGR2GRAY);
+                Imgproc.equalizeHist(grayFrame, grayFrame);
+
+                // Détection de visages
+                faceDetector.detectMultiScale(
+                        grayFrame,
+                        faceDetections,
+                        1.1,
+                        3,
+                        0,
+                        new Size(30, 30),
+                        new Size(300, 300)
+                );
+
+                if (faceDetections.toArray().length > 0) {
+                    faceDetected = true;
+                    break;
+                }
+
+                // Attendre un court instant avant la prochaine capture
+                Thread.sleep(500); // 500 ms entre chaque tentative
+            }
+
+            camera.release();
+            System.out.println("Image webcam capturée");
+            System.out.println("Nombre de visages détectés : " + faceDetections.toArray().length);
+
+            if (!faceDetected) {
+                showAlert(Alert.AlertType.ERROR, "Échec", "Aucun visage détecté après plusieurs tentatives. Essayez encore.");
+                return;
+            }
+
+            // Sauvegarder l'image capturée
+            Imgcodecs.imwrite("captured_face.jpg", frame);
+            System.out.println("Image capturée sauvegardée");
+
+            // Récupérer tous les utilisateurs avec une image de profil
+            List<Utilisateur> users = AuthService.getAllUsersWithImageProfile();
+            if (users.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Aucun utilisateur avec une image de profil n'a été trouvé.");
+                return;
+            }
+
+            // Comparer avec toutes les images de profil et trouver la différence minimale
+            Utilisateur matchedUser = null;
+            double minDiff = Double.MAX_VALUE;
+            double threshold = 6000000.0; // Seuil maximal pour une correspondance valide
+
+            for (Utilisateur user : users) {
+                String referenceImagePath = "profile_images/" + user.getImageprofile();
+                System.out.println("Comparaison avec l'image de profil : " + referenceImagePath);
+                double diff = FaceRecognitionUtils.compareFacesWithOpenCV("captured_face.jpg", referenceImagePath);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    matchedUser = user;
+                }
+            }
+
+            // Vérifier si la différence minimale est acceptable
+            if (matchedUser != null && minDiff < threshold) {
+                System.out.println("Utilisateur correspondant trouvé avec une différence de : " + minDiff);
+                // Vérifier le statut de l'utilisateur
+                if (!"approuvé".equalsIgnoreCase(matchedUser.getStatut())) {
+                    // Afficher une page ou alerte pour statut non approuvé
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/Auth/NonApprouve.fxml"));
+                    Parent root = loader.load();
+                    Stage stage = (Stage) faceLoginButton.getScene().getWindow();
+                    stage.setScene(new Scene(root));
+                    stage.show();
+                    return;
+                }
+
+                // Stocker l'utilisateur connecté dans le service
+                AuthService.setConnectedUtilisateur(matchedUser);
+
+                // Afficher un message de bienvenue
+                showAlert(Alert.AlertType.INFORMATION, "Connexion réussie", "Bienvenue " + matchedUser.getPrenom() + " !");
+
+                // Redirection vers la page d'accueil
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Home.fxml"));
+                Parent root = loader.load();
+                Stage stage = (Stage) faceLoginButton.getScene().getWindow();
+                stage.setScene(new Scene(root));
+                stage.show();
+            } else {
+                System.out.println("Aucune correspondance trouvée avec une différence acceptable (minDiff = " + minDiff + ")");
+                showAlert(Alert.AlertType.ERROR, "Échec de connexion", "Visage non reconnu.");
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur dans la connexion par visage : " + e.getMessage());
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Une erreur est survenue : " + e.getMessage());
+        }
+    }
 }

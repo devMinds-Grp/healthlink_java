@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 public class MainFX extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        System.out.println("JavaFX Version: " + System.getProperty("javafx.version"));
 
         // Verify database connection first
         try {
@@ -41,6 +40,8 @@ public class MainFX extends Application {
 
     public static void main(String[] args) {
         // This will be called by MainLauncher
+        System.load("C:\\opencv\\build\\java\\x64\\opencv_java451.dll");
+
         launch(args);
     }
 }

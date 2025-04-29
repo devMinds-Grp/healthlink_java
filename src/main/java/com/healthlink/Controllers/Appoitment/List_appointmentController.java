@@ -2,8 +2,14 @@ package com.healthlink.Controllers.Appoitment;
 
 import com.healthlink.Entities.Appointment;
 import com.healthlink.Services.AppointmentService;
+import com.healthlink.Entites.Utilisateur;
+import com.healthlink.Services.AuthService;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,13 +25,45 @@ import java.util.List;
 public class List_appointmentController {
 
     @FXML private TableView<Appointment> appointmentsTable;
+    @FXML private TextField searchField;
+    @FXML private Button sortAscButton;
+    @FXML private Button sortDescButton;
 
     private final AppointmentService appointmentService = new AppointmentService();
+    private ObservableList<Appointment> appointmentList;
+    private FilteredList<Appointment> filteredAppointments;
 
     @FXML
     public void initialize() {
         setupTableColumns();
         loadAppointments();
+        setupSearchFilter();
+        setupButtonActions();
+    }
+
+    private void setupSearchFilter() {
+        filteredAppointments = new FilteredList<>(appointmentList, p -> true);
+        searchField.textProperty().addListener((observable, oldValue, newValue) ->
+                filteredAppointments.setPredicate(appointment -> {
+                    if (newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
+
+                    String lowerCaseFilter = newValue.toLowerCase();
+                    return (appointment.getPatientName() != null && appointment.getPatientName().toLowerCase().contains(lowerCaseFilter)) ||
+                            (appointment.getDoctorName() != null && appointment.getDoctorName().toLowerCase().contains(lowerCaseFilter)) ||
+                            (appointment.getDate() != null && appointment.getDate().toLowerCase().contains(lowerCaseFilter));
+                })
+        );
+
+        SortedList<Appointment> sortedAppointments = new SortedList<>(filteredAppointments);
+        sortedAppointments.comparatorProperty().bind(appointmentsTable.comparatorProperty());
+        appointmentsTable.setItems(sortedAppointments);
+    }
+
+    private void setupButtonActions() {
+        sortAscButton.setOnAction(event -> sortAscending());
+        sortDescButton.setOnAction(event -> sortDescending());
     }
 
     private void openEditDialog(Appointment appointment) {
@@ -44,6 +82,7 @@ public class List_appointmentController {
             loadAppointments();
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert("Erreur", "Impossible d'ouvrir le formulaire de modification: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -73,19 +112,61 @@ public class List_appointmentController {
 
     private void setupTableColumns() {
         @SuppressWarnings("unchecked")
-        TableColumn<Appointment, String> dateColumn = (TableColumn<Appointment, String>) appointmentsTable.getColumns().get(0);
+        TableColumn<Appointment, String> patientNameColumn = (TableColumn<Appointment, String>) appointmentsTable.getColumns().get(0);
         @SuppressWarnings("unchecked")
-        TableColumn<Appointment, String> typeColumn = (TableColumn<Appointment, String>) appointmentsTable.getColumns().get(1);
+        TableColumn<Appointment, String> doctorNameColumn = (TableColumn<Appointment, String>) appointmentsTable.getColumns().get(1);
         @SuppressWarnings("unchecked")
-        TableColumn<Appointment, String> statusColumn = (TableColumn<Appointment, String>) appointmentsTable.getColumns().get(2);
+        TableColumn<Appointment, String> dateColumn = (TableColumn<Appointment, String>) appointmentsTable.getColumns().get(2);
         @SuppressWarnings("unchecked")
-        TableColumn<Appointment, Void> actionsColumn = (TableColumn<Appointment, Void>) appointmentsTable.getColumns().get(3);
+        TableColumn<Appointment, String> typeColumn = (TableColumn<Appointment, String>) appointmentsTable.getColumns().get(3);
+        @SuppressWarnings("unchecked")
+        TableColumn<Appointment, String> statusColumn = (TableColumn<Appointment, String>) appointmentsTable.getColumns().get(4);
+        @SuppressWarnings("unchecked")
+        TableColumn<Appointment, Void> actionsColumn = (TableColumn<Appointment, Void>) appointmentsTable.getColumns().get(5);
+
+        patientNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPatientName()));
+        patientNameColumn.setCellFactory(column -> new TableCell<Appointment, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    if (item.equals("Utilisateur inconnu")) {
+                        setStyle("-fx-text-fill: #e74c3c; -fx-font-style: italic;");
+                    } else {
+                        setStyle("");
+                    }
+                }
+            }
+        });
+
+        doctorNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDoctorName()));
+        doctorNameColumn.setCellFactory(column -> new TableCell<Appointment, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    if (item.equals("Médecin inconnu")) {
+                        setStyle("-fx-text-fill: #e74c3c; -fx-font-style: italic;");
+                    } else {
+                        setStyle("");
+                    }
+                }
+            }
+        });
 
         dateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate()));
         typeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
                 cellData.getValue().getType().equals("en_ligne") ? "En ligne" : "Présentielle"
         ));
-        statusColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus()));
+        statusColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus().getValue()));
 
         actionsColumn.setCellFactory(col -> new TableCell<Appointment, Void>() {
             private final Button editBtn = new Button("Modifier");
@@ -122,26 +203,39 @@ public class List_appointmentController {
     }
 
     private void loadAppointments() {
-        appointmentsTable.getItems().clear();
-        List<Appointment> appointments = appointmentService.getAllAppointments();
-        appointmentsTable.getItems().addAll(appointments);
+        Utilisateur connectedUser = AuthService.getConnectedUtilisateur();
+        if (connectedUser == null || connectedUser.getRole().getId() != 3) {
+            showAlert("Erreur", "Aucun patient connecté ou rôle non autorisé.", Alert.AlertType.ERROR);
+            appointmentList = FXCollections.observableArrayList();
+        } else {
+            List<Appointment> appointments = appointmentService.getAppointmentsByConnectedUser();
+            if (appointmentList == null) {
+                appointmentList = FXCollections.observableArrayList(appointments);
+                setupSearchFilter();
+            } else {
+                appointmentList.setAll(appointments);
+            }
+        }
     }
 
     @FXML
-    private void showCreateForm() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Appointment/create_appointment.fxml"));
-            Parent root = loader.load();
+    private void sortAscending() {
+        @SuppressWarnings("unchecked")
+        TableColumn<Appointment, String> dateColumn = (TableColumn<Appointment, String>) appointmentsTable.getColumns().get(2);
+        appointmentsTable.getSortOrder().clear();
+        dateColumn.setSortType(TableColumn.SortType.ASCENDING);
+        appointmentsTable.getSortOrder().add(dateColumn);
+        appointmentsTable.sort();
+    }
 
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setScene(new Scene(root));
-            stage.showAndWait();
-
-            loadAppointments();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @FXML
+    private void sortDescending() {
+        @SuppressWarnings("unchecked")
+        TableColumn<Appointment, String> dateColumn = (TableColumn<Appointment, String>) appointmentsTable.getColumns().get(2);
+        appointmentsTable.getSortOrder().clear();
+        dateColumn.setSortType(TableColumn.SortType.DESCENDING);
+        appointmentsTable.getSortOrder().add(dateColumn);
+        appointmentsTable.sort();
     }
 
     private void showAlert(String title, String message, Alert.AlertType type) {

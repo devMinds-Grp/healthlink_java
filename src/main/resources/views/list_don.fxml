@@ -20,7 +20,7 @@
     <!-- ========== CONTENU PRINCIPAL ========== -->
     <center>
         <StackPane alignment="CENTER" style="-fx-background-color: #f5f7fa;">
-            <VBox alignment="TOP_CENTER" styleClass="form-container" maxWidth="800">
+            <VBox alignment="TOP_CENTER" styleClass="form-container" maxWidth="1100">
                 <padding>
                     <Insets top="20" right="20" bottom="20" left="20"/>
                 </padding>
@@ -31,14 +31,13 @@
                 </VBox>
 
                 <!-- Tableau -->
-                <TableView fx:id="donationTable" prefHeight="380.0" prefWidth="760.0" styleClass="styled-table">
+                <TableView fx:id="donationTable" prefHeight="380.0" prefWidth="1100" styleClass="styled-table">
                     <columns>
-                        <TableColumn fx:id="idColumn" prefWidth="50.0" text="ID"/>
-                        <TableColumn fx:id="descriptionColumn" prefWidth="200.0" text="Description"/>
-                        <TableColumn fx:id="lieuColumn" prefWidth="150.0" text="Location"/>
-                        <TableColumn fx:id="dateColumn" prefWidth="100.0" text="Date"/>
-                        <TableColumn fx:id="numTelColumn" prefWidth="100.0" text="Phone Number"/>
-                        <TableColumn fx:id="actionsColumn" prefWidth="150.0" text="Actions"/>
+                        <TableColumn fx:id="descriptionColumn" prefWidth="250.0" text="Description"/>
+                        <TableColumn fx:id="lieuColumn" prefWidth="200.0" text="Location"/>
+                        <TableColumn fx:id="dateColumn" prefWidth="175.0" text="Date"/>
+                        <TableColumn fx:id="numTelColumn" prefWidth="175.0" text="Phone Number"/>
+                        <TableColumn fx:id="actionsColumn" prefWidth="300.0" text="Actions"/>
                     </columns>
                 </TableView>
 
@@ -47,6 +46,17 @@
                     <Button text="Add New Donation" onAction="#openAddDonWindow" styleClass="primary-button"/>
                     <Button text="Refresh" onAction="#refreshTable" styleClass="secondary-button"/>
                 </HBox>
+
+                <!-- Chatbot UI Section (Updated) -->
+                <VBox spacing="10" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+                    <Label text="Virtual Assistant for Donors" styleClass="form-title"/>
+                    <TextArea fx:id="chatbotResponseArea" prefHeight="100" prefWidth="760" editable="false" wrapText="true"
+                              promptText="Ask a question about blood donation..." styleClass="styled-textarea"/>
+                    <HBox spacing="10" alignment="CENTER">
+                        <ComboBox fx:id="chatbotInputField" prefWidth="660" editable="true" promptText="Select or type a question (e.g., Can I donate after traveling abroad?)" styleClass="styled-textfield"/>
+                        <Button fx:id="chatbotSubmitButton" text="Ask" onAction="#handleChatbotQuestion" styleClass="primary-button"/>
+                    </HBox>
+                </VBox>
             </VBox>
         </StackPane>
     </center>

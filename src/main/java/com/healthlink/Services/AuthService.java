@@ -10,9 +10,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import java.util.List;
 
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class AuthService  {
     private static Utilisateur connectedUtilisateur;
@@ -241,6 +243,67 @@ public class AuthService  {
 
     public static void logout() {
         connectedUtilisateur = null;
+    }
+
+    public  Utilisateur findUserByImageProfile(String imageProfile) throws SQLException {
+        String query = "SELECT u.*, r.id as role_id, r.nom as role_nom " +
+                "FROM utilisateur u " +
+                "JOIN role r ON u.role_id = r.id " +
+                "WHERE u.imageprofile = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, imageProfile);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Utilisateur user = new Utilisateur();
+                user.setId(rs.getInt("id"));
+                user.setNom(rs.getString("nom"));
+                user.setPrenom(rs.getString("prenom"));
+                user.setEmail(rs.getString("email"));
+                user.setMot_de_passe(rs.getString("mot_de_passe"));
+                user.setImageprofile(rs.getString("imageprofile"));
+                user.setStatut(rs.getString("statut"));
+
+                Role role = new Role();
+                role.setId(rs.getInt("role_id"));
+                role.setNom(rs.getString("role_nom"));
+                user.setRole(role);
+
+                return user;
+            }
+            return null; // Aucun utilisateur trouvé avec cette image de profil
+        }
+    }
+
+    public  List<Utilisateur> getAllUsersWithImageProfile() throws SQLException {
+        List<Utilisateur> users = new ArrayList<>();
+        String query = "SELECT u.*, r.id as role_id, r.nom as role_nom " +
+                "FROM utilisateur u " +
+                "JOIN role r ON u.role_id = r.id " +
+                "WHERE u.imageprofile IS NOT NULL";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Utilisateur user = new Utilisateur();
+                user.setId(rs.getInt("id"));
+                user.setNom(rs.getString("nom"));
+                user.setPrenom(rs.getString("prenom"));
+                user.setEmail(rs.getString("email"));
+                user.setMot_de_passe(rs.getString("mot_de_passe"));
+                user.setImageprofile(rs.getString("imageprofile"));
+                user.setStatut(rs.getString("statut"));
+
+                Role role = new Role();
+                role.setId(rs.getInt("role_id"));
+                role.setNom(rs.getString("role_nom"));
+                user.setRole(role);
+
+                users.add(user);
+            }
+        }
+        return users;
     }
 
 }

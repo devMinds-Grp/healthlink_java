@@ -48,11 +48,11 @@
             <TextField fx:id="numTelField" GridPane.columnIndex="1" GridPane.rowIndex="3" styleClass="form-field"/>
 
             <!-- Boutons d'action -->
-            <HBox spacing="25" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="4"
+            <VBox spacing="25" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="4"
                   style="-fx-padding: 20 0 0 0;">
                 <Button text="Save" onAction="#handleSave" styleClass="primary-button"/>
                 <Button text="Cancel" onAction="#handleCancel" styleClass="secondary-button"/>
-            </HBox>
+            </VBox>
         </GridPane>
     </VBox>
 </StackPane>
