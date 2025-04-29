@@ -1,6 +1,8 @@
 package com.healthlink.Controllers;
 
 import com.healthlink.Entites.Utilisateur;
+import com.healthlink.Entities.ChatMessage;
+import com.healthlink.Entities.Notification;
 import com.healthlink.Services.AuthService;
 import com.healthlink.Services.ChatService;
 import com.healthlink.Services.NotificationService;
@@ -64,6 +66,7 @@ public class NavbarController {
             throw new RuntimeException("Failed to initialize services", e);
         }
     }
+
     // Map to store navigation details
     private static final Map<String, NavigationTarget> NAVIGATION_MAP = new HashMap<>();
 
@@ -98,16 +101,28 @@ public class NavbarController {
     @FXML
     public void initialize() {
         currentUser = AuthService.getConnectedUtilisateur();
-
-        if (currentUser != null && currentUser.getRole().getId() > 2) {
-            System.out.println("Current user: ID=" + currentUser.getId() + ", Role=" + currentUser.getRole().getId());
-            updateNotificationBadge();
         Utilisateur utilisateur = AuthService.getConnectedUtilisateur();
         Button[] allButtons = {
                 homeButton, careButton, prescriptionButton, appointmentButton, doctorButton,
                 myAppointmentsButton, donButton, donationResponseButton, hospitalsButton,
                 ForumButton, ReclamationButton, profileButton, disconnectButton, dashboardButton
         };
+
+        // Hide all buttons by default
+        setButtonVisibility(false, allButtons);
+
+        // If no user is logged in, hide all buttons and return
+        if (utilisateur == null) {
+            setButtonVisibility(false, homeButton, careButton, prescriptionButton, appointmentButton,
+                    donButton, ForumButton, ReclamationButton, profileButton, disconnectButton,
+                    dashboardButton);
+            return;
+        }
+
+        // Notification setup for users with role ID > 2
+        if (currentUser != null && currentUser.getRole().getId() > 2) {
+            System.out.println("Current user: ID=" + currentUser.getId() + ", Role=" + currentUser.getRole().getId());
+            updateNotificationBadge();
 
             if (notificationIcon == null) {
                 System.err.println("ERROR: notificationIcon is null - Check fx:id in Navbar.fxml");
@@ -139,52 +154,24 @@ public class NavbarController {
             notificationBadge.setVisible(false);
         }
 
-        if (currentUser == null) {
-            setButtonVisibility(false, homeButton, careButton, prescriptionButton, appointmentButton,
-                    donButton, ForumButton, ReclamationButton, profileButton, disconnectButton,
-                    dashboardButton);
-        // Hide all buttons by default
-        setButtonVisibility(false, allButtons);
-
-        // If no user is logged in, return early
-        if (utilisateur == null) {
-            return;
-        }
-
         // Show buttons based on user role
         switch (utilisateur.getRole().getId()) {
             case 1: // Admin
                 setButtonVisibility(true, homeButton, dashboardButton, prescriptionButton,
                         ForumButton, profileButton, ReclamationButton, donButton, disconnectButton);
-        setButtonVisibility(false, homeButton, careButton, prescriptionButton, appointmentButton,
-                donButton, ForumButton, ReclamationButton, profileButton, disconnectButton,
-                dashboardButton);
-
-        switch (currentUser.getRole().getId()) {
-            case 1:
-                setButtonVisibility(true, homeButton, dashboardButton, disconnectButton);
                 break;
-            case 2:
-                setButtonVisibility(true, homeButton, prescriptionButton, ForumButton, ReclamationButton,
-                        profileButton, disconnectButton);
             case 2: // Doctor
                 setButtonVisibility(true, homeButton, prescriptionButton, myAppointmentsButton,
                         hospitalsButton, ForumButton, ReclamationButton, profileButton, disconnectButton);
                 break;
-            case 3:
-                setButtonVisibility(true, homeButton, careButton, appointmentButton, donButton, ForumButton,
-                        ReclamationButton, profileButton, disconnectButton);
             case 3: // Patient
                 setButtonVisibility(true, homeButton, appointmentButton, doctorButton, donButton,
-                        donationResponseButton, hospitalsButton, ForumButton, ReclamationButton,
+                        donationResponseButton, careButton, hospitalsButton, ForumButton, ReclamationButton,
                         profileButton, disconnectButton);
                 break;
             case 4: // Soignant
                 setButtonVisibility(true, homeButton, careButton, hospitalsButton,
                         ForumButton, ReclamationButton, profileButton, disconnectButton);
-            case 4:
-                setButtonVisibility(true, homeButton, careButton, ForumButton, ReclamationButton,
-                        profileButton, disconnectButton);
                 break;
             default:
                 // No buttons visible for unrecognized roles
@@ -484,25 +471,28 @@ public class NavbarController {
             showAlert("Erreur", "Cible de navigation inconnue.");
             return;
         }
+        navigateTo(target.fxmlPath, target.title);
 
+        // Handle logout for disconnect action
+        if ("disconnect".equals(targetKey)) {
+            AuthService.logout();
+        }
+    }
+
+    // Helper method to load FXML and set stage
     private void navigateTo(String fxmlPath, String title) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(target.fxmlPath));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
             Stage stage = (Stage) homeButton.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle(target.title);
+            stage.setTitle(title);
             stage.setMaximized(true);
             java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
             stage.setWidth(screenSize.getWidth());
             stage.setHeight(screenSize.getHeight());
             stage.setResizable(true);
             stage.show();
-
-            // Handle logout for disconnect action
-            if ("disconnect".equals(targetKey)) {
-                AuthService.logout();
-            }
         } catch (IOException e) {
             showAlert("Erreur", "Impossible de charger la page : " + e.getMessage());
         }
@@ -522,39 +512,16 @@ public class NavbarController {
     @FXML private void navigateToReclamations() { navigateTo("reclamations"); }
     @FXML private void navigateToDashboard() { navigateTo("dashboard"); }
     @FXML private void navigateToProfile() { navigateTo("profile"); }
-    @FXML private void navigateToDisconnect() { navigateTo("disconnect"); }
-
-    // Utility method to show error alerts
-    @FXML
-    private void navigateToForum() {
-        navigateTo("/views/MainView.fxml", "Forum");
-    }
-
-    @FXML
-    private void navigateToReclamations() {
-        navigateTo("/list_reclamations.fxml", "Reclamations");
-    }
-
-    @FXML
-    private void navigateToDashboard() {
-        navigateTo("/views/User/list.fxml", "Tableau de bord");
-    }
-
-    @FXML
-    private void navigateToProfile() {
-        navigateTo("/views/User/Auth/Profile.fxml", "Profil");
-    }
-
-    @FXML
-    private void navigateToDisconnect() {
+    @FXML private void navigateToDisconnect() {
         if (badgeTimeline != null) {
             badgeTimeline.stop();
             System.out.println("Badge polling stopped on disconnect");
         }
         AuthService.logout();
-        navigateTo("/views/User/Auth/Login.fxml", "Connexion");
+        navigateTo("disconnect");
     }
 
+    // Utility method to show error alerts
     private void showAlert(String title, String message) {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
         alert.setTitle(title);
