@@ -23,7 +23,7 @@ public class DashboardController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         WebEngine webEngine = webView.getEngine();
-        String powerBiUrl = "https://app.powerbi.com/view?r=eyJrIjoiYzc4ZjcwZTgtMzVlMy00YTY1LWI3NTQtOGY0ZWM0MzA0MzI0IiwidCI6ImRiZDY2NjRkLTRlYjktNDZlYi05OWQ4LTVjNDNiYTE1M2M2MSIsImMiOjl9";
+        String powerBiUrl = "https://app.powerbi.com/view?r=eyJrIjoiNzAyNWFjMDItODIxOC00NGI0LTkyNWYtNmQwMDdlZjEzNzM2IiwidCI6ImRiZDY2NjRkLTRlYjktNDZlYi05OWQ4LTVjNDNiYTE1M2M2MSIsImMiOjl9";
         webEngine.load(powerBiUrl);
     }
     @FXML
