@@ -24,11 +24,11 @@ public class CreatePrescriptionController {
     @FXML private TextField dosageField;
     @FXML private TextField dureeField;
     @FXML private TextArea notesArea;
-    @FXML private ComboBox<Integer> rdvCardIdCombo; // Changed from appointmentDateCombo
+    @FXML private ComboBox<Integer> rdvCardIdCombo;
 
     private final PrescriptionService prescriptionService = new PrescriptionService();
     private final AppointmentService appointmentService = new AppointmentService();
-    private List<Appointment> appointments; // Store appointments for mapping
+    private List<Appointment> appointments;
 
     @FXML
     public void initialize() {
@@ -57,7 +57,7 @@ public class CreatePrescriptionController {
                             .findFirst()
                             .orElse(null);
                     if (appointment != null) {
-                        setText(  appointment.getDate() );
+                        setText(appointment.getDate());
                     } else {
                         setText("ID: " + item);
                     }
@@ -78,7 +78,7 @@ public class CreatePrescriptionController {
                             .findFirst()
                             .orElse(null);
                     if (appointment != null) {
-                        setText("Date: " + appointment.getDate() );
+                        setText("Date: " + appointment.getDate());
                     } else {
                         setText("ID: " + item);
                     }
@@ -153,6 +153,13 @@ public class CreatePrescriptionController {
         }
         if (notes.trim().length() < 10) {
             showAlert("Erreur", "Les notes doivent contenir au moins 10 caractères.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        // Validate rdvCardId
+        Integer rdvCardId = rdvCardIdCombo.getValue();
+        if (rdvCardId == null) {
+            showAlert("Champ requis", "Veuillez sélectionner un rendez-vous.", Alert.AlertType.WARNING);
             return false;
         }
 

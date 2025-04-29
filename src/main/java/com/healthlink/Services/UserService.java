@@ -131,7 +131,7 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
             return null;
         }
     }
-    
+
     public List<Utilisateur> findAllPatients() {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM utilisateur u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 3";
         List<Utilisateur> patients = new ArrayList<>();
@@ -165,10 +165,9 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
     }
     public Utilisateur findPatientById(int id) {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM utilisateur u LEFT JOIN role r ON u.role_id = r.id WHERE u.id = ? AND u.role_id = 3";
-
-        try (PreparedStatement pst =  connection.prepareStatement(req)) {
+        try (Connection conn = MyDB.getInstance().getConnection();
+             PreparedStatement pst = conn.prepareStatement(req)) {
             pst.setInt(1, id);
-
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     return extractPatientFromResultSet(rs);
@@ -176,6 +175,7 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
             }
         } catch (SQLException e) {
             System.err.println("Erreur lors de la recherche du patient: " + e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }
@@ -297,6 +297,8 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
         medecin.setNum_tel(rs.getInt("num_tel"));
         medecin.setAdresse(rs.getString("adresse"));
         medecin.setSpeciality(rs.getString("speciality"));
+        medecin.setImageprofile(rs.getString("imageprofile"));
+
 
         return medecin;
     }

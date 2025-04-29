@@ -14,34 +14,13 @@
 
     <!-- ========== NAVBAR EN HAUT ========== -->
     <top>
-        <HBox style="-fx-background-color: #007bff; -fx-spacing: 20; -fx-padding: 10 30; -fx-alignment: CENTER_LEFT;">
-            <!-- Logo -->
-            <HBox style="-fx-alignment: CENTER; -fx-spacing: 15; -fx-padding: 5 50;">
-                <ImageView fitWidth="100" fitHeight="90">
-                    <image>
-                        <Image url="/assets/11.png"/>
-                    </image>
-                </ImageView>
-            </HBox>
-
-            <!-- Espace flexible -->
-            <Region HBox.hgrow="ALWAYS"/>
-
-            <!-- Menu de navigation -->
-            <HBox style="-fx-alignment: CENTER_RIGHT; -fx-spacing: 15;">
-                <Button text="Home" styleClass="nav-button" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
-                <Button text="BloodDonation" styleClass="nav-button" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
-                <Button text="ResponseDon" styleClass="nav-button nav-button-active" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
-                <Button text="Profile" styleClass="nav-button" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
-                <Button text="Disconnect" styleClass="nav-button" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
-            </HBox>
-        </HBox>
+        <fx:include source="../views/Navbar.fxml"/>
     </top>
 
     <!-- ========== CONTENU PRINCIPAL ========== -->
     <center>
         <StackPane alignment="CENTER" style="-fx-background-color: #f5f7fa;">
-            <VBox alignment="TOP_CENTER" styleClass="form-container" maxWidth="800">
+            <VBox alignment="TOP_CENTER" styleClass="form-container" maxWidth="1100">
                 <padding>
                     <Insets top="20" right="20" bottom="20" left="20"/>
                 </padding>
@@ -52,11 +31,10 @@
                 </VBox>
 
                 <!-- Tableau -->
-                <TableView fx:id="responseTable" prefHeight="380.0" prefWidth="760.0" styleClass="styled-table">
+                <TableView fx:id="responseTable" prefHeight="380.0" prefWidth="1100.0" styleClass="styled-table">
                     <columns>
-                        <TableColumn fx:id="idColumn" prefWidth="100.0" text="ID"/>
-                        <TableColumn fx:id="descriptionColumn" prefWidth="500.0" text="Description"/>
-                        <TableColumn fx:id="actionsColumn" prefWidth="150.0" text="Actions"/>
+                        <TableColumn fx:id="descriptionColumn" prefWidth="700.0" text="Description"/>
+                        <TableColumn fx:id="actionsColumn" prefWidth="400.0" text="Actions"/>
                     </columns>
                 </TableView>
 
