@@ -19,6 +19,8 @@
         <Button fx:id="careButton" text="Care" styleClass="nav-button" onAction="#navigateToCare"/>
         <Button fx:id="prescriptionButton" text="Prescription" styleClass="nav-button" onAction="#navigateToPrescription"/>
         <Button fx:id="appointmentButton" text="Appointments" styleClass="nav-button" onAction="#navigateToAppointment"/>
+        <Button fx:id="doctorButton" text="Doctors" styleClass="nav-button" onAction="#navigateToDoctors"/>
+        <Button fx:id="myAppointmentsButton" onAction="#navigateToMyAppointments" text="Mes RDV" styleClass="nav-button"/>
         <Button fx:id="donButton" text="Donation" styleClass="nav-button" onAction="#navigateToDon"/>
         <Button fx:id="ForumButton" text="Forum" styleClass="nav-button" onAction="#navigateToForum"/>
         <Button fx:id="ReclamationButton" text="Reclamations" styleClass="nav-button" onAction="#navigateToReclamations"/>

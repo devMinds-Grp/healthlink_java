@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane stylesheets="@../../css/Appointment.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.healthlink.Controllers.Appoitment.List_appointmentController">
+<BorderPane stylesheets="@../../css/Appointment.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.healthlink.Controllers.Appoitment.My_appointmentsController">
     <top>
         <fx:include source="../Navbar.fxml"/>
     </top>
@@ -32,23 +32,20 @@
                             <Image url="@../../assets/liste.png"/>
                         </image>
                     </ImageView>
-                    <Label styleClass="form-title" text="Liste des Rendez-vous"/>
+                    <Label styleClass="form-title" text="Mes Rendez-vous"/>
                 </HBox>
                 <HBox alignment="CENTER" spacing="10" style="-fx-padding: 20 0 20 0;">
-                    <TextField fx:id="searchField" promptText="Rechercher par nom de médecin" styleClass="search-field" style="-fx-max-width: 300;"/>
+                    <TextField fx:id="searchField" promptText="Rechercher par nom de patient ou date" styleClass="search-field" style="-fx-max-width: 300;"/>
                     <Button fx:id="sortAscButton" onAction="#sortAscending" styleClass="sort-button" text="Trier ↑"/>
                     <Button fx:id="sortDescButton" onAction="#sortDescending" styleClass="sort-button" text="Trier ↓"/>
                     <Region HBox.hgrow="ALWAYS"/>
                 </HBox>
                 <TableView fx:id="appointmentsTable" styleClass="styled-table" style="-fx-min-width: 1200; -fx-max-width: 1200; -fx-min-height: 500; -fx-max-height: 500;">
                     <columns>
-                        <TableColumn prefWidth="200" text="Patient">
+                        <TableColumn prefWidth="250" text="Patient">
                             <cellValueFactory><PropertyValueFactory property="patientName"/></cellValueFactory>
                         </TableColumn>
-                        <TableColumn prefWidth="200" text="Médecin">
-                            <cellValueFactory><PropertyValueFactory property="doctorName"/></cellValueFactory>
-                        </TableColumn>
-                        <TableColumn prefWidth="200" text="Date">
+                        <TableColumn prefWidth="250" text="Date">
                             <cellValueFactory><PropertyValueFactory property="date"/></cellValueFactory>
                         </TableColumn>
                         <TableColumn prefWidth="200" text="Type">
@@ -57,7 +54,7 @@
                         <TableColumn prefWidth="200" text="Statut">
                             <cellValueFactory><PropertyValueFactory property="status"/></cellValueFactory>
                         </TableColumn>
-                        <TableColumn prefWidth="200" text="Actions"/>
+                        <TableColumn prefWidth="300" text="Actions"/>
                     </columns>
                 </TableView>
             </VBox>

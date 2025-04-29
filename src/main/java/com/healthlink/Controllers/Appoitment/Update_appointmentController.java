@@ -56,7 +56,23 @@ public class Update_appointmentController {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
-                setDisable(date.isBefore(LocalDate.now()));
+                if (currentAppointment != null) {
+                    LocalDate originalDate = LocalDate.parse(
+                            currentAppointment.getDate(),
+                            DateTimeFormatter.ofPattern(DB_DATE_PATTERN)
+                    );
+                    LocalDate minDate = originalDate.minusDays(10);
+                    LocalDate maxDate = originalDate.plusDays(10);
+                    // Disable dates before today or outside the ±5-day range
+                    setDisable(
+                            date.isBefore(LocalDate.now()) ||
+                                    date.isBefore(minDate) ||
+                                    date.isAfter(maxDate)
+                    );
+                } else {
+                    // Disable dates before today if no appointment is set
+                    setDisable(date.isBefore(LocalDate.now()));
+                }
             }
         });
 
