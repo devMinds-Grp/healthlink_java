@@ -16,9 +16,10 @@ public class ReponseDonService {
     }
 
     public boolean addReponseDon(ReponseDon reponse) {
-        String query = "INSERT INTO donation_response (description) VALUES (?)";
+        String query = "INSERT INTO donation_response (description, blood_donation_id) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, reponse.getDescription());
+            stmt.setInt(2, reponse.getBloodDonationId());
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -28,10 +29,11 @@ public class ReponseDonService {
     }
 
     public boolean updateReponseDon(ReponseDon reponse) {
-        String query = "UPDATE donation_response SET description = ? WHERE id = ?";
+        String query = "UPDATE donation_response SET description = ?, blood_donation_id = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, reponse.getDescription());
-            stmt.setInt(2, reponse.getId());
+            stmt.setInt(2, reponse.getBloodDonationId());
+            stmt.setInt(3, reponse.getId());
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -60,7 +62,8 @@ public class ReponseDonService {
             while (rs.next()) {
                 ReponseDon reponse = new ReponseDon(
                         rs.getInt("id"),
-                        rs.getString("description")
+                        rs.getString("description"),
+                        rs.getInt("blood_donation_id")
                 );
                 reponses.add(reponse);
             }
@@ -71,6 +74,21 @@ public class ReponseDonService {
     }
 
     public ReponseDon getReponseDonById(int id) {
+        String query = "SELECT * FROM donation_response WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new ReponseDon(
+                            rs.getInt("id"),
+                            rs.getString("description"),
+                            rs.getInt("blood_donation_id")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving response with ID " + id + ": " + e.getMessage());
+        }
         return null;
     }
 }

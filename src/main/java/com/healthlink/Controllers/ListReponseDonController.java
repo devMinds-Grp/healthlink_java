@@ -3,7 +3,6 @@ package com.healthlink.Controllers;
 import com.healthlink.Entites.ReponseDon;
 import com.healthlink.Services.ReponseDonService;
 import com.healthlink.utils.MyDB;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,9 +21,6 @@ public class ListReponseDonController {
 
     @FXML
     private TableView<ReponseDon> responseTable;
-
-    @FXML
-    private TableColumn<ReponseDon, Integer> idColumn;
 
     @FXML
     private TableColumn<ReponseDon, String> descriptionColumn;
@@ -50,7 +46,6 @@ public class ListReponseDonController {
         }
 
         // Initialize table columns
-        idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
         descriptionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
 
         // Set up actions column with Edit and Delete buttons

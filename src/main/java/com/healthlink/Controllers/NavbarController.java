@@ -18,12 +18,13 @@ public class NavbarController {
     @FXML private Button prescriptionButton;
     @FXML private Button appointmentButton;
     @FXML private Button donButton;
+    @FXML private Button donationResponseButton;
+    @FXML private Button hospitalsButton;
     @FXML private Button ForumButton;
     @FXML private Button ReclamationButton;
     @FXML private Button profileButton;
     @FXML private Button disconnectButton;
     @FXML private Button dashboardButton;
-
 
     @FXML
     public void initialize() {
@@ -34,32 +35,32 @@ public class NavbarController {
         if (utilisateur == null) {
             // Cacher tous les boutons si aucun utilisateur n'est connecté
             setButtonVisibility(false, homeButton, careButton, prescriptionButton, appointmentButton,
-                    donButton, ForumButton, ReclamationButton, profileButton, disconnectButton,
-                    dashboardButton);
+                    donButton, donationResponseButton, hospitalsButton, ForumButton, ReclamationButton,
+                    profileButton, disconnectButton, dashboardButton);
             return;
         }
 
         // Par défaut, cacher tous les boutons
         setButtonVisibility(false, homeButton, careButton, prescriptionButton, appointmentButton,
-                donButton, ForumButton, ReclamationButton, profileButton, disconnectButton,
-                dashboardButton);
+                donButton, donationResponseButton, hospitalsButton, ForumButton, ReclamationButton,
+                profileButton, disconnectButton, dashboardButton);
 
         // Afficher les boutons en fonction du rôle de l'utilisateur
         switch (utilisateur.getRole().getId()) {
             case 1: // Admin
-                setButtonVisibility(true, homeButton, dashboardButton,  disconnectButton);
+                setButtonVisibility(true, homeButton, dashboardButton, disconnectButton);
                 break;
             case 2: // Doctor
-                setButtonVisibility(true, homeButton, prescriptionButton, ForumButton, ReclamationButton,
-                        profileButton, disconnectButton);
-                break;
-            case 3: // Patient
-                setButtonVisibility(true, homeButton, appointmentButton, donButton, ForumButton,
+                setButtonVisibility(true, homeButton, prescriptionButton, hospitalsButton, ForumButton,
                         ReclamationButton, profileButton, disconnectButton);
                 break;
+            case 3: // Patient
+                setButtonVisibility(true, homeButton, appointmentButton, donButton, donationResponseButton,
+                        hospitalsButton, ForumButton, ReclamationButton, profileButton, disconnectButton);
+                break;
             case 4: // Soignant
-                setButtonVisibility(true, homeButton, careButton, ForumButton, ReclamationButton,
-                        profileButton, disconnectButton);
+                setButtonVisibility(true, homeButton, careButton, hospitalsButton, ForumButton,
+                        ReclamationButton, profileButton, disconnectButton);
                 break;
             default:
                 // Aucun bouton visible pour les rôles non reconnus
@@ -121,6 +122,16 @@ public class NavbarController {
     }
 
     @FXML
+    private void navigateToDonationResponse() {
+        navigateTo("/views/list_reponse_don.fxml", "Donation Response List");
+    }
+
+    @FXML
+    private void navigateToHospitals() {
+        navigateTo("/views/map_view.fxml", "Find Nearby Hospitals");
+    }
+
+    @FXML
     private void navigateToForum() {
         navigateTo("/views/MainView.fxml", "Forum");
     }
@@ -139,8 +150,6 @@ public class NavbarController {
     private void navigateToProfile() {
         navigateTo("/views/User/Auth/Profile.fxml", "Profil");
     }
-
-
 
     @FXML
     private void navigateToDisconnect() {

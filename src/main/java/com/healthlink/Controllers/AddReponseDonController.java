@@ -8,6 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 public class AddReponseDonController {
@@ -16,66 +17,42 @@ public class AddReponseDonController {
     private TextArea descriptionField;
 
     private ReponseDonService reponseDonService;
+    private int bloodDonationId; // Changed from donDuSangId
 
     @FXML
     public void initialize() {
         try {
-            MyDB db = MyDB.getInstance();
-            reponseDonService = new ReponseDonService(db.getConnection());
+            Connection connection = MyDB.getInstance().getConnection();
+            reponseDonService = new ReponseDonService(connection);
         } catch (SQLException e) {
-            System.err.println("Failed to initialize database connection: " + e.getMessage());
             showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to connect to the database: " + e.getMessage());
         }
     }
 
+    public void setBloodDonationId(int id) { // Changed from setDonDuSangId
+        this.bloodDonationId = id;
+    }
+
     @FXML
     private void handleSave() {
-        if (descriptionField == null) {
-            showAlert(Alert.AlertType.ERROR, "Initialization Error", "Description field failed to initialize. Check FXML and controller setup.");
+        String description = descriptionField.getText().trim();
+        if (description.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Input Error", "Description cannot be empty.");
             return;
         }
 
-        if (reponseDonService == null) {
-            showAlert(Alert.AlertType.ERROR, "Service Error", "Database service is not initialized. Please check the database connection.");
-            return;
-        }
-
-        try {
-            String description = descriptionField.getText().trim();
-
-            // Validation for Description
-            if (description.isEmpty()) {
-                showAlert(Alert.AlertType.ERROR, "Validation Error", "Description cannot be empty.");
-                return;
-            }
-            if (description.length() < 10) {
-                showAlert(Alert.AlertType.ERROR, "Validation Error", "Description must be at least 10 characters long.");
-                return;
-            }
-            if (description.length() > 500) {
-                showAlert(Alert.AlertType.ERROR, "Validation Error", "Description cannot exceed 500 characters.");
-                return;
-            }
-
-            ReponseDon reponse = new ReponseDon(description);
-
-            if (reponseDonService.addReponseDon(reponse)) {
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Response donation added successfully!");
-                closeWindow();
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Error", "Failed to add response donation.");
-            }
-        } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Unexpected Error", "An error occurred: " + e.getMessage());
+        ReponseDon reponse = new ReponseDon(description, bloodDonationId);
+        if (reponseDonService.addReponseDon(reponse)) {
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Response added successfully!");
+            Stage stage = (Stage) descriptionField.getScene().getWindow();
+            stage.close();
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to add response to the database.");
         }
     }
 
     @FXML
     private void handleCancel() {
-        closeWindow();
-    }
-
-    private void closeWindow() {
         Stage stage = (Stage) descriptionField.getScene().getWindow();
         stage.close();
     }
