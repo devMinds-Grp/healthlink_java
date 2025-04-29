@@ -4,6 +4,7 @@ import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.UserService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,7 +15,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
+import javafx.scene.web.WebView;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -25,7 +26,8 @@ public class AffichageSoignant implements Initializable {
 
     private final UserService userService = new UserService();
     private final ObservableList<Utilisateur> soignantList = FXCollections.observableArrayList();
-
+    @FXML
+    private WebView webView;
     // Éléments pour les soignants
     @FXML private TableView<Utilisateur> soignantTableView;
     @FXML private TableColumn<Utilisateur, String> nomSoignantColumn;
@@ -125,6 +127,10 @@ public class AffichageSoignant implements Initializable {
     private void showAttenteView() {
         loadView("/views/User/enattente.fxml");
     }
+    @FXML
+    public void showDashView(ActionEvent actionEvent) {
+        loadView("/views/User/Dashboard.fxml");
+    }
     private void loadView(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -196,5 +202,18 @@ public class AffichageSoignant implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    @FXML
+    private void onArrowClicked() {
+        // Redirection quand on clique sur la flèche
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Home.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) webView.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -46,11 +46,7 @@ public class Profile implements Initializable {
         // Récupère l'utilisateur connecté depuis AuthService
         Utilisateur utilisateur = AuthService.getConnectedUtilisateur();
 
-        // Vérifie si l'utilisateur est connecté et que son rôle est ADMIN (id=1)
-        if (utilisateur == null || utilisateur.getRole().getId() != 1) {
-            dashboardButton.setVisible(false);
-            dashboardButton.setManaged(false); // Empêche de laisser l’espace vide
-        }
+
     }
 
     private void loadProfileImage(Utilisateur user) {
@@ -78,6 +74,7 @@ public class Profile implements Initializable {
         }
 
     }
+
     private void loadUserData() {
         Utilisateur utilisateur = AuthService.getConnectedUtilisateur();
 
@@ -93,6 +90,7 @@ public class Profile implements Initializable {
             System.out.println("Aucun utilisateur connecté !");
         }
     }
+
     public void handleEditProfile() {
         try {
             Utilisateur utilisateur = AuthService.getConnectedUtilisateur();
@@ -172,7 +170,7 @@ public class Profile implements Initializable {
             Parent root = loader.load();
 
             // 2. Obtenir la stage actuelle à partir de l'événement
-            Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
             // 3. Changer la scène
             stage.setScene(new Scene(root));
@@ -189,14 +187,6 @@ public class Profile implements Initializable {
             alert.showAndWait();
         }
     }
-    @FXML
-    private void handleHome(ActionEvent event) {
-        loadView("/views/Home.fxml", event);
-    }
 
-    @FXML
-    private void handleDashboard(ActionEvent event) {
-        loadView("/views/User/list.fxml", event);
-    }
 
 }

@@ -2,6 +2,7 @@ package com.healthlink.Controllers.User;
 
 import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.UserService;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -172,5 +173,9 @@ public class Enattente implements Initializable {
     @FXML
     private void showSoignantView() {
         loadView("/views/User/listSoignant.fxml");
+    }
+    @FXML
+    public void showDashView(ActionEvent actionEvent) {
+        loadView("/views/User/Dashboard.fxml");
     }
 }

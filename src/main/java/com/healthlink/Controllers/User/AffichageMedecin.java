@@ -4,6 +4,7 @@ import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.UserService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -20,12 +22,13 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
+import javafx.scene.web.WebView;
 public class AffichageMedecin implements Initializable {
 
     private final UserService userService = new UserService();
     private final ObservableList<Utilisateur> medecinList = FXCollections.observableArrayList();
-
+    @FXML
+    private WebView webView;
     // Éléments pour les médecins
     @FXML private TableView<Utilisateur> medecinTableView;
     @FXML private TableColumn<Utilisateur, String> nomMedecinColumn;
@@ -139,6 +142,10 @@ public class AffichageMedecin implements Initializable {
     private void showAttenteView() {
         loadView("/views/User/enattente.fxml");
     }
+    @FXML
+    public void showDashView(ActionEvent actionEvent) {
+        loadView("/views/User/Dashboard.fxml");
+    }
     // Méthode pour charger les différentes vues
     private void loadView(String fxmlPath) {
         try {
@@ -215,5 +222,18 @@ public class AffichageMedecin implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    @FXML
+    private void onArrowClicked() {
+        // Redirection quand on clique sur la flèche
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Home.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) webView.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,9 +1,21 @@
 package com.healthlink.Controllers.User.Authentification;
 
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.healthlink.Entites.Role;
 import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.AuthService;
 //import com.healthlink.Services.UserService;
+import com.healthlink.Services.GoogleAuthService;
+import com.google.api.client.auth.oauth2.TokenResponse;
+import com.google.api.client.auth.oauth2.TokenResponseException;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,11 +23,20 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import java.security.SecureRandom;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 public class Register {
 
@@ -89,6 +110,15 @@ public class Register {
                 !validateEmail(emailTextField.getText()) ||
                 !validatePassword(motdepasseTextField.getText()) ||
                 !validatePhone(numtelTextField.getText())) {
+            return;
+        }
+        // Vérification avec QuickEmailVerification
+        if (!com.healthlink.Services.EmailVerifier.verifierEmail(emailTextField.getText())) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur d'email");
+            alert.setHeaderText(null);
+            alert.setContentText("L'adresse email est invalide, temporaire ou n'existe pas !");
+            alert.show();
             return;
         }
         try {
@@ -172,6 +202,15 @@ public class Register {
                 !validateImage(fichierImage)) {
             return;
         }
+        // Vérification avec QuickEmailVerification
+        if (!com.healthlink.Services.EmailVerifier.verifierEmail(emailTextField.getText())) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur d'email");
+            alert.setHeaderText(null);
+            alert.setContentText("L'adresse email est invalide, temporaire ou n'existe pas !");
+            alert.show();
+            return;
+        }
         try {
             Utilisateur utilisateur = new Utilisateur();
             utilisateur.setNom(nomTextField.getText());
@@ -242,6 +281,15 @@ public class Register {
                 !validateRequiredField(specialiteComboBox.getValue(), "catégorie de soin") ||
                 !validateDiplome(fichierDiplome) ||
                 !validateImage(fichierImage)) {
+            return;
+        }
+        // Vérification avec QuickEmailVerification
+        if (!com.healthlink.Services.EmailVerifier.verifierEmail(emailTextField.getText())) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur d'email");
+            alert.setHeaderText(null);
+            alert.setContentText("L'adresse email est invalide, temporaire ou n'existe pas !");
+            alert.show();
             return;
         }
         try {
@@ -475,5 +523,162 @@ public class Register {
             alert.setContentText("Le fichier " + fxmlPath + " est introuvable ou corrompu.");
             alert.showAndWait();
         }
+    }
+
+    private GoogleAuthService googleAuthService;
+    private WebView webView;
+    private Stage authStage;
+
+    public Register() {
+        this.googleAuthService = new GoogleAuthService();
+    }
+
+    @FXML
+    void handleGoogleSignIn(ActionEvent event) {
+        // Créer une nouvelle fenêtre pour l'authentification
+        authStage = new Stage();
+        StackPane root = new StackPane();
+        webView = new WebView();
+        root.getChildren().add(webView);
+
+        Scene scene = new Scene(root, 600, 800);
+        authStage.setScene(scene);
+        authStage.setTitle("Connexion avec Google");
+
+        // Charger l'URL d'authentification
+        String authUrl = googleAuthService.getAuthorizationUrl();
+        webView.getEngine().load(authUrl);
+
+        // Écouter les changements d'URL pour capturer le code d'autorisation
+        webView.getEngine().locationProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.startsWith("http://localhost:8888/Callback")) {
+                handleGoogleCallback(newValue);
+            }
+        });
+
+        authStage.show();
+    }
+
+
+    private Map<String, Object> getGoogleUserInfo(String accessToken) throws IOException {
+        HttpTransport transport = new NetHttpTransport();
+        JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+
+        String url = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken;
+        HttpRequest request = transport.createRequestFactory()
+                .buildGetRequest(new GenericUrl(url));
+
+        HttpResponse response = request.execute();
+        String jsonResponse = response.parseAsString();
+
+        // Parse la réponse JSON en Map
+        return jsonFactory.fromString(jsonResponse, Map.class);
+    }
+
+    @FXML
+    private void handleGoogleCallback(String callbackUrl) {
+        try {
+            // Extraction plus robuste du code
+            URI uri = new URI(callbackUrl);
+            String query = uri.getQuery();
+            if (query == null) {
+                throw new RuntimeException("No query parameters in callback URL");
+            }
+
+            String[] params = query.split("&");
+            String code = null;
+            for (String param : params) {
+                if (param.startsWith("code=")) {
+                    code = param.substring(5);
+                    break;
+                }
+            }
+
+            if (code == null || code.isEmpty()) {
+                throw new RuntimeException("No authorization code in callback URL");
+            }
+
+            // Debug: Afficher le code reçu
+            System.out.println("Code reçu: " + code);
+
+            GoogleTokenResponse tokenResponse = googleAuthService.getTokenResponse(code);
+            String accessToken = tokenResponse.getAccessToken();
+
+            authStage.close();
+
+            // Récupérer les infos utilisateur
+            Map<String, Object> userInfo = getGoogleUserInfo(accessToken);
+
+            // Remplir le formulaire...
+            Platform.runLater(() -> {
+                nomTextField.setText((String) userInfo.get("family_name"));
+                prenomTextField.setText((String) userInfo.get("given_name"));
+                emailTextField.setText((String) userInfo.get("email"));
+
+                String randomPassword = generateRandomPassword();
+                motdepasseTextField.setText(randomPassword);
+//
+//                String pictureUrl = (String) userInfo.get("picture");
+//                if (pictureUrl != null) {
+//                    saveProfileImageFromUrl(pictureUrl);
+//                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Échec de l'authentification Google: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+    private void showAlert(String title, String message, Alert.AlertType alertType) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(alertType);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+            alert.showAndWait();
+        });
+    }
+
+//    private void saveProfileImageFromUrl(String imageUrl) {
+//        try {
+//            URL url = new URL(imageUrl);
+//            BufferedImage image = ImageIO.read(url);
+//            File outputFile = new File("profile_images/" + emailTextField.getText() + ".jpg");
+//            ImageIO.write(image, "jpg", outputFile);
+//        } catch (IOException e) {
+//            System.err.println("Erreur lors de la sauvegarde de l'image: " + e.getMessage());
+//        }
+//}
+    private String generateRandomPassword() {
+        String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lower = "abcdefghijklmnopqrstuvwxyz";
+        String digits = "0123456789";
+        String special = "!@#$%^&*";
+        String all = upper + lower + digits + special;
+
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder();
+
+        // Au moins un caractère de chaque type
+        password.append(upper.charAt(random.nextInt(upper.length())));
+        password.append(lower.charAt(random.nextInt(lower.length())));
+        password.append(digits.charAt(random.nextInt(digits.length())));
+        password.append(special.charAt(random.nextInt(special.length())));
+
+        // 4 caractères aléatoires supplémentaires
+        for (int i = 0; i < 4; i++) {
+            password.append(all.charAt(random.nextInt(all.length())));
+        }
+
+        // Mélanger le mot de passe
+        char[] array = password.toString().toCharArray();
+        for (int i = array.length - 1; i > 0; i--) {
+            int index = random.nextInt(i + 1);
+            char temp = array[index];
+            array[index] = array[i];
+            array[i] = temp;
+        }
+
+        return new String(array);
     }
 }

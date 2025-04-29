@@ -9,26 +9,13 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class HomeController {
-
-    @FXML
-    public void initialize() {
-        // No button visibility logic needed here, handled by NavbarController
-    }
-
-    @FXML
-    private void handleProfile(ActionEvent event) {
-        loadView("/views/Profile.fxml", event);
-    }
-
-    @FXML
-    private void handleHome(ActionEvent event) {
-        loadView("/views/Home.fxml", event);
-    }
 
     // Méthode générique pour charger les vues
     private void loadView(String fxmlPath, ActionEvent event) {
@@ -63,4 +50,5 @@ public class HomeController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
 }

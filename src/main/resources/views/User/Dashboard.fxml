@@ -1,25 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.web.WebView?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.Separator?>
 <?import java.net.URL?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.shape.Rectangle?>
 
+<?import javafx.scene.layout.HBox?>
 <AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.healthlink.Controllers.User.AffichageSoignant">
-
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.healthlink.Controllers.User.DashboardController">
     <!-- Style CSS intégré -->
     <stylesheets>
         <URL value="@/css/styles.css" />
@@ -49,6 +43,7 @@
         </children>
     </HBox>
 
+
     <!-- Sidebar blanche -->
     <VBox AnchorPane.leftAnchor="0" AnchorPane.topAnchor="60.0" AnchorPane.bottomAnchor="0" prefWidth="200" style="-fx-background-color: white; -fx-border-color: #ecf0f1; -fx-border-width: 0 1 0 0;">
         <children>
@@ -75,37 +70,8 @@
     <!-- Barre bleue de séparation -->
     <Rectangle layoutX="200.0" AnchorPane.topAnchor="60.0" AnchorPane.bottomAnchor="0" width="2.0" fill="#3498db" />
 
-    <!-- Contenu principal amélioré -->
-    <VBox AnchorPane.leftAnchor="202.0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="60.0" AnchorPane.bottomAnchor="0" spacing="20.0" style="-fx-padding: 20;">
-        <!-- Barre d'outils avec bouton ajout -->
-        <HBox spacing="20.0" alignment="CENTER_RIGHT" style="-fx-padding: 0 0 10 0;">
-            <children>
-                <Button text="Ajouter Soignant" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20; -fx-background-radius: 4; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(46,204,113,0.3), 5, 0, 0, 1);" onAction="#openAddSoignantForm"/>
-            </children>
-        </HBox>
-
-        <!-- Titre avec séparateur -->
-        <VBox spacing="5">
-            <Label text="Liste des Soignants" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
-            <Separator style="-fx-background-color: #bdc3c7; -fx-padding: 2 0 0 0;"/>
-        </VBox>
-
-        <!-- Tableau amélioré -->
-        <TableView fx:id="soignantTableView" style="-fx-background-color: #ffffff; -fx-border-color: #ecf0f1; -fx-border-radius: 4; -fx-background-radius: 4; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0, 0, 1);" VBox.vgrow="ALWAYS">
-            <columns>
-                <TableColumn fx:id="nomSoignantColumn" prefWidth="140.0" text="Nom" style="-fx-alignment: CENTER_LEFT; -fx-font-size: 14px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;"/>
-                <TableColumn fx:id="prenomSoignantColumn" prefWidth="140.0" text="Prénom" style="-fx-alignment: CENTER_LEFT; -fx-font-size: 14px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;"/>
-                <TableColumn fx:id="emailSoignantColumn" prefWidth="180.0" text="Email" style="-fx-alignment: CENTER_LEFT; -fx-font-size: 14px; -fx-text-fill: #2c3e50;"/>
-                <TableColumn fx:id="categorieSoinColumn" prefWidth="160.0" text="Catégorie Soin" style="-fx-alignment: CENTER_LEFT; -fx-font-size: 14px; -fx-text-fill: #2c3e50;"/>
-                <TableColumn fx:id="actionsSoignantColumn" prefWidth="150.0" text="Actions" style="-fx-alignment: CENTER; -fx-font-size: 14px; -fx-text-fill: #2c3e50;">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="dummy"/>
-                    </cellValueFactory>
-                </TableColumn>
-            </columns>
-        </TableView>
-
-        <!-- Pied de page -->
-        <Label text="2025 © HealthLink" style="-fx-font-style: italic; -fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
+    <!-- Contenu principal avec WebView -->
+    <VBox AnchorPane.leftAnchor="202.0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="60.0" AnchorPane.bottomAnchor="0" style="-fx-padding: 20;">
+        <WebView fx:id="webView" VBox.vgrow="ALWAYS" />
     </VBox>
 </AnchorPane>
