@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.healthlink.Controllers.Controller"
+            stylesheets="@styles.css">
+
+    <!-- ========== NAVBAR EN HAUT ========== -->
+    <top>
+        <fx:include source="../views/Navbar.fxml"/>
+    </top>
+
+    <!-- ========== CONTENU PRINCIPAL ========== -->
+    <center>
+        <StackPane alignment="CENTER" style="-fx-background-color: #f5f7fa;">
+            <VBox alignment="TOP_CENTER" styleClass="form-container" maxWidth="1100">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+
+                <!-- Titre -->
+                <VBox alignment="CENTER" spacing="10" style="-fx-padding: 0 0 20 0;">
+                    <Label text="Find Nearby Hospitals" styleClass="form-title"/>
+                </VBox>
+
+                <!-- Position and Distance Input -->
+                <HBox spacing="10" alignment="CENTER">
+                    <Label fx:id="positionLabel" text="Detecting position..." styleClass="form-label"/>
+                    <Label text="Max Distance (km):" styleClass="form-label"/>
+                    <TextField fx:id="maxDistanceField" promptText="e.g., 10" prefWidth="80" styleClass="styled-textfield"/>
+                    <Button fx:id="retryButton" text="Retry Location" onAction="#retryLocation" styleClass="primary-button"/>
+                </HBox>
+
+                <!-- Action Buttons -->
+                <HBox spacing="10" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+                    <Button fx:id="findButton" text="Find Nearby Hospitals" onAction="#findHospitals" styleClass="success-button"/>
+                    <Button fx:id="clearButton" text="Clear" onAction="#clearFields" styleClass="danger-button"/>
+                </HBox>
+
+                <!-- Hospital List -->
+                <Label text="Nearby Hospitals" styleClass="form-title" style="-fx-padding: 20 0 10 0;"/>
+                <ListView fx:id="hospitalList" prefHeight="400" prefWidth="800" styleClass="styled-listview"/>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>
