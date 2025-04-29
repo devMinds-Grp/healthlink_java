@@ -2,6 +2,8 @@ package com.healthlink.Entities;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -13,6 +15,7 @@ public class Forum {
     private Date date;
     private int userId;
     private boolean isApproved;
+    private ObservableList<Rating> ratings = FXCollections.observableArrayList();
 
     // Constructeurs
     public Forum() {}
@@ -74,6 +77,24 @@ public class Forum {
         isApproved = approved;
     }
 
+    // Getters/Setters pour les ratings
+    public ObservableList<Rating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(ObservableList<Rating> ratings) {
+        this.ratings = ratings;
+    }
+
+    // Calcul de la note moyenne
+    public double getAverageRating() {
+        if (ratings.isEmpty()) return 0;
+        return ratings.stream()
+                .mapToInt(Rating::getStars)
+                .average()
+                .orElse(0);
+    }
+
     // Propriétés JavaFX pour TableView
     public StringProperty titleProperty() {
         return title;
@@ -91,6 +112,11 @@ public class Forum {
         return new SimpleStringProperty(isApproved ? "Approuvé" : "En attente");
     }
 
+    // Propriété pour afficher la note moyenne dans TableView
+    public StringProperty averageRatingProperty() {
+        return new SimpleStringProperty(String.format("%.1f/5", getAverageRating()));
+    }
+
     // Méthode toString()
     @Override
     public String toString() {
@@ -101,6 +127,7 @@ public class Forum {
                 ", date=" + date +
                 ", userId=" + userId +
                 ", isApproved=" + isApproved +
+                ", averageRating=" + getAverageRating() +
                 '}';
     }
 
@@ -113,10 +140,10 @@ public class Forum {
         return id == forum.id;
     }
 
-
     public String getFormattedDate() {
         return new SimpleDateFormat("dd/MM/yyyy HH:mm").format(date);
     }
+
     @Override
     public int hashCode() {
         return Objects.hash(id);

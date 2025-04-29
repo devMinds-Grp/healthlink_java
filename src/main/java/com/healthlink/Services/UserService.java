@@ -17,6 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+//ajouter par majd
+import java.util.Date;
+import java.sql.Timestamp;
+
 public class UserService implements InterfaceCRUD<Utilisateur> {
     private Connection connection;
     private EmailService emailService; // Ajout du service EmailService
@@ -861,6 +865,40 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
         }
 
         return utilisateur;
+    }
+
+    //ajouter par majd
+    public void banUser(int userId, Date banEnd, String reason) {
+        String req = "UPDATE utilisateur SET banned_until = ? WHERE id = ?";
+        try (PreparedStatement pst = connection.prepareStatement(req)) {
+            // Conversion de java.util.Date en java.sql.Timestamp
+            pst.setTimestamp(1, new Timestamp(banEnd.getTime()));
+            pst.setInt(2, userId);
+            pst.executeUpdate();
+
+            System.out.println("Utilisateur " + userId + " banni jusqu'au " + banEnd + " pour raison: " + reason);
+        } catch (SQLException e) {
+            System.err.println("Erreur lors du bannissement de l'utilisateur: " + e.getMessage());
+        }
+    }
+
+    public boolean isUserBanned(int userId) {
+        String req = "SELECT banned_until FROM utilisateur WHERE id = ?";
+        try (PreparedStatement pst = connection.prepareStatement(req)) {
+            pst.setInt(1, userId);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    Timestamp bannedUntil = rs.getTimestamp("banned_until");
+                    if (bannedUntil != null) {
+                        return bannedUntil.after(new Date());
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la vérification du bannissement: " + e.getMessage());
+        }
+        return false;
     }
 
 

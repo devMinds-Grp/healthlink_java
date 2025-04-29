@@ -36,6 +36,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
+//ajouter par majd
+import com.healthlink.Services.UserService;
+import java.sql.Connection; // Pour la connexion à la base de données
+import java.sql.PreparedStatement; // Pour les requêtes préparées
+import java.sql.ResultSet; // Pour les résultats des requêtes
+import java.sql.SQLException; // Pour gérer les exceptions SQL
+import java.sql.Timestamp; // Pour gérer banned_until
+import com.healthlink.utils.MyDB; // Import pour MyDB
 
 public class Login {
 
@@ -108,6 +116,26 @@ public class Login {
         try {
             Utilisateur utilisateur = AuthService.login(email, password);
             if (utilisateur != null) {
+                //ajouter par majd
+                // Vérifier si l'utilisateur est banni
+                UserService userService = new UserService();
+                if (userService.isUserBanned(utilisateur.getId())) {
+                    // Récupérer la date de fin de bannissement pour l'afficher dans le message
+                    String req = "SELECT banned_until FROM utilisateur WHERE id = ?";
+                    try (Connection conn = MyDB.getInstance().getConnection();
+                         PreparedStatement pst = conn.prepareStatement(req)) {
+                        pst.setInt(1, utilisateur.getId());
+                        ResultSet rs = pst.executeQuery();
+                        if (rs.next()) {
+                            Timestamp bannedUntil = rs.getTimestamp("banned_until");
+                            showAlert(Alert.AlertType.ERROR, "Compte banni",
+                                    "Votre compte est banni jusqu'au " + bannedUntil + ".");
+                        }
+                    } catch (SQLException e) {
+                        showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de la vérification du bannissement : " + e.getMessage());
+                    }
+                    return;
+                }//
                 if (!"approuvé".equalsIgnoreCase(utilisateur.getStatut())) {
                     // Afficher une page ou alerte pour statut non approuvé
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/Auth/NonApprouve.fxml"));

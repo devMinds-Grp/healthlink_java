@@ -121,6 +121,10 @@ public class AffichageMedecin implements Initializable {
     @FXML private MenuItem medecinsMenuItem;
     @FXML private MenuItem soignantsMenuItem;
 
+    @FXML
+    private void showForumView() {
+        loadView("/views/admindashboard.fxml");
+    }
     // Méthode appelée quand on clique sur "Patients"
     @FXML
     private void showPatientsView() {
@@ -149,19 +153,24 @@ public class AffichageMedecin implements Initializable {
     // Méthode pour charger les différentes vues
     private void loadView(String fxmlPath) {
         try {
-            // 1. Charger le fichier FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
 
-            // 2. Récupérer la fenêtre actuelle
-            Stage stage = (Stage) patientsMenuItem.getParentPopup().getOwnerWindow();
+            // Obtenir la fenêtre actuelle de manière générique
+            Stage currentStage = (Stage) medecinTableView.getScene().getWindow();
 
-            // 3. Changer la scène
-            stage.setScene(new Scene(root));
-            stage.show();
+            // Si medecinTableView n'est pas disponible, essayer avec un autre noeud
+            if (currentStage == null && webView != null) {
+                currentStage = (Stage) webView.getScene().getWindow();
+            }
+
+            // Créer une nouvelle scène
+            Scene scene = new Scene(root);
+            currentStage.setScene(scene);
+            currentStage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erreur lors du chargement de la vue: " + fxmlPath);
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger la vue: " + fxmlPath);
         }
     }
 

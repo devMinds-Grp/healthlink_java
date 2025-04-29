@@ -14,6 +14,7 @@
         <Insets bottom="20" left="20" right="20" top="20"/>
     </padding>
 
+
     <Label text="Tableau de bord Admin" styleClass="header-label"/>
 
     <TabPane>
@@ -49,4 +50,10 @@
             </VBox>
         </Tab>
     </TabPane>
+    <!-- Ajout du bouton de retour -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button text="← Retour a la liste des utilisateurs"
+                onAction="#returnToUserList"
+                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 5 15;"/>
+    </HBox>
 </VBox>
