@@ -20,7 +20,7 @@
         <Button fx:id="prescriptionButton" text="Prescription" styleClass="nav-button" onAction="#navigateToPrescription"/>
         <Button fx:id="appointmentButton" text="Appointments" styleClass="nav-button" onAction="#navigateToAppointment"/>
         <Button fx:id="doctorButton" text="Doctors" styleClass="nav-button" onAction="#navigateToDoctors"/>
-        <Button fx:id="myAppointmentsButton" onAction="#navigateToMyAppointments" text="Mes RDV" styleClass="nav-button"/>
+        <Button fx:id="myAppointmentsButton" text="Mes RDV" styleClass="nav-button" onAction="#navigateToMyAppointments"/>
         <Button fx:id="donButton" text="Donation" styleClass="nav-button" onAction="#navigateToDon"/>
         <Button fx:id="donationResponseButton" text="Donation Response" styleClass="nav-button" onAction="#navigateToDonationResponse"/>
         <Button fx:id="hospitalsButton" text="Hospitals" styleClass="nav-button" onAction="#navigateToHospitals"/>
