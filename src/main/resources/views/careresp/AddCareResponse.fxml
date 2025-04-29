@@ -41,9 +41,6 @@
                         <ColumnConstraints halignment="RIGHT" minWidth="100"/>
                         <ColumnConstraints hgrow="ALWAYS"/>
                     </columnConstraints>
-                    <Label text="Date de Réponse :" GridPane.rowIndex="0" styleClass="form-label"/>
-                    <DatePicker fx:id="dateRepField" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="form-field"/>
-                    <Label text="Contenu :" GridPane.rowIndex="1" styleClass="form-label"/>
                     <TextArea fx:id="contenuRepField" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="form-field" wrapText="true"/>
                     <!-- Buttons -->
                     <HBox GridPane.rowIndex="2" GridPane.columnIndex="1" spacing="30" alignment="CENTER_RIGHT">

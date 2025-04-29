@@ -2,7 +2,9 @@ package com.healthlink.Controllers.CareController;
 
 import com.healthlink.Controllers.CareRespController.AddCareResponseController;
 import com.healthlink.Controllers.CareRespController.ListCareResponsesController;
+import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Entities.Care;
+import com.healthlink.Services.AuthService;
 import com.healthlink.Services.CareService;
 import com.healthlink.utils.MyDB;
 import javafx.fxml.FXML;
@@ -47,7 +49,6 @@ public class ListCareController {
                 private final Button deleteButton = new Button("Delete");
                 private final Button responseButton = new Button("Response");
                 private final Button viewResponsesButton = new Button("View Responses");
-                private final HBox buttonBox = new HBox(10, updateButton, deleteButton, responseButton, viewResponsesButton);
 
                 {
                     updateButton.getStyleClass().add("edit-button");
@@ -83,7 +84,16 @@ public class ListCareController {
                 @Override
                 protected void updateItem(Void item, boolean empty) {
                     super.updateItem(item, empty);
-                    setGraphic(empty ? null : buttonBox);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        HBox buttonBox = new HBox(10, updateButton, deleteButton, viewResponsesButton);
+                        Utilisateur utilisateur = AuthService.getConnectedUtilisateur();
+                        if (utilisateur != null && utilisateur.getRole().getId() == 4) { // ROLE_SOIGNANT
+                            buttonBox.getChildren().add(2, responseButton);
+                        }
+                        setGraphic(buttonBox);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -143,9 +153,21 @@ public class ListCareController {
 
     private void goToListCareResponses(Care care) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/careResp/ListCareResponses.fxml"));
+            Utilisateur currentUser = AuthService.getConnectedUtilisateur();
+            System.out.println("Loading ListCareResponses.fxml for care ID=" + care.getId() + ", user ID=" + (currentUser != null ? currentUser.getId() : "null"));
+            String fxmlPath = "/views/careResp/ListCareResponses.fxml";
+            System.out.println("Attempting to load FXML from path: " + fxmlPath);
+            java.net.URL fxmlUrl = getClass().getResource(fxmlPath);
+            if (fxmlUrl == null) {
+                throw new IOException("FXML file not found at path: " + fxmlPath);
+            }
+            System.out.println("FXML URL resolved to: " + fxmlUrl);
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
+            System.out.println("FXMLLoader created with URL: " + fxmlUrl);
             Parent root = loader.load();
+            System.out.println("ListCareResponses.fxml loaded successfully");
             ListCareResponsesController controller = loader.getController();
+            System.out.println("ListCareResponsesController instance retrieved: " + controller);
             controller.setCareId(care.getId());
             Stage stage = new Stage();
             stage.setTitle("Care Responses");
@@ -153,6 +175,7 @@ public class ListCareController {
             stage.show();
         } catch (IOException e) {
             System.err.println("Failed to load ListCareResponses.fxml: " + e.getMessage());
+            e.printStackTrace();
             showAlert("Error", "Failed to open Care Responses list: " + e.getMessage());
         }
     }

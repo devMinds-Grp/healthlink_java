@@ -25,7 +25,12 @@
         <Button fx:id="dashboardButton" text="Dashboard" styleClass="nav-button" onAction="#navigateToDashboard"/>
         <Button fx:id="profileButton" text="Profile" styleClass="nav-button" onAction="#navigateToProfile"/>
         <Button fx:id="disconnectButton" text="Disconnect" styleClass="nav-button" onAction="#navigateToDisconnect"/>
-
+        <ImageView fx:id="notificationIcon" fitWidth="24" fitHeight="24">
+            <image>
+                <Image url="@../img/bell.png"/>
+            </image>
+        </ImageView>
+        <Label fx:id="notificationBadge" text="0" styleClass="notification-badge" visible="false"/>
 
     </HBox>
 </HBox>

@@ -1,5 +1,6 @@
 package com.healthlink.example;
 
+import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Entities.Care;
 import com.healthlink.Entities.CareResponse;
 import com.healthlink.Services.CareResponseService;
@@ -73,8 +74,12 @@ public class Main {
         }
         System.out.println("\nAll Cares:");
         cares.forEach(care -> System.out.printf(
-                "ID: %d | Date: %s | Address: %s | Description: %s\n",
-                care.getId(), care.getDate(), care.getAddress(), care.getDescription()
+                "ID: %d | Date: %s | Address: %s | Description: %s | Patient ID: %s\n",
+                care.getId(),
+                care.getDate(),
+                care.getAddress(),
+                care.getDescription(),
+                care.getPatient() != null ? care.getPatient().getId() : "null"
         ));
     }
 
@@ -87,6 +92,16 @@ public class Main {
 
         System.out.print("Enter description: ");
         care.setDescription(scanner.nextLine());
+
+        // Optionally set a patient ID
+        System.out.print("Enter Patient ID (or leave blank for no patient): ");
+        String patientIdInput = scanner.nextLine();
+        if (!patientIdInput.isEmpty()) {
+            int patientId = Integer.parseInt(patientIdInput);
+            Utilisateur patient = new Utilisateur();
+            patient.setId(patientId);
+            care.setPatient(patient);
+        }
 
         if (careService.addCare(care)) {
             System.out.println("✅ Care added successfully! ID: " + care.getId());
@@ -125,12 +140,7 @@ public class Main {
         int id = scanner.nextInt();
         scanner.nextLine();
 
-        // Delete all responses first to maintain referential integrity
-        Care care = findCareById(id);
-        if (care != null) {
-            care.getResponses().forEach(r -> careResponseService.deleteCareResponse(r.getId()));
-        }
-
+        // Use the overloaded method without user permission checks
         if (careService.deleteCare(id)) {
             System.out.println("✅ Care and all its responses deleted!");
         } else {
@@ -148,11 +158,15 @@ public class Main {
         if (care == null) return;
 
         System.out.println("\nCare Details:");
-        System.out.printf("ID: %d | Date: %s\nAddress: %s\nDescription: %s\n",
-                care.getId(), care.getDate(), care.getAddress(), care.getDescription());
+        System.out.printf("ID: %d | Date: %s\nAddress: %s\nDescription: %s\nPatient ID: %s\n",
+                care.getId(),
+                care.getDate(),
+                care.getAddress(),
+                care.getDescription(),
+                care.getPatient() != null ? care.getPatient().getId() : "null");
 
         System.out.println("\nResponses:");
-        if (care.getResponses().isEmpty()) {
+        if (care.getResponses() == null || care.getResponses().isEmpty()) {
             System.out.println("No responses yet.");
         } else {
             care.getResponses().forEach(r ->
@@ -204,7 +218,7 @@ public class Main {
         if (care == null) return;
 
         System.out.println("\nResponses:");
-        if (care.getResponses().isEmpty()) {
+        if (care.getResponses() == null || care.getResponses().isEmpty()) {
             System.out.println("No responses found for this care.");
         } else {
             care.getResponses().forEach(r ->
@@ -212,6 +226,7 @@ public class Main {
                             r.getId(), r.getDateRep(), r.getContenuRep()));
         }
     }
+
     private static void addResponse() {
         try {
             listAllCares();
@@ -266,6 +281,7 @@ public class Main {
             e.printStackTrace();
         }
     }
+
     private static void editResponse() {
         listAllCares();
         System.out.print("\nEnter Care ID to edit responses: ");
@@ -273,7 +289,7 @@ public class Main {
         scanner.nextLine();
 
         Care care = findCareById(careId);
-        if (care == null || care.getResponses().isEmpty()) {
+        if (care == null || care.getResponses() == null || care.getResponses().isEmpty()) {
             System.out.println("No responses found.");
             return;
         }
@@ -312,7 +328,7 @@ public class Main {
         scanner.nextLine();
 
         Care care = findCareById(careId);
-        if (care == null || care.getResponses().isEmpty()) {
+        if (care == null || care.getResponses() == null || care.getResponses().isEmpty()) {
             System.out.println("No responses found.");
             return;
         }
