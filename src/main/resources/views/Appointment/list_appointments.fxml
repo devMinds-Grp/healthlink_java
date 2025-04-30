@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane stylesheets="@../../css/Appointment.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.healthlink.Controllers.Appoitment.List_appointmentController">
+    <top>
+        <fx:include source="../Navbar.fxml"/>
+    </top>
+
+    <center>
+        <StackPane alignment="CENTER" style="-fx-background-color: #f5f7fa;">
+            <VBox alignment="TOP_CENTER" styleClass="form-container" style="-fx-max-width: 1200; -fx-min-width: 1200;">
+                <padding>
+                    <Insets bottom="50" left="40" right="40" top="50"/>
+                </padding>
+                <HBox alignment="CENTER" spacing="15">
+                    <ImageView fitHeight="50" fitWidth="50">
+                        <image>
+                            <Image url="@../../assets/liste.png"/>
+                        </image>
+                    </ImageView>
+                    <Label styleClass="form-title" text="Liste des Rendez-vous"/>
+                </HBox>
+                <HBox alignment="CENTER_RIGHT" style="-fx-padding: 0 0 20 0;">
+                    <Button onAction="#showCreateForm" styleClass="primary-button" text="Créer un Rendez-vous"/>
+                </HBox>
+                <TableView fx:id="appointmentsTable" styleClass="styled-table" style="-fx-min-width: 900; -fx-max-width: 1000; -fx-min-height: 500; -fx-max-height: 500;">
+                    <columns>
+                        <TableColumn prefWidth="250" text="Date">
+                            <cellValueFactory><PropertyValueFactory property="date"/></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn prefWidth="250" text="Type">
+                            <cellValueFactory><PropertyValueFactory property="type"/></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn prefWidth="250" text="Statut">
+                            <cellValueFactory><PropertyValueFactory property="status"/></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn prefWidth="250" text="Actions"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

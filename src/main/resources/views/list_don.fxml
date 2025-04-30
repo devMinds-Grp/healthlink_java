@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.healthlink.Controllers.ListDonController"
+            stylesheets="@list_don.css">
+
+    <!-- ========== NAVBAR EN HAUT ========== -->
+    <top>
+        <fx:include source="../views/Navbar.fxml"/>
+    </top>
+
+    <!-- ========== CONTENU PRINCIPAL ========== -->
+    <center>
+        <StackPane alignment="CENTER" style="-fx-background-color: #f5f7fa;">
+            <VBox alignment="TOP_CENTER" styleClass="form-container" maxWidth="800">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+
+                <!-- Titre -->
+                <VBox alignment="CENTER" spacing="10" style="-fx-padding: 0 0 20 0;">
+                    <Label text="Blood Donations List" styleClass="form-title"/>
+                </VBox>
+
+                <!-- Tableau -->
+                <TableView fx:id="donationTable" prefHeight="380.0" prefWidth="760.0" styleClass="styled-table">
+                    <columns>
+                        <TableColumn fx:id="idColumn" prefWidth="50.0" text="ID"/>
+                        <TableColumn fx:id="descriptionColumn" prefWidth="200.0" text="Description"/>
+                        <TableColumn fx:id="lieuColumn" prefWidth="150.0" text="Location"/>
+                        <TableColumn fx:id="dateColumn" prefWidth="100.0" text="Date"/>
+                        <TableColumn fx:id="numTelColumn" prefWidth="100.0" text="Phone Number"/>
+                        <TableColumn fx:id="actionsColumn" prefWidth="150.0" text="Actions"/>
+                    </columns>
+                </TableView>
+
+                <!-- Boutons d'action -->
+                <HBox spacing="25" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+                    <Button text="Add New Donation" onAction="#openAddDonWindow" styleClass="primary-button"/>
+                    <Button text="Refresh" onAction="#refreshTable" styleClass="secondary-button"/>
+                </HBox>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.healthlink.Controllers.AddReclamationController"
+      stylesheets="@add_reclamation.css" spacing="20" prefWidth="500" prefHeight="550"
+      styleClass="dialog-container">
+
+    <Label text="Nouvelle Réclamation" styleClass="dialog-title"/>
+
+    <GridPane hgap="10" vgap="15">
+        <Label text="Catégorie:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="categoryComboBox" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"/>
+
+        <Label text="Titre (5-100 caractères):" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="titleField" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"/>
+
+        <Label text="Description (20-500 caractères):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextArea fx:id="descArea" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
+                  GridPane.vgrow="ALWAYS" wrapText="true"/>
+    </GridPane>
+
+    <!-- Section CAPTCHA -->
+    <VBox spacing="10" styleClass="captcha-box">
+        <Label text="Vérification CAPTCHA" styleClass="captcha-label"/>
+        <HBox spacing="10" alignment="CENTER">
+            <ImageView fx:id="captchaImage" fitWidth="150" fitHeight="50"/>
+            <Button text="Rafraîchir" onAction="#refreshCaptcha" styleClass="refresh-btn"/>
+        </HBox>
+        <TextField fx:id="captchaInput" promptText="Entrez le texte ci-dessus"/>
+    </VBox>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Annuler" onAction="#handleCancel" styleClass="cancel-btn"/>
+        <Button text="Enregistrer" onAction="#handleSave" styleClass="save-btn"/>
+    </HBox>
+</VBox>

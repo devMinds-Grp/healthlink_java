@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.*?>
+<?import java.net.URL?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.healthlink.Controllers.ForumListController"
+            stylesheets="@/styles/forum.css">
+
+    <!-- Navbar -->
+    <top>
+        <fx:include source="../views/Navbar.fxml"/>
+    </top>
+
+    <!-- Main Content -->
+    <center>
+        <VBox styleClass="form-background" BorderPane.alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
+            <padding>
+                <Insets top="30" bottom="30" left="20" right="20"/>
+            </padding>
+
+            <!-- Welcome Section -->
+            <VBox fx:id="welcomeSection" visible="false" managed="false">
+                <HBox spacing="20" alignment="CENTER_LEFT">
+                    <VBox spacing="10" HBox.hgrow="ALWAYS">
+                        <Label text="Welcome To" styleClass="subheader-label"/>
+                        <Label text="Our Forum." styleClass="header-label"/>
+                        <Label text="Nous croyons en la collaboration et en l'échange de connaissances. Nous vous encourageons à partager vos idées, à poser des questions et à participer activement à la vie de ce forum. Ensemble, nous pouvons créer une communauté forte et dynamique." wrapText="true"/>
+
+                        <VBox spacing="10" styleClass="feature-list">
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="•" styleClass="bullet-point"/>
+                                <Label text="Obtenez des conseils de professionnels"/>
+                            </HBox>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="•" styleClass="bullet-point"/>
+                                <Label text="Rejoignez une communauté active"/>
+                            </HBox>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="•" styleClass="bullet-point"/>
+                                <Label text="Partagez vos expériences et apprenez"/>
+                            </HBox>
+                        </VBox>
+
+                        <Button text="Create New" styleClass="create-button" onAction="#handleCreateNew"/>
+                    </VBox>
+
+                    <!-- Placeholder for future image -->
+                    <StackPane minWidth="300" minHeight="300" visible="false" managed="false"/>
+                </HBox>
+            </VBox>
+
+            <!-- Forums List Section -->
+            <VBox spacing="20" VBox.vgrow="ALWAYS">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Forum List" styleClass="subheader-label"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="newForumButton" text="Create New" styleClass="create-button"/>
+                </HBox>
+
+                <!-- Custom Forum List Container -->
+                <ScrollPane fitToWidth="true" styleClass="edge-to-edge" VBox.vgrow="ALWAYS">
+                    <content>
+                        <VBox fx:id="forumContainer" spacing="15"/>
+                    </content>
+                </ScrollPane>
+            </VBox>
+        </VBox>
+    </center>
+
+</BorderPane>

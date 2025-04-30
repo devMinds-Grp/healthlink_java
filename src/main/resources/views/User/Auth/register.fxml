@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.healthlink.Controllers.User.Authentification.Register"
+            prefHeight="600.0" prefWidth="1000.0">
+
+    <!-- Partie gauche -->
+    <left>
+        <VBox spacing="15" alignment="TOP_LEFT" style="-fx-background-color: #f4f7fc;" prefWidth="400">
+            <padding><Insets top="20" left="40" right="40" bottom="20"/></padding>
+            <children>
+                <Label text="Inscription Patient" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
+
+                <Label text="Nom" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="nomTextField" promptText="Ex. Ameni"/>
+
+                <Label text="Prénom" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="prenomTextField" promptText="Ex. Chakroun"/>
+
+                <Label text="Email" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="emailTextField" promptText="Ex. amenichakroun62@gmail.com"/>
+
+                <Label text="Mot de passe" style="-fx-font-weight: bold;"/>
+                <PasswordField fx:id="motdepasseTextField" promptText="Ameni.123"/>
+
+                <Label text="Numéro de téléphone" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="numtelTextField" promptText="Entrez le numéro de téléphone"/>
+
+                <VBox spacing="5.0">
+                    <Label text="Image de profil" style="-fx-font-weight: bold;"/>
+                    <Button fx:id="choisirImageButton" text="Choisir un fichier"
+                            style="-fx-background-color: #3498db; -fx-text-fill: white;"
+                            onAction="#handleChoisirImage"/>
+                    <Label fx:id="nomFichierLabel" text="Aucun fichier choisi"
+                           style="-fx-font-style: italic; -fx-text-fill: #666;"/>
+                </VBox>
+
+                <!-- Boutons -->
+                <HBox spacing="10" alignment="TOP_RIGHT">
+                    <children>
+                        <Button text="S'inscrire" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;" onAction="#addPatient"/>
+                        <Button text="Réinitialiser" style="-fx-font-weight: bold;"/>
+                    </children>
+                </HBox>
+
+                <!-- Connexion Google -->
+                <HBox spacing="5" alignment="TOP_RIGHT">
+                    <children>
+                        <Label text="G" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                        <Button text="S'inscrire avec Google" fx:id="googleSignInButton" onAction="#handleGoogleSignIn" style="-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 5;-fx-font-weight: bold;"/>
+                    </children>
+                </HBox>
+                <Separator/>
+
+                <!-- Choix de rôle -->
+                <Label text="Choisissez un rôle :" style="-fx-font-weight: bold;"/>
+                <HBox spacing="10" alignment="CENTER">
+                    <children>
+                        <Button text="Patient" onAction="#handleRegister" />
+                        <Button text="Médecin" onAction="#handleRegisterM"/>
+                        <Button text="Soignant" onAction="#handleRegisterS"/>
+                    </children>
+                </HBox>
+                <HBox spacing="5" alignment="CENTER">
+                    <children>
+                        <Label text="Déjà inscrit ?" />
+                        <Hyperlink text="Connectez-vous" style="-fx-text-fill: #3f51b5; -fx-font-weight: bold;" onAction="#handleLogin" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </left>
+
+    <!-- Partie droite (fond bleu) -->
+    <center>
+        <Pane prefWidth="600" style="-fx-background-color: linear-gradient(to bottom right, #283593, #283593);" />
+    </center>
+
+</BorderPane>

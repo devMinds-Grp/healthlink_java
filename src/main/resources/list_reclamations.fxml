@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.healthlink.Controllers.ListReclamationsController"
+            stylesheets="@/reclamations.css">
+
+    <!-- Navbar -->
+    <top>
+        <fx:include source="/views/Navbar.fxml"/>
+    </top>
+
+    <!-- Main Content -->
+    <center>
+        <VBox styleClass="form-background" BorderPane.alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
+            <padding>
+                <Insets top="30" bottom="30" left="20" right="20"/>
+            </padding>
+
+            <!-- Header -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Gestion des Réclamations" styleClass="header-label"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="addReclamationButton" text="Ajouter Réclamation" styleClass="create-button" onAction="#handleAddReclamation"/>
+            </HBox>
+
+            <!-- Search Field -->
+            <TextField fx:id="searchField" promptText="Rechercher par titre, description ou catégorie..." styleClass="search-field" />
+            <VBox.margin>
+                <Insets top="20"/>
+            </VBox.margin>
+
+            <!-- Reclamations List -->
+            <ScrollPane fitToWidth="true" styleClass="edge-to-edge" VBox.vgrow="ALWAYS">
+                <content>
+                    <VBox>
+                        <FlowPane fx:id="cardsContainer" hgap="20" vgap="20" prefWrapLength="960" visible="false"/>
+                        <Pagination fx:id="pagination" VBox.vgrow="ALWAYS"/>
+                    </VBox>
+                </content>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+</BorderPane>

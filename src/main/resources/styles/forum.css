@@ -1,0 +1,383 @@
+/* Palette de couleurs principale */
+.root {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-font-size: 14px;
+    -fx-primary-color: #1a73e8; /* Bleu principal pour l'en-tête */
+    -fx-light-blue: #40a9ff; /* Bleu plus clair pour les boutons et survols */
+    -fx-dark-blue: #0d47a1; /* Bleu foncé pour certains éléments */
+    -fx-white: #ffffff;
+    -fx-gray: #f5f5f5;
+    -fx-light-gray: #f9f9f9;
+    -fx-border-gray: #e0e0e0;
+}
+
+/* En-tête */
+.header-container {
+    -fx-background-color: -fx-primary-color;
+    -fx-padding: 20 20 20 20;
+}
+
+.header-label-white {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.header-label {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-padding: 10 0 20 0;
+}
+
+/* Formulaires */
+.form-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.text-field, .text-area {
+    -fx-background-color: -fx-white;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 4;
+    -fx-padding: 8;
+    -fx-font-size: 14px;
+}
+
+.text-field:focused, .text-area:focused {
+    -fx-border-color: #1a73e8;
+    -fx-border-width: 1.5px;
+}
+
+/* Boutons principaux */
+.primary-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4;
+    -fx-padding: 10 20 10 20;
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: derive(#3498db, 10%);
+}
+
+.secondary-button {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-background-radius: 4;
+    -fx-padding: 10 20 10 20;
+    -fx-cursor: hand;
+}
+
+.secondary-button:hover {
+    -fx-background-color: derive(#6c757d, 10%);
+}
+
+.book-button {
+    -fx-background-color: -fx-white;
+    -fx-text-fill: -fx-primary-color;
+    -fx-font-weight: bold;
+    -fx-border-color: -fx-primary-color;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 10 20 10 20;
+}
+
+.create-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4;
+    -fx-padding: 8 16 8 16;
+}
+
+.create-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+/* Boutons d'action */
+.action-button {
+    -fx-padding: 6 12 6 12;
+    -fx-background-radius: 4;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.show-button {
+    -fx-background-color: #17a2b8;
+    -fx-text-fill: white;
+}
+
+.show-button:hover {
+    -fx-background-color: derive(#17a2b8, 10%);
+}
+
+.edit-button {
+    -fx-background-color: #ffc107;
+    -fx-text-fill: #212529;
+}
+
+.edit-button:hover {
+    -fx-background-color: derive(#ffc107, 10%);
+}
+
+.delete-button {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: white;
+}
+
+.delete-button:hover {
+    -fx-background-color: derive(#dc3545, 10%);
+}
+
+.button-bar {
+    -fx-padding: 20 0 0 0;
+    -fx-spacing: 10;
+}
+
+/* Forum Cards Styling */
+.forum-card {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.forum-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 4);
+}
+
+.forum-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.forum-description {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555555;
+    -fx-wrap-text: true;
+}
+
+.forum-date {
+    -fx-font-size: 12px;
+    -fx-text-fill: #777777;
+}
+
+/* Tableaux */
+.table-view {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 10 5 10 5;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell {
+    -fx-background-color: -fx-white;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: -fx-light-gray;
+}
+
+/* Messages d'erreur */
+.error-label {
+    -fx-text-fill: #dc3545;
+    -fx-font-size: 12px;
+    -fx-padding: 2px 0 0 0;
+}
+
+.button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4;
+    -fx-padding: 5 10 5 10;
+}
+
+.button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.button-bar {
+    -fx-padding: 10 0 0 0;
+}
+
+.table-view {
+    -fx-base: #ecf0f1;
+    -fx-control-inner-background: #ffffff;
+}
+
+.button-success {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+}
+
+.button-danger {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+}
+
+.button-warning {
+    -fx-background-color: #f39c12;
+    -fx-text-fill: white;
+}
+
+.button-primary {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+.comment-cell {
+    -fx-padding: 5px;
+}
+
+.comment-actions {
+    -fx-spacing: 5px;
+}
+
+.status-approved {
+    -fx-text-fill: #2ecc71;
+    -fx-font-weight: bold;
+}
+
+/* Styles pour les champs invalides */
+.text-field:error, .text-area:error {
+    -fx-border-color: #ff0000;
+    -fx-border-width: 1.5px;
+}
+
+/* Styles pour les messages d'erreur */
+.error-label {
+    -fx-font-size: 11px;
+    -fx-padding: 2px 0 0 0;
+}
+
+/* Ajouter dans forum.css */
+.form-container {
+    -fx-background-color: -fx-white;
+    -fx-padding: 25;
+    -fx-spacing: 15;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 5);
+    -fx-border-radius: 10;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1;
+    -fx-max-width: 800px;
+    -fx-alignment: center;
+}
+
+/* Modifications pour les conteneurs de formulaire */
+.form-background {
+    -fx-background-color: #f0f5ff;
+    -fx-alignment: top-center;
+}
+
+/* Couleurs de fond pour l'en-tête */
+.header-container {
+    -fx-background-color: #1a73e8;
+    -fx-alignment: center-left;
+    -fx-min-height: 120px;
+}
+
+/* Conteneur global pour centrer le formulaire */
+.main-container {
+    -fx-alignment: center;
+    -fx-padding: 0;
+    -fx-background-color: #f0f5ff;
+}
+
+/* Additional styles for ShowForum view */
+/* Header and title styling */
+.subheader-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0 5 0;
+}
+
+/* Feature list styling */
+.feature-list {
+    -fx-padding: 15 0 25 0;
+}
+
+.bullet-point {
+    -fx-text-fill: #40a9ff;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+/* ScrollPane styling */
+.edge-to-edge, .edge-to-edge > .viewport {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* Card background hover effect */
+.forum-card:hover {
+    -fx-background-color: #f8f9fa;
+}
+
+
+
+/* Boutons principaux avec les couleurs CRUD */
+.create-button {
+    -fx-background-color: #4CAF50; /* Vert pour création */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4;
+    -fx-padding: 8 16 8 16;
+}
+
+.create-button:hover {
+    -fx-background-color: derive(#4CAF50, -10%); /* Variante plus foncée au survol */
+}
+
+.show-button {
+    -fx-background-color: #2196F3; /* Bleu pour affichage */
+    -fx-text-fill: white;
+}
+
+.show-button:hover {
+    -fx-background-color: derive(#2196F3, -10%);
+}
+
+.edit-button {
+    -fx-background-color: #FF9800; /* Orange pour modification */
+    -fx-text-fill: #212529;
+}
+
+.edit-button:hover {
+    -fx-background-color: derive(#FF9800, -10%);
+}
+
+.delete-button {
+    -fx-background-color: #F44336; /* Rouge pour suppression */
+    -fx-text-fill: white;
+}
+
+.delete-button:hover {
+    -fx-background-color: derive(#F44336, -10%);
+}
+
+/* Bouton de retour à la liste */
+.secondary-button {
+    -fx-background-color: #9E9E9E; /* Gris pour retour */
+    -fx-text-fill: white;
+    -fx-background-radius: 4;
+    -fx-padding: 10 20 10 20;
+    -fx-cursor: hand;
+}
+
+.secondary-button:hover {
+    -fx-background-color: derive(#9E9E9E, -10%);
+}

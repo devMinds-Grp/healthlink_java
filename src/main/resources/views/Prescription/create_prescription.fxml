@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.healthlink.Controllers.Prescription.CreatePrescriptionController"
+            stylesheets="@../../css/Prescription.css">
+
+    <!-- ========== NAVBAR EN HAUT ========== -->
+    <top>
+        <fx:include source="../Navbar.fxml"/>
+    </top>
+
+
+    <!-- ========== CONTENU PRINCIPAL ========== -->
+    <center>
+        <StackPane alignment="CENTER" style="-fx-background-color: #f5f7fa; -fx-padding: 30;">
+            <!-- Carte du formulaire -->
+            <VBox alignment="CENTER" styleClass="form-container" maxWidth="400">
+                <padding>
+                    <Insets top="30" right="40" bottom="30" left="40"/>
+                </padding>
+
+                <!-- En-tête formulaire -->
+                <VBox alignment="CENTER" spacing="10">
+                    <HBox alignment="CENTER" spacing="15">
+                        <ImageView fitWidth="52" fitHeight="52">
+                            <image>
+                                <Image url="@../../assets/medicament.png"/>
+                            </image>
+                        </ImageView>
+                        <Label text="Créer une Nouvelle Prescription" styleClass="form-title"/>
+                    </HBox>
+                    <Separator styleClass="separator"/>
+                </VBox>
+
+                <!-- Formulaire -->
+                <VBox spacing="15" style="-fx-padding: 20 0 0 0;">
+                    <!-- Nom du médicament -->
+                    <VBox spacing="5">
+                        <Label text="Nom du médicament" styleClass="field-label" />
+                        <TextField fx:id="nomMedicamentField" styleClass="form-field"
+                                   promptText="Ex: Paracétamol 500mg (min 5 caractères)"/>
+                    </VBox>
+
+                    <!-- Dosage -->
+                    <VBox spacing="5">
+                        <Label text="Dosage" styleClass="field-label"/>
+                        <TextField fx:id="dosageField" styleClass="form-field"
+                                   promptText="Ex: 1 comprimé 3 fois/jour (min 5 caractères)"/>
+                    </VBox>
+
+                    <!-- Durée -->
+                    <VBox spacing="5">
+                        <Label text="Durée" styleClass="field-label"/>
+                        <TextField fx:id="dureeField" styleClass="form-field"
+                                   promptText="Ex: Pendant 7 jours (min 5 caractères)"/>
+                    </VBox>
+
+                    <!-- Notes -->
+                    <VBox spacing="5">
+                        <Label text="Notes" styleClass="field-label"/>
+                        <TextArea fx:id="notesArea" styleClass="form-field"
+                                  wrapText="true" prefRowCount="3"
+                                  promptText="Ex: A prendre après repas (min 10 caractères)"/>
+                    </VBox>
+
+                    <!-- Rendez-vous ID (ComboBox) -->
+                    <VBox spacing="5">
+                        <Label text="date de Rendez-vous " styleClass="field-label"/>
+                        <ComboBox fx:id="rdvCardIdCombo" styleClass="form-field"
+                                  promptText="Sélectionnez un rendez-vous"/>
+                    </VBox>
+
+                    <!-- Bouton Enregistrer -->
+                    <HBox alignment="CENTER_RIGHT" style="-fx-padding: 20 0 0 0;">
+                        <Button text="ENREGISTRER" onAction="#handleSaveAction" styleClass="primary-button"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

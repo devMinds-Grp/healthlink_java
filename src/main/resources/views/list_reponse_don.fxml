@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.healthlink.Controllers.ListReponseDonController"
+            stylesheets="@list_reponse_don.css">
+
+    <!-- ========== NAVBAR EN HAUT ========== -->
+    <top>
+        <HBox style="-fx-background-color: #007bff; -fx-spacing: 20; -fx-padding: 10 30; -fx-alignment: CENTER_LEFT;">
+            <!-- Logo -->
+            <HBox style="-fx-alignment: CENTER; -fx-spacing: 15; -fx-padding: 5 50;">
+                <ImageView fitWidth="100" fitHeight="90">
+                    <image>
+                        <Image url="/assets/11.png"/>
+                    </image>
+                </ImageView>
+            </HBox>
+
+            <!-- Espace flexible -->
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Menu de navigation -->
+            <HBox style="-fx-alignment: CENTER_RIGHT; -fx-spacing: 15;">
+                <Button text="Home" styleClass="nav-button" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
+                <Button text="BloodDonation" styleClass="nav-button" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
+                <Button text="ResponseDon" styleClass="nav-button nav-button-active" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
+                <Button text="Profile" styleClass="nav-button" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
+                <Button text="Disconnect" styleClass="nav-button" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- ========== CONTENU PRINCIPAL ========== -->
+    <center>
+        <StackPane alignment="CENTER" style="-fx-background-color: #f5f7fa;">
+            <VBox alignment="TOP_CENTER" styleClass="form-container" maxWidth="800">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+
+                <!-- Titre -->
+                <VBox alignment="CENTER" spacing="10" style="-fx-padding: 0 0 20 0;">
+                    <Label text="Response Donations List" styleClass="form-title"/>
+                </VBox>
+
+                <!-- Tableau -->
+                <TableView fx:id="responseTable" prefHeight="380.0" prefWidth="760.0" styleClass="styled-table">
+                    <columns>
+                        <TableColumn fx:id="idColumn" prefWidth="100.0" text="ID"/>
+                        <TableColumn fx:id="descriptionColumn" prefWidth="500.0" text="Description"/>
+                        <TableColumn fx:id="actionsColumn" prefWidth="150.0" text="Actions"/>
+                    </columns>
+                </TableView>
+
+                <!-- Boutons d'action -->
+                <HBox spacing="25" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+                    <Button text="Add New Response" onAction="#openAddReponseDonWindow" styleClass="primary-button"/>
+                    <Button text="Refresh" onAction="#refreshTable" styleClass="secondary-button"/>
+                </HBox>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

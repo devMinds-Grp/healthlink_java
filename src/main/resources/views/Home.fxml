@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.healthlink.Controllers.HomeController" stylesheets="@../css/Care.css">
+    <!-- Navbar -->
+    <top>
+        <fx:include source="Navbar.fxml"/>
+    </top>
+
+    <!-- Content -->
+    <center>
+        <StackPane alignment="CENTER" style="-fx-background-color: #f5f7fa; -fx-padding: 30;">
+            <VBox alignment="CENTER" styleClass="form-container" maxWidth="600">
+                <padding>
+                    <Insets top="30" right="40" bottom="30" left="40"/>
+                </padding>
+                <VBox alignment="CENTER" spacing="20">
+                    <Label text="Bienvenue sur HealthLink" styleClass="form-title"/>
+                    <Label text="Gérez vos soins, prescriptions et rendez-vous en toute simplicité." styleClass="form-label"/>
+                    <HBox spacing="20" alignment="CENTER">
+                        <!-- Image de fond pour la section principale -->
+                        <ImageView fitHeight="500.0" fitWidth="800.0" preserveRatio="false"
+                                   AnchorPane.topAnchor="80.0" AnchorPane.bottomAnchor="0.0"
+                                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                            <image>
+                                <Image url="@../img/banner.png"/>
+                            </image>
+                        </ImageView>
+
+                        <!-- Overlay semi-transparent pour améliorer la lisibilité du texte -->
+                        <Pane style="-fx-background-color: rgba(42, 82, 190, 0.3);"
+                              AnchorPane.topAnchor="60.0" AnchorPane.bottomAnchor="0.0"
+                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
+
+                        <!-- Contenu principal centré -->
+                        <VBox alignment="TOP_LEFT" spacing="15"
+                              AnchorPane.topAnchor="200.0" AnchorPane.bottomAnchor="150.0"
+                              AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+                            <!-- Titre principal -->
+                            <Text text="THE BEST MEDICAL CENTER"
+                                  style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-fill: #2a52be; -fx-font-family: 'Arial';"/>
+                            <!-- Slogan avec saut de ligne -->
+                            <Text text="Bringing health into life for the whole family."
+                                  style="-fx-font-size: 22px; -fx-fill: #333333; -fx-text-alignment: center; -fx-font-family: 'Arial';"/>
+                            <!-- Bouton Discover More -->
+                            <Button text="Discover More"
+                                    style="-fx-background-color: #2a52be; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10 30; -fx-background-radius: 5;"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>
