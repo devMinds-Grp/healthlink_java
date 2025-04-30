@@ -11,6 +11,11 @@
     -fx-border-gray: #e0e0e0;
 }
 
+/* Arrière-plan global avec dégradé */
+.main-background {
+    -fx-background-color: linear-gradient(to bottom, #0d47a1, #bbdefb);
+}
+
 /* En-tête */
 .header-container {
     -fx-background-color: -fx-primary-color;
@@ -50,31 +55,20 @@
 }
 
 /* Boutons principaux */
-.primary-button {
-    -fx-background-color: #3498db;
+.form-container .primary-button {
+    -fx-background-color: #3498db; /* Vert pour les boutons de création */
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 4;
     -fx-padding: 10 20 10 20;
     -fx-cursor: hand;
+    -fx-min-width: 150px; /* Uniformisation de la taille */
+    -fx-max-width: 150px;
 }
 
-.primary-button:hover {
-    -fx-background-color: derive(#3498db, 10%);
+.form-container .primary-button:hover {
+    -fx-background-color: derive(#3498db, -10%); /* Vert plus foncé au survol */
 }
-
-.secondary-button {
-    -fx-background-color: #6c757d;
-    -fx-text-fill: white;
-    -fx-background-radius: 4;
-    -fx-padding: 10 20 10 20;
-    -fx-cursor: hand;
-}
-
-.secondary-button:hover {
-    -fx-background-color: derive(#6c757d, 10%);
-}
-
 .book-button {
     -fx-background-color: -fx-white;
     -fx-text-fill: -fx-primary-color;
@@ -86,7 +80,7 @@
 }
 
 .create-button {
-    -fx-background-color: #3498db;
+    -fx-background-color: #4CAF50; /* Vert pour création */
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 4;
@@ -94,7 +88,7 @@
 }
 
 .create-button:hover {
-    -fx-background-color: #2980b9;
+    -fx-background-color: derive(#4CAF50, -10%); /* Variante plus foncée au survol */
 }
 
 /* Boutons d'action */
@@ -103,6 +97,9 @@
     -fx-background-radius: 4;
     -fx-font-weight: bold;
     -fx-cursor: hand;
+    -fx-min-width: 80px; /* Assure une largeur minimale pour afficher le texte */
+    -fx-min-height: 30px; /* Assure une hauteur minimale pour la lisibilité */
+    -fx-text-fill: inherit; /* Conserve la couleur du texte définie par les sous-classes */
 }
 
 .show-button {
@@ -167,6 +164,12 @@
     -fx-text-fill: #777777;
 }
 
+.forum-rating {
+    -fx-font-size: 12px;
+    -fx-text-fill: #777777;
+    -fx-font-weight: bold;
+}
+
 /* Tableaux */
 .table-view {
     -fx-background-color: transparent;
@@ -191,11 +194,6 @@
 }
 
 /* Messages d'erreur */
-.error-label {
-    -fx-text-fill: #dc3545;
-    -fx-font-size: 12px;
-    -fx-padding: 2px 0 0 0;
-}
 
 .button {
     -fx-background-color: #3498db;
@@ -258,10 +256,6 @@
 }
 
 /* Styles pour les messages d'erreur */
-.error-label {
-    -fx-font-size: 11px;
-    -fx-padding: 2px 0 0 0;
-}
 
 /* Ajouter dans forum.css */
 .form-container {
@@ -279,7 +273,7 @@
 
 /* Modifications pour les conteneurs de formulaire */
 .form-background {
-    -fx-background-color: #f0f5ff;
+    -fx-background-color: #f5f7fa;
     -fx-alignment: top-center;
 }
 
@@ -320,14 +314,14 @@
 .edge-to-edge, .edge-to-edge > .viewport {
     -fx-background-color: transparent;
     -fx-padding: 0;
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
 }
 
 /* Card background hover effect */
 .forum-card:hover {
     -fx-background-color: #f8f9fa;
 }
-
-
 
 /* Boutons principaux avec les couleurs CRUD */
 .create-button {
@@ -370,14 +364,173 @@
 }
 
 /* Bouton de retour à la liste */
-.secondary-button {
-    -fx-background-color: #9E9E9E; /* Gris pour retour */
+
+.average-rating-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #06BBCC;
+}
+
+.star-rating {
+    -fx-spacing: 5;
+}
+
+/* Styles pour les étoiles de notation */
+.rating-star {
+    -fx-cursor: hand;
+}
+
+.rating-star:hover {
+    -fx-opacity: 0.8;
+}
+
+/* Styles pour l'affichage des évaluations */
+.rating-box {
+    -fx-background-color: -fx-light-gray;
+    -fx-padding: 10;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: -fx-border-gray;
+    -fx-border-width: 1;
+}
+
+.rating-user-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+.rating-comment-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #555555;
+}
+
+/* Style pour le statut */
+.status-approved {
+    -fx-text-fill: #27ae60;
+    -fx-font-weight: bold;
+}
+
+.status-pending {
+    -fx-text-fill: #f39c12;
+    -fx-font-weight: bold;
+}
+
+.error-label {
+    -fx-text-fill: red;
+    -fx-font-size: 12px;
+    -fx-padding: 2px 0 0 0;
+    -fx-wrap-text: true; /* Permet le retour à la ligne */
+    -fx-max-width: 400px; /* Limite la largeur pour éviter un étirement excessif */
+}
+
+/* Styles pour la fonctionnalité de génération de forum */
+.status-label {
+    -fx-font-style: italic;
+    -fx-text-fill: #555;
+}
+
+.subtitle-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.success-button {
+    -fx-background-color: #4CAF50;
     -fx-text-fill: white;
+}
+
+.success-button:hover {
+    -fx-background-color: #45a049;
+}
+
+/* Style pour le titre principal */
+.form-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+/* Style pour le séparateur */
+.separator {
+    -fx-background-color: #e0e0e0;
+    -fx-pref-height: 1;
+    -fx-max-width: 300;
+}
+
+.secondary-button, .danger-button, .verify-button {
     -fx-background-radius: 4;
     -fx-padding: 10 20 10 20;
+    -fx-min-width: 150px;
+    -fx-max-width: 150px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
     -fx-cursor: hand;
+    -fx-text-fill: white;
+}
+
+.secondary-button {
+    -fx-background-color: #9E9E9E;
 }
 
 .secondary-button:hover {
     -fx-background-color: derive(#9E9E9E, -10%);
+}
+
+.danger-button {
+    -fx-background-color: #e74c3c;
+}
+
+.danger-button:hover {
+    -fx-background-color: #c0392b;
+}
+
+.danger-button:disabled {
+    -fx-background-color: #95a5a6;
+    -fx-text-fill: #7f8c8d;
+}
+
+.verify-button {
+    -fx-background-color: #1a73e8;
+}
+
+.verify-button:hover {
+    -fx-background-color: derive(#1a73e8, -10%);
+}
+
+.action-icon {
+    -fx-cursor: hand; /* Curseur de main pour indiquer que l'icône est cliquable */
+    -fx-opacity: 0.7; /* Opacité par défaut */
+    -fx-transition: opacity 0.2s ease; /* Animation fluide pour l'opacité */
+}
+
+.action-icon:hover {
+    -fx-opacity: 1; /* Pleine opacité au survol */
+}
+
+.action-icon:pressed {
+    -fx-opacity: 0.5; /* Légère réduction de l'opacité lorsqu'on clique */
+}
+
+/* Style pour les boutons d'icônes */
+.icon-button {
+    -fx-background-color: transparent; /* Fond transparent */
+    -fx-background-radius: 0; /* Supprime les coins arrondis */
+    -fx-padding: 5; /* Espace interne pour l'icône */
+    -fx-cursor: hand; /* Curseur de main */
+}
+
+/* Style spécifique pour le bouton Show */
+.show-icon-button {
+    -fx-background-color: transparent; /* Fond transparent */
+}
+
+/* Effet au survol pour une meilleure UX */
+.icon-button:hover {
+    -fx-background-color: #e0e0e0; /* Fond gris clair au survol */
+}
+
+/* Effet au clic */
+.icon-button:pressed {
+    -fx-background-color: #d0d0d0; /* Fond gris plus foncé au clic */
 }

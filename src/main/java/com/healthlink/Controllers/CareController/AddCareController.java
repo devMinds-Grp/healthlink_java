@@ -1,6 +1,8 @@
 package com.healthlink.Controllers.CareController;
 
 import com.healthlink.Entities.Care;
+import com.healthlink.Entites.Utilisateur;
+import com.healthlink.Services.AuthService;
 import com.healthlink.Services.CareService;
 import com.healthlink.utils.MyDB;
 import javafx.application.Platform;
@@ -76,6 +78,18 @@ public class AddCareController {
         care.setDate(date);
         care.setAddress(address);
         care.setDescription(description);
+
+        // Set patient to logged-in user
+        Utilisateur patient = AuthService.getConnectedUtilisateur();
+        if (patient != null) {
+            care.setPatient(patient);
+            System.out.println("Adding care for patient: ID=" + patient.getId() +
+                    ", Name=" + (patient.getPrenom() != null ? patient.getPrenom() : "null") + " " +
+                    (patient.getNom() != null ? patient.getNom() : "null"));
+        } else {
+            showAlert("Erreur", "Aucun utilisateur connecté. Veuillez vous connecter.", Alert.AlertType.ERROR);
+            return;
+        }
 
         // Save to database
         try {

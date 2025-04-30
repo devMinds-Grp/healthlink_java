@@ -109,6 +109,10 @@ public class AffichageSoignant implements Initializable {
     }
 
     @FXML
+    private void showForumView() {
+        loadView("/views/admindashboard.fxml");
+    }
+    @FXML
     private void showPatientsView() {
         loadView("/views/User/list.fxml");
     }
@@ -131,6 +135,7 @@ public class AffichageSoignant implements Initializable {
     public void showDashView(ActionEvent actionEvent) {
         loadView("/views/User/Dashboard.fxml");
     }
+
     private void loadView(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));

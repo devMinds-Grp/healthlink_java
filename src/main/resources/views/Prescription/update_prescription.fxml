@@ -16,7 +16,6 @@
         <fx:include source="../Navbar.fxml"/>
     </top>
 
-
     <!-- ========== CONTENU PRINCIPAL ========== -->
     <center>
         <StackPane alignment="CENTER" style="-fx-background-color: #f5f7fa; -fx-padding: 30;">
@@ -45,21 +44,21 @@
                     <VBox spacing="5">
                         <Label text="Nom du médicament" styleClass="field-label"/>
                         <TextField fx:id="nomMedicamentField" styleClass="form-field"
-                                   promptText="Ex: Paracétamol 500mg (min 10 caractères)"/>
+                                   promptText="Ex: Paracétamol 500mg (min 5 caractères)"/>
                     </VBox>
 
                     <!-- Dosage -->
                     <VBox spacing="5">
                         <Label text="Dosage" styleClass="field-label"/>
                         <TextField fx:id="dosageField" styleClass="form-field"
-                                   promptText="Ex: 1 comprimé 3 fois/jour (min 10 caractères)"/>
+                                   promptText="Ex: 1 comprimé 3 fois/jour (min 5 caractères)"/>
                     </VBox>
 
                     <!-- Durée -->
                     <VBox spacing="5">
                         <Label text="Durée" styleClass="field-label"/>
                         <TextField fx:id="dureeField" styleClass="form-field"
-                                   promptText="Ex: Pendant 7 jours (min 10 caractères)"/>
+                                   promptText="Ex: Pendant 7 jours (min 5 caractères)"/>
                     </VBox>
 
                     <!-- Notes -->
@@ -67,19 +66,18 @@
                         <Label text="Notes" styleClass="field-label"/>
                         <TextArea fx:id="notesArea" styleClass="form-field"
                                   wrapText="true" prefRowCount="3"
-                                  promptText="Ex: A prendre après repas (min 15 caractères)"/>
+                                  promptText="Ex: A prendre après repas (min 10 caractères)"/>
                     </VBox>
 
-                    <!-- Rendez-vous ID (ComboBox) -->
+                    <!-- Rendez-vous Date (Label instead of ComboBox) -->
                     <VBox spacing="5">
-                        <Label text="date de Rendez-vous " styleClass="field-label"/>
-                        <ComboBox fx:id="rdvCardIdCombo" styleClass="form-field"
-                                  promptText="Sélectionnez un rendez-vous"/>
+                        <Label text="Date de Rendez-vous" styleClass="field-label"/>
+                        <Label fx:id="rdvDateLabel" styleClass="form-field" text="Non défini"/>
                     </VBox>
 
                     <!-- Bouton Enregistrer -->
                     <HBox alignment="CENTER_RIGHT" style="-fx-padding: 20 0 0 0;">
-                        <Button text="Retour" onAction="#handleBackAction" styleClass="secondaryyy-button"/>
+                        <Button text="Retour" onAction="#handleBackAction" styleClass="secondaryyy-button"/> <!-- Fixed CSS class -->
                         <Button text="Mettre à jour" onAction="#handleUpdateAction" styleClass="primary-button"/>
                     </HBox>
                 </VBox>

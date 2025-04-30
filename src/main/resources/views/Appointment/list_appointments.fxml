@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -21,7 +22,7 @@
 
     <center>
         <StackPane alignment="CENTER" style="-fx-background-color: #f5f7fa;">
-            <VBox alignment="TOP_CENTER" styleClass="form-container" style="-fx-max-width: 1200; -fx-min-width: 1200;">
+            <VBox alignment="TOP_CENTER" styleClass="form-container" style="-fx-max-width: 1300; -fx-min-width: 1400;">
                 <padding>
                     <Insets bottom="50" left="40" right="40" top="50"/>
                 </padding>
@@ -33,21 +34,30 @@
                     </ImageView>
                     <Label styleClass="form-title" text="Liste des Rendez-vous"/>
                 </HBox>
-                <HBox alignment="CENTER_RIGHT" style="-fx-padding: 0 0 20 0;">
-                    <Button onAction="#showCreateForm" styleClass="primary-button" text="Créer un Rendez-vous"/>
+                <HBox alignment="CENTER" spacing="10" style="-fx-padding: 20 0 20 0;">
+                    <TextField fx:id="searchField" promptText="Rechercher par nom de médecin" styleClass="search-field" style="-fx-max-width: 300;"/>
+                    <Button fx:id="sortAscButton" onAction="#sortAscending" styleClass="sort-button" text="Trier ↑"/>
+                    <Button fx:id="sortDescButton" onAction="#sortDescending" styleClass="sort-button" text="Trier ↓"/>
+                    <Region HBox.hgrow="ALWAYS"/>
                 </HBox>
-                <TableView fx:id="appointmentsTable" styleClass="styled-table" style="-fx-min-width: 900; -fx-max-width: 1000; -fx-min-height: 500; -fx-max-height: 500;">
+                <TableView fx:id="appointmentsTable" styleClass="styled-table" style="-fx-min-width: 1200; -fx-max-width: 1200; -fx-min-height: 500; -fx-max-height: 500;">
                     <columns>
-                        <TableColumn prefWidth="250" text="Date">
+                        <TableColumn prefWidth="200" text="Patient">
+                            <cellValueFactory><PropertyValueFactory property="patientName"/></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn prefWidth="200" text="Médecin">
+                            <cellValueFactory><PropertyValueFactory property="doctorName"/></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn prefWidth="200" text="Date">
                             <cellValueFactory><PropertyValueFactory property="date"/></cellValueFactory>
                         </TableColumn>
-                        <TableColumn prefWidth="250" text="Type">
+                        <TableColumn prefWidth="200" text="Type">
                             <cellValueFactory><PropertyValueFactory property="type"/></cellValueFactory>
                         </TableColumn>
-                        <TableColumn prefWidth="250" text="Statut">
+                        <TableColumn prefWidth="200" text="Statut">
                             <cellValueFactory><PropertyValueFactory property="status"/></cellValueFactory>
                         </TableColumn>
-                        <TableColumn prefWidth="250" text="Actions"/>
+                        <TableColumn prefWidth="200" text="Actions"/>
                     </columns>
                 </TableView>
             </VBox>

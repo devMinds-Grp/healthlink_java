@@ -5,10 +5,15 @@ import com.healthlink.Services.AppointmentService;
 import com.healthlink.Services.AppointmentService.AddResult;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
+import java.io.IOException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -21,6 +26,11 @@ public class Create_appointmentController {
     private final AppointmentService appointmentService = new AppointmentService();
     private static final String DB_DATE_PATTERN = "yyyy-MM-dd";
     private static final String DATE_PATTERN = "dd/MM/yyyy";
+    private List_doctorController.Doctor selectedDoctor;
+
+    public void setSelectedDoctor(List_doctorController.Doctor doctor) {
+        this.selectedDoctor = doctor;
+    }
 
     @FXML
     public void initialize() {
@@ -48,7 +58,9 @@ public class Create_appointmentController {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
-                setDisable(date.isBefore(LocalDate.now()));
+                boolean isWeekend = date.getDayOfWeek() == DayOfWeek.SATURDAY ||
+                        date.getDayOfWeek() == DayOfWeek.SUNDAY;
+                setDisable(empty || date.isBefore(LocalDate.now()) || isWeekend);
             }
         });
 
@@ -84,23 +96,29 @@ public class Create_appointmentController {
             showAlert("Erreur", "Veuillez sélectionner un type de rendez-vous.", Alert.AlertType.WARNING);
             return;
         }
+        if (selectedDoctor == null) {
+            showAlert("Erreur", "Aucun médecin sélectionné.", Alert.AlertType.WARNING);
+            return;
+        }
 
         String date = dateValue.format(DateTimeFormatter.ofPattern(DB_DATE_PATTERN));
         String type = typeValue.toLowerCase().replace(" ", "_").replace("é", "e");
         Appointment newAppointment = new Appointment(date, type);
+        newAppointment.setDoctorId(selectedDoctor.getId());
 
         System.out.println("Tentative d'ajout d'un rendez-vous :");
         System.out.println("Date : " + newAppointment.getDate());
         System.out.println("Type : " + newAppointment.getType());
         System.out.println("Statut : " + newAppointment.getStatus());
+        System.out.println("Médecin ID : " + newAppointment.getDoctorId());
 
         AddResult result = appointmentService.addAppointment(newAppointment);
         if (result.isSuccess()) {
             String formattedDate = dateValue.format(DateTimeFormatter.ofPattern(DATE_PATTERN));
-            String message = String.format("Votre rendez-vous %s du %s a été créé avec succès !",
-                    typeValue, formattedDate);
+            String message = String.format("Votre rendez-vous %s du %s avec Dr. %s %s a été créé avec succès !",
+                    typeValue, formattedDate, selectedDoctor.getFirstName(), selectedDoctor.getLastName());
             showAlert("Succès", message, Alert.AlertType.INFORMATION);
-            closeWindow();
+            openAppointmentList();
         } else {
             showAlert("Erreur", "Échec de la création du rendez-vous : " + result.getErrorMessage(), Alert.AlertType.ERROR);
         }
@@ -114,6 +132,25 @@ public class Create_appointmentController {
     private void closeWindow() {
         Stage stage = (Stage) datePicker.getScene().getWindow();
         stage.close();
+    }
+
+    private void openAppointmentList() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Appointment/list_appointments.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Liste des Rendez-vous");
+
+            closeWindow();
+
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Erreur lors du chargement de la liste des rendez-vous: " + e.getMessage());
+            showAlert("Erreur", "Impossible d'ouvrir la liste des rendez-vous: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     private void showAlert(String title, String message, Alert.AlertType type) {

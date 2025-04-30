@@ -1,25 +1,5 @@
 package com.healthlink.tests;
 
-<<<<<<< HEAD
-
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
-public class Test extends Application {
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/add_category.fxml"));
-        primaryStage.setTitle("Formini application");
-        primaryStage.setScene(new Scene(root, 600, 400));
-        primaryStage.show();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-=======
 import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Entites.Role;
 import com.healthlink.Services.UserService;
@@ -292,6 +272,5 @@ public class Test {
             return "";
         }
         return str.length() > length ? str.substring(0, length - 3) + "..." : str;
->>>>>>> master
     }
 }

@@ -2,10 +2,14 @@ package com.healthlink.Controllers;
 
 import com.healthlink.Entities.Forum;
 import com.healthlink.Entities.ForumResponse;
+import com.healthlink.Entites.Utilisateur;
+import com.healthlink.Services.AuthService;
+import com.healthlink.Services.ForumService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
@@ -13,22 +17,33 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class MainController {
-    private int currentUserId = 1;
+    // Remplacez la valeur statique par une récupération dynamique
+    private int currentUserId;
     private Forum currentForum;
+
+    // Ajoutez une instance de AuthService
+    private final AuthService authService = new AuthService();
 
     @FXML
     private StackPane mainContainer;
 
     @FXML
     public void initialize() {
-        showForumList(); // Charge la vue par défaut au démarrage
+        // Récupérer l'ID de l'utilisateur connecté au démarrage
+        Utilisateur connectedUser = authService.getConnectedUtilisateur();
+        if (connectedUser != null) {
+            this.currentUserId = connectedUser.getId();
+            System.out.println("Utilisateur connecté récupéré - ID: " + currentUserId);
+        } else {
+            System.err.println("Aucun utilisateur connecté trouvé dans AuthService");
+            this.currentUserId = -1; // Valeur par défaut si aucun utilisateur n'est connecté
+        }
 
-        // Ajout du gestionnaire d'événements clavier
+        showForumList(); // Charge la vue par défaut au démarrage
         setupKeyboardShortcut();
     }
 
     private void setupKeyboardShortcut() {
-        // Attendre que la scène soit disponible
         mainContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPress);
@@ -37,10 +52,9 @@ public class MainController {
     }
 
     private void handleKeyPress(KeyEvent event) {
-        // Raccourci Ctrl+Shift+A pour admin
         if (event.isControlDown() && event.isShiftDown() && event.getCode() == KeyCode.A) {
             showAdminDashboard();
-            event.consume(); // Empêche la propagation de l'événement
+            event.consume();
         }
     }
 
@@ -74,6 +88,7 @@ public class MainController {
 
             CreateForumController controller = loader.getController();
             controller.setMainController(this);
+            controller.setCurrentUserId(currentUserId); // Passer currentUserId
 
             mainContainer.getChildren().setAll(view);
         } catch (IOException e) {
@@ -84,6 +99,7 @@ public class MainController {
     public void showForumDetails(Forum forum) {
         this.currentForum = forum;
         try {
+            System.out.println("Affichage des détails du forum - forumId: " + forum.getId() + ", userId: " + currentUserId);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/ShowForum.fxml"));
             Parent view = loader.load();
 
@@ -136,20 +152,37 @@ public class MainController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/AdminDashboard.fxml"));
             Parent view = loader.load();
 
-            // Option 1: Remplace la vue actuelle
             mainContainer.getChildren().setAll(view);
-
-            // Option 2: Ouvre dans une nouvelle fenêtre (décommenter)
-            /*
-            Stage adminStage = new Stage();
-            adminStage.setScene(new Scene(view));
-            adminStage.setTitle("Admin Dashboard");
-            adminStage.initOwner(mainContainer.getScene().getWindow());
-            adminStage.show();
-            */
         } catch (IOException e) {
             System.err.println("Erreur lors du chargement du dashboard admin: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    public void showGenerateForum() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/generateForum.fxml"));
+            Parent root = loader.load();
+
+            GenerateForumController controller = loader.getController();
+            controller.setMainController(this);
+            controller.setCurrentUserId(currentUserId);
+
+            mainContainer.getChildren().setAll(root); // Utilisez mainContainer au lieu de mainContent
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible de charger l'interface de génération de forum: " + e.getMessage());
+        }
+    }
+    public void createForum(Forum forum) {
+        ForumService forumService = new ForumService();
+        forumService.add(forum);
+    }
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

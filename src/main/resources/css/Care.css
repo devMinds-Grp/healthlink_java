@@ -443,3 +443,46 @@
     .custom-alert .dialog-pane {
         -fx-background-color: transparent;
     }
+    .form-container {
+        -fx-background-color: white;
+        -fx-background-radius: 10;
+        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    }
+
+    .form-title {
+        -fx-font-size: 24px;
+        -fx-font-weight: bold;
+        -fx-text-fill: #333333;
+    }
+
+    .styled-table {
+        -fx-background-color: white;
+        -fx-border-color: #e0e0e0;
+        -fx-border-width: 1;
+    }
+
+    .styled-table .table-row-cell {
+        -fx-background-color: white;
+        -fx-border-color: #e0e0e0;
+        -fx-border-width: 0 0 1 0;
+    }
+
+    .styled-table .table-row-cell:filled:hover {
+        -fx-background-color: #f0f0f0;
+    }
+
+    .styled-table .column-header {
+        -fx-background-color: #f8f9fa;
+        -fx-border-color: #e0e0e0;
+    }
+
+    .secondary-button {
+        -fx-background-color: #6c757d;
+        -fx-text-fill: white;
+        -fx-background-radius: 5;
+    }
+
+    .styled-table .table-cell {
+        -fx-alignment: center-left;
+        -fx-padding: 10;
+    }

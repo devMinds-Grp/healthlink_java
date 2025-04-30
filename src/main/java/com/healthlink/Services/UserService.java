@@ -4,6 +4,7 @@ import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Entites.Role;
 import com.healthlink.Interfaces.InterfaceCRUD;
 import com.healthlink.utils.MyDB;
+import com.healthlink.Services.EmailService;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.imageio.ImageIO;
@@ -15,6 +16,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+//ajouter par majd
+import java.util.Date;
+import java.sql.Timestamp;
 
 public class UserService implements InterfaceCRUD<Utilisateur> {
     private Connection connection;
@@ -126,7 +131,7 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
             return null;
         }
     }
-    
+
     public List<Utilisateur> findAllPatients() {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM utilisateur u LEFT JOIN role r ON u.role_id = r.id WHERE u.role_id = 3";
         List<Utilisateur> patients = new ArrayList<>();
@@ -160,10 +165,9 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
     }
     public Utilisateur findPatientById(int id) {
         String req = "SELECT u.*, r.id as role_id, r.nom as role_nom FROM utilisateur u LEFT JOIN role r ON u.role_id = r.id WHERE u.id = ? AND u.role_id = 3";
-
-        try (PreparedStatement pst =  connection.prepareStatement(req)) {
+        try (Connection conn = MyDB.getInstance().getConnection();
+             PreparedStatement pst = conn.prepareStatement(req)) {
             pst.setInt(1, id);
-
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     return extractPatientFromResultSet(rs);
@@ -171,13 +175,14 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
             }
         } catch (SQLException e) {
             System.err.println("Erreur lors de la recherche du patient: " + e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }
 
 
     // Méthode pour supprimer un patient
-    public boolean deletePatient(int id) {
+    public void deletePatient(int id) {
         String req = "DELETE FROM utilisateur WHERE id = ? AND role_id = 3";
 
         try (PreparedStatement pst =  connection.prepareStatement(req)) {
@@ -187,15 +192,11 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
             if (affectedRows == 0) {
                 System.out.println("Aucun patient trouvé avec cet ID ou ce n'est pas un patient");
             } else {
-
                 System.out.println("Patient supprimé avec succès");
-                return true;
-
             }
         } catch (SQLException e) {
             System.err.println("Erreur lors de la suppression du patient: " + e.getMessage());
         }
-        return false;
     }
 
     // Méthode pour mettre à jour un patient
@@ -296,6 +297,8 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
         medecin.setNum_tel(rs.getInt("num_tel"));
         medecin.setAdresse(rs.getString("adresse"));
         medecin.setSpeciality(rs.getString("speciality"));
+        medecin.setImageprofile(rs.getString("imageprofile"));
+
 
         return medecin;
     }
@@ -864,6 +867,40 @@ public class UserService implements InterfaceCRUD<Utilisateur> {
         }
 
         return utilisateur;
+    }
+
+    //ajouter par majd
+    public void banUser(int userId, Date banEnd, String reason) {
+        String req = "UPDATE utilisateur SET banned_until = ? WHERE id = ?";
+        try (PreparedStatement pst = connection.prepareStatement(req)) {
+            // Conversion de java.util.Date en java.sql.Timestamp
+            pst.setTimestamp(1, new Timestamp(banEnd.getTime()));
+            pst.setInt(2, userId);
+            pst.executeUpdate();
+
+            System.out.println("Utilisateur " + userId + " banni jusqu'au " + banEnd + " pour raison: " + reason);
+        } catch (SQLException e) {
+            System.err.println("Erreur lors du bannissement de l'utilisateur: " + e.getMessage());
+        }
+    }
+
+    public boolean isUserBanned(int userId) {
+        String req = "SELECT banned_until FROM utilisateur WHERE id = ?";
+        try (PreparedStatement pst = connection.prepareStatement(req)) {
+            pst.setInt(1, userId);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    Timestamp bannedUntil = rs.getTimestamp("banned_until");
+                    if (bannedUntil != null) {
+                        return bannedUntil.after(new Date());
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la vérification du bannissement: " + e.getMessage());
+        }
+        return false;
     }
 
 

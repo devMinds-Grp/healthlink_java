@@ -1,9 +1,12 @@
 package com.healthlink.Services;
 
 import com.healthlink.Entities.Forum;
+import com.healthlink.Entities.Rating;
+import com.healthlink.Entities.User;
 import com.healthlink.Interfaces.InterfaceCRUD;
 import com.healthlink.Interfaces.ForumOperations;
 import com.healthlink.utils.MyDB;
+import javafx.collections.FXCollections;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,16 +18,28 @@ public class ForumService implements InterfaceCRUD<Forum>, ForumOperations {
     public ForumService() {
         try {
             con = MyDB.getInstance().getConnection();
+            if (con == null) {
+                throw new RuntimeException("La connexion à la base de données est nulle.");
+            }
         } catch (SQLException e) {
             System.err.println("Erreur lors de la connexion à la base de données: " + e.getMessage());
+            throw new RuntimeException("Échec de l'initialisation de la connexion", e);
         }
     }
 
     @Override
     public void add(Forum forum) {
         String req = "INSERT INTO `forum` (`title`, `description`, `date`, `user_id`, `is_approved`) VALUES (?, ?, ?, ?, ?)";
+        System.out.println("Ajout du forum: " + forum);
+        System.out.println("Paramètres: title=" + forum.getTitle() + ", description=" + forum.getDescription() +
+                ", date=" + forum.getDate() + ", user_id=" + forum.getUserId() + ", is_approved=" + forum.isApproved());
+
         try (PreparedStatement pst = con.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
-            pst.setString(1, forum.getTitle());
+            String title = forum.getTitle();
+            if (title.length() > 255) {
+                title = title.substring(0, 255);
+            }
+            pst.setString(1, title);
             pst.setString(2, forum.getDescription());
             pst.setDate(3, new java.sql.Date(forum.getDate().getTime()));
             pst.setInt(4, forum.getUserId());
@@ -35,11 +50,15 @@ public class ForumService implements InterfaceCRUD<Forum>, ForumOperations {
                 try (ResultSet generatedKeys = pst.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         forum.setId(generatedKeys.getInt(1));
+                        System.out.println("Forum inséré avec ID: " + forum.getId());
                     }
                 }
+            } else {
+                throw new RuntimeException("Échec de l'insertion du forum, aucune ligne affectée.");
             }
         } catch (SQLException e) {
-            System.err.println("Erreur lors de l'ajout: " + e.getMessage());
+            System.err.println("Erreur SQL lors de l'ajout du forum: " + e.getMessage());
+            throw new RuntimeException("Échec de l'insertion du forum: " + e.getMessage(), e);
         }
     }
 
@@ -72,14 +91,12 @@ public class ForumService implements InterfaceCRUD<Forum>, ForumOperations {
 
     public void deleteForumWithResponses(Forum forum) {
         try {
-            // 1. Supprimer d'abord les commentaires associés
             String deleteResponsesQuery = "DELETE FROM forum_response WHERE forum_id = ?";
             try (PreparedStatement pst = con.prepareStatement(deleteResponsesQuery)) {
                 pst.setInt(1, forum.getId());
                 pst.executeUpdate();
             }
 
-            // 2. Puis supprimer le forum
             String deleteForumQuery = "DELETE FROM forum WHERE id = ?";
             try (PreparedStatement pst = con.prepareStatement(deleteForumQuery)) {
                 pst.setInt(1, forum.getId());
@@ -88,6 +105,42 @@ public class ForumService implements InterfaceCRUD<Forum>, ForumOperations {
         } catch (SQLException e) {
             System.err.println("Erreur lors de la suppression: " + e.getMessage());
             throw new RuntimeException("Échec de la suppression du forum et de ses commentaires", e);
+        }
+    }
+
+    public void deleteForum(int forumId) {
+        try {
+            String deleteResponsesQuery = "DELETE FROM forum_response WHERE forum_id = ?";
+            try (PreparedStatement pst = con.prepareStatement(deleteResponsesQuery)) {
+                pst.setInt(1, forumId);
+                pst.executeUpdate();
+            }
+
+            String deleteRatingsQuery = "DELETE FROM rating WHERE forum_id = ?";
+            try (PreparedStatement pst = con.prepareStatement(deleteRatingsQuery)) {
+                pst.setInt(1, forumId);
+                pst.executeUpdate();
+            }
+
+            String deleteReportsQuery = "DELETE FROM report WHERE forum_id = ?";
+            try (PreparedStatement pst = con.prepareStatement(deleteReportsQuery)) {
+                pst.setInt(1, forumId);
+                pst.executeUpdate();
+            }
+
+            String deleteForumQuery = "DELETE FROM forum WHERE id = ?";
+            try (PreparedStatement pst = con.prepareStatement(deleteForumQuery)) {
+                pst.setInt(1, forumId);
+                int affectedRows = pst.executeUpdate();
+                if (affectedRows > 0) {
+                    System.out.println("Forum avec ID " + forumId + " supprimé avec succès.");
+                } else {
+                    System.out.println("Aucun forum trouvé avec l'ID " + forumId + ".");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la suppression du forum: " + e.getMessage());
+            throw new RuntimeException("Échec de la suppression du forum", e);
         }
     }
 
@@ -163,7 +216,12 @@ public class ForumService implements InterfaceCRUD<Forum>, ForumOperations {
     @Override
     public List<Forum> findApprovedForums() {
         List<Forum> forums = new ArrayList<>();
-        String req = "SELECT * FROM `forum` WHERE `is_approved` = true ORDER BY `date` DESC";
+        String req = "SELECT f.*, COALESCE(AVG(r.stars), 0) as average_rating " +
+                "FROM `forum` f " +
+                "LEFT JOIN `rating` r ON f.id = r.forum_id " +
+                "WHERE f.is_approved = true " +
+                "GROUP BY f.id " +
+                "ORDER BY average_rating DESC, f.date DESC";
 
         try (Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(req)) {
@@ -176,6 +234,7 @@ public class ForumService implements InterfaceCRUD<Forum>, ForumOperations {
                 f.setDate(rs.getDate("date"));
                 f.setUserId(rs.getInt("user_id"));
                 f.setApproved(true);
+                f.setRatings(FXCollections.observableArrayList(findRatingsByForum(f.getId())));
                 forums.add(f);
             }
         } catch (SQLException e) {
@@ -255,6 +314,7 @@ public class ForumService implements InterfaceCRUD<Forum>, ForumOperations {
         }
         return 0;
     }
+
     public List<Forum> findAllForums() {
         List<Forum> forums = new ArrayList<>();
         String req = "SELECT * FROM `forum` ORDER BY `is_approved`, `date` DESC";
@@ -276,5 +336,112 @@ public class ForumService implements InterfaceCRUD<Forum>, ForumOperations {
             System.err.println("Erreur lors de la récupération de tous les forums: " + e.getMessage());
         }
         return forums;
+    }
+
+    public void addRating(int forumId, int userId, int stars, String comment) {
+        String req = "INSERT INTO rating (forum_id, user_id, stars, comment) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement pst = con.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+            pst.setInt(1, forumId);
+            pst.setInt(2, userId);
+            pst.setInt(3, stars);
+            pst.setString(4, comment);
+
+            int affectedRows = pst.executeUpdate();
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = pst.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int generatedId = generatedKeys.getInt(1);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de l'ajout du rating: " + e.getMessage());
+            throw new RuntimeException("Échec de l'ajout de l'évaluation", e);
+        }
+    }
+
+    public List<Rating> findRatingsByForum(int forumId) {
+        List<Rating> ratings = new ArrayList<>();
+        String req = "SELECT r.*, u.nom, u.prenom FROM `rating` r " +
+                "JOIN `utilisateur` u ON r.user_id = u.id " +
+                "WHERE r.`forum_id` = ? ORDER BY r.id DESC";
+
+        try (PreparedStatement pst = con.prepareStatement(req)) {
+            pst.setInt(1, forumId);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    Rating rating = new Rating();
+                    rating.setId(rs.getInt("id"));
+                    rating.setForumId(forumId);
+                    rating.setUserId(rs.getInt("user_id"));
+                    rating.setStars(rs.getInt("stars"));
+                    rating.setComment(rs.getString("comment"));
+
+                    Forum forum = new Forum();
+                    forum.setId(forumId);
+                    rating.setForum(forum);
+
+                    User user = new User();
+                    user.setId(rs.getInt("user_id"));
+                    user.setNom(rs.getString("nom"));
+                    user.setPrenom(rs.getString("prenom"));
+                    rating.setUser(user);
+
+                    ratings.add(rating);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération des ratings: " + e.getMessage());
+            throw new RuntimeException("Échec de la récupération des évaluations", e);
+        }
+        return ratings;
+    }
+
+    public double getAverageRating(int forumId) {
+        String req = "SELECT AVG(stars) as average FROM `rating` WHERE `forum_id` = ?";
+        try (PreparedStatement pst = con.prepareStatement(req)) {
+            pst.setInt(1, forumId);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("average");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors du calcul de la moyenne: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    public boolean hasUserRatedForum(int forumId, int userId) {
+        String req = "SELECT COUNT(*) as count FROM `rating` WHERE `forum_id` = ? AND `user_id` = ?";
+        try (PreparedStatement pst = con.prepareStatement(req)) {
+            pst.setInt(1, forumId);
+            pst.setInt(2, userId);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("count") > 0;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la vérification: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public void updateRating(Rating rating) {
+        String req = "UPDATE `rating` SET `stars` = ?, `comment` = ? WHERE `id` = ?";
+        try (PreparedStatement pst = con.prepareStatement(req)) {
+            pst.setInt(1, rating.getStars());
+            pst.setString(2, rating.getComment());
+            pst.setInt(3, rating.getId());
+
+            pst.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la mise à jour du rating: " + e.getMessage());
+            throw new RuntimeException("Échec de la mise à jour de l'évaluation", e);
+        }
     }
 }

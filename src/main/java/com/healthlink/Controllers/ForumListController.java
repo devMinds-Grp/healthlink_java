@@ -4,10 +4,13 @@ import com.healthlink.Entities.Forum;
 import com.healthlink.Services.ForumService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
@@ -28,10 +31,7 @@ public class ForumListController {
 
     @FXML
     public void initialize() {
-        // Configuration du bouton Nouveau Forum
         newForumButton.setOnAction(event -> mainController.showCreateForum());
-
-        // Chargement des données (forums approuvés)
         loadApprovedForums();
     }
 
@@ -40,21 +40,20 @@ public class ForumListController {
         mainController.showCreateForum();
     }
 
+    @FXML
+    private void handleGenerateForumClick(ActionEvent event) {
+        mainController.showGenerateForum();
+    }
+
     private void loadApprovedForums() {
-        // Effacer les forums existants
         forumContainer.getChildren().clear();
-
-        // Charger les forums approuvés
         forumData.setAll(forumService.findApprovedForums());
-
-        // Créer une carte pour chaque forum
         for (Forum forum : forumData) {
             forumContainer.getChildren().add(createForumCard(forum));
         }
     }
 
     private HBox createForumCard(Forum forum) {
-        // Création du conteneur principal
         HBox card = new HBox();
         card.getStyleClass().add("forum-card");
         card.setPadding(new Insets(15));
@@ -66,7 +65,6 @@ public class ForumListController {
         card.setBackground(new Background(new BackgroundFill(
                 Color.WHITE, new CornerRadii(4), Insets.EMPTY)));
 
-        // Contenu du forum (titre, description, date)
         VBox content = new VBox();
         content.setSpacing(5);
         content.setAlignment(Pos.CENTER_LEFT);
@@ -78,32 +76,56 @@ public class ForumListController {
         Label descLabel = new Label(forum.getDescription());
         descLabel.getStyleClass().add("forum-description");
         descLabel.setWrapText(true);
+        descLabel.setMaxHeight(3 * 14 * 1.2);
+        descLabel.setStyle("-fx-overflow: hidden; -fx-text-overflow: ellipsis;");
+
+        HBox metaInfo = new HBox(20);
+        metaInfo.setAlignment(Pos.CENTER_LEFT);
 
         Label dateLabel = new Label(forum.getFormattedDate());
         dateLabel.getStyleClass().add("forum-date");
 
-        content.getChildren().addAll(titleLabel, descLabel, dateLabel);
+        HBox ratingBox = new HBox(5);
+        ratingBox.getStyleClass().add("star-rating");
+        double averageRating = forumService.getAverageRating(forum.getId());
+        int fullStars = (int) averageRating;
+        double fractionalPart = averageRating - fullStars;
 
-        // Boutons d'action
+        for (int i = 1; i <= 5; i++) {
+            ImageView star = new ImageView();
+            star.setFitWidth(16);
+            star.setFitHeight(16);
+            if (i <= fullStars) {
+                star.setImage(new Image(getClass().getResourceAsStream("/img/star_filled.png")));
+            } else if (i == fullStars + 1 && fractionalPart > 0) {
+                star.setImage(new Image(getClass().getResourceAsStream("/img/star_half.png")));
+            } else {
+                star.setImage(new Image(getClass().getResourceAsStream("/img/star_empty.png")));
+            }
+            ratingBox.getChildren().add(star);
+        }
+
+        Label ratingLabel = new Label(String.format("%.1f/5", averageRating));
+        ratingLabel.getStyleClass().add("forum-rating");
+
+        metaInfo.getChildren().addAll(dateLabel, ratingBox, ratingLabel);
+        content.getChildren().addAll(titleLabel, descLabel, metaInfo);
+
         HBox actions = new HBox();
         actions.setSpacing(10);
         actions.setAlignment(Pos.CENTER);
 
-        Button showBtn = new Button("Show");
-        showBtn.getStyleClass().addAll("action-button", "show-button");
+        Button showBtn = new Button();
+        showBtn.getStyleClass().addAll("icon-button", "show-icon-button");
         showBtn.setOnAction(e -> mainController.showForumDetails(forum));
 
-        Button editBtn = new Button("Edit");
-        editBtn.getStyleClass().addAll("action-button", "edit-button");
-        editBtn.setOnAction(e -> mainController.showEditForum(forum));
+        // Ajouter une icône au bouton
+        ImageView showIcon = new ImageView(new Image(getClass().getResourceAsStream("/img/show2.png")));
+        showIcon.setFitWidth(32);
+        showIcon.setFitHeight(32);
+        showBtn.setGraphic(showIcon);
 
-        Button deleteBtn = new Button("Delete");
-        deleteBtn.getStyleClass().addAll("action-button", "delete-button");
-        deleteBtn.setOnAction(e -> deleteForum(forum));
-
-        actions.getChildren().addAll(showBtn, editBtn, deleteBtn);
-
-        // Assemblage final
+        actions.getChildren().add(showBtn);
         card.getChildren().addAll(content, actions);
 
         return card;
@@ -126,12 +148,10 @@ public class ForumListController {
         }
     }
 
-    // Méthode optionnelle pour filtrer selon le statut d'approbation
     public void setShowOnlyApproved(boolean showOnlyApproved) {
-        refreshTable(); // Dans cette version, on affiche toujours seulement les approuvés
+        refreshTable();
     }
 
-    // Méthode pour basculer entre l'affichage d'accueil et la liste des forums
     public void toggleWelcomeSection(boolean show) {
         welcomeSection.setVisible(show);
         welcomeSection.setManaged(show);

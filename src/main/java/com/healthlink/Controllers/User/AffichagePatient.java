@@ -15,34 +15,29 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.scene.Node;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.scene.web.WebView;
 
 public class AffichagePatient implements Initializable {
+    @FXML
+    private WebView webView;
     private final UserService userService = new UserService();
     private final ObservableList<Utilisateur> patientList = FXCollections.observableArrayList();
 
-    // Éléments FXML
+    // Éléments pour les patients
     @FXML private TableView<Utilisateur> patientTableView;
     @FXML private TableColumn<Utilisateur, String> nomPatientColumn;
     @FXML private TableColumn<Utilisateur, String> prenomPatientColumn;
     @FXML private TableColumn<Utilisateur, String> emailPatientColumn;
     @FXML private TableColumn<Utilisateur, Integer> numTelPatientColumn;
     @FXML private TableColumn<Utilisateur, Void> actionsPatientColumn;
-
-    // Menu items
     @FXML private MenuItem patientsMenuItem;
-    @FXML private MenuItem medecinsMenuItem;
-    @FXML private MenuItem soignantsMenuItem;
-    @FXML private MenuItem attenteMenuItem;
-    @FXML private MenuItem statsMenuItem;
-    @FXML private MenuItem reclamationMenuItem;
-    @FXML private MenuItem categorieMenuItem;
-    @FXML private MenuItem statsReclamationMenuItem;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -55,7 +50,7 @@ public class AffichagePatient implements Initializable {
         nomPatientColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
         prenomPatientColumn.setCellValueFactory(new PropertyValueFactory<>("prenom"));
         emailPatientColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
-        numTelPatientColumn.setCellValueFactory(new PropertyValueFactory<>("numTel"));
+        numTelPatientColumn.setCellValueFactory(new PropertyValueFactory<>("num_tel"));
     }
 
     private void setupActionsColumn() {
@@ -104,7 +99,7 @@ public class AffichagePatient implements Initializable {
             stage.setTitle("Détails du Patient");
             stage.show();
         } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir les détails du patient");
+            e.printStackTrace();
         }
     }
 
@@ -123,7 +118,7 @@ public class AffichagePatient implements Initializable {
 
             loadPatients();
         } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir le formulaire de modification");
+            e.printStackTrace();
         }
     }
 
@@ -135,13 +130,9 @@ public class AffichagePatient implements Initializable {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            boolean success = userService.deletePatient(patient.getId());
-            if (success) {
-                showAlert(Alert.AlertType.INFORMATION, "Succès", "Patient supprimé avec succès");
-                loadPatients();
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Erreur", "Échec de la suppression du patient");
-            }
+            userService.deletePatient(patient.getId());
+            loadPatients();
+            showAlert(Alert.AlertType.INFORMATION, "Succès", "Patient supprimé avec succès");
         }
     }
 
@@ -153,7 +144,6 @@ public class AffichagePatient implements Initializable {
         alert.showAndWait();
     }
 
-    // Navigation methods
     @FXML
     private void showPatientsView() {
         loadView("/views/User/list.fxml");
@@ -180,45 +170,20 @@ public class AffichagePatient implements Initializable {
     }
 
     @FXML
-    private void showReclamationView() {
-        loadView2("/views/list_reclamations_admin.fxml");
-    }
-
-    @FXML
-    private void showCategorieView() {
-        loadView2("/liste_categories.fxml");
-    }
-
-    @FXML
-    private void showStatsReclamation() {
-        loadView2("/views/stats.fxml");
+    private void showForumView() {
+        loadView("/views/admindashboard.fxml");
     }
 
     private void loadView(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
-
-            Stage stage = (Stage) patientTableView.getScene().getWindow();
+            // Obtenir la fenêtre actuelle à partir de n'importe quel nœud de la scène
+            Stage stage = (Stage) patientTableView.getScene().getWindow(); // ou tout autre nœud
             stage.setScene(new Scene(root));
             stage.show();
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger la vue: " + fxmlPath);
-        }
-    }
-    private void loadView2(String fxmlPath) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Parent root = loader.load();
-
-            Stage stage = new Stage();
-            stage.setMaxHeight(700); // 800 pixels ou la valeur de votre choix
-            // Optionnel: définir aussi une largeur maximale
-            stage.setMaxWidth(1200);
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger la vue: " + fxmlPath);
+            e.printStackTrace();
         }
     }
 
@@ -227,17 +192,31 @@ public class AffichagePatient implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/ajout.fxml"));
             Parent root = loader.load();
-
             Stage stage = new Stage();
             stage.setTitle("Ajouter un nouveau patient");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
             stage.showAndWait();
-
-            loadPatients();
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir le formulaire d'ajout");
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void returnToHome(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Home.fxml"));
+            Parent root = loader.load();
+
+            // Obtenir la fenêtre actuelle
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // Changer la scène
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger la page d'accueil");
         }
     }
 }

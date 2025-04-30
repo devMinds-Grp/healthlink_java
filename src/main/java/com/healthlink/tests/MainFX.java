@@ -9,16 +9,6 @@ import javafx.stage.Stage;
 public class MainFX extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-<<<<<<< HEAD
-        Parent root = FXMLLoader.load(getClass().getResource("/liste_categories.fxml"));
-        primaryStage.setTitle("Formini application");
-        primaryStage.setScene(new Scene(root, 600, 400));
-        primaryStage.show();
-    }
-
-    public static void main(String[] args) {
-=======
-        System.out.println("JavaFX Version: " + System.getProperty("javafx.version"));
 
         // Verify database connection first
         try {
@@ -33,16 +23,6 @@ public class MainFX extends Application {
 
         // Load FXML
         Parent root = FXMLLoader.load(getClass().getResource("/views/User/Auth/login.fxml"));
-
-
-
-        //clientttt
-     //   Parent root = FXMLLoader.load(getClass().getResource("/list_reclamations.fxml"));
-
-
-
-
-
         primaryStage.setTitle("Care Management System");
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.setMaximized(true);
@@ -60,7 +40,8 @@ public class MainFX extends Application {
 
     public static void main(String[] args) {
         // This will be called by MainLauncher
->>>>>>> master
+        System.load("C:\\opencv\\build\\java\\x64\\opencv_java451.dll");
+
         launch(args);
     }
 }

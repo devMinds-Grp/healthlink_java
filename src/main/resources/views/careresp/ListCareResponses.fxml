@@ -4,25 +4,24 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
-<?import java.net.URL?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17"
+<BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.healthlink.Controllers.CareRespController.ListCareResponsesController"
             stylesheets="@../../css/Care.css">
 
     <!-- Navbar -->
     <top>
-        <fx:include source="../Navbar.fxml"/>
+        <fx:include source="/views/Navbar.fxml"/>
     </top>
 
     <!-- Content -->
     <center>
         <StackPane alignment="CENTER">
-            <VBox alignment="TOP_CENTER" styleClass="form-container" maxWidth="600">
+            <VBox alignment="TOP_CENTER" styleClass="form-container" maxWidth="800">
                 <padding>
                     <Insets top="30" right="40" bottom="30" left="40"/>
                 </padding>
@@ -31,7 +30,7 @@
                     <HBox alignment="CENTER" spacing="15">
                         <ImageView fitWidth="50" fitHeight="45">
                             <image>
-                                <Image url="@../../assets/details.png"/>
+                                <Image url="@../../img/details.png"/>
                             </image>
                         </ImageView>
                         <Label text="Care Responses" styleClass="form-title"/>
@@ -40,9 +39,7 @@
                 <!-- Table -->
                 <TableView fx:id="responseTable" styleClass="styled-table">
                     <columns>
-                        <TableColumn text="ID" prefWidth="50">
-                            <cellValueFactory><PropertyValueFactory property="id"/></cellValueFactory>
-                        </TableColumn>
+                        <TableColumn fx:id="ownerColumn" text="Owner" prefWidth="200"/>
                         <TableColumn text="Date" prefWidth="100">
                             <cellValueFactory><PropertyValueFactory property="dateRep"/></cellValueFactory>
                         </TableColumn>
