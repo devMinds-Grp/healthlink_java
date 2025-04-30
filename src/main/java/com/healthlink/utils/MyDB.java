@@ -83,4 +83,8 @@ public class MyDB {
             System.err.println("Error while closing connection: " + e.getMessage());
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master

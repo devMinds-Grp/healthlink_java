@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.healthlink.Controllers.EditReponseDonController"
+           alignment="CENTER"
+           style="-fx-background-color: #f5f7fa;"
+           stylesheets="@edit_reponse_don.css">
+
+    <!-- Formulaire centré -->
+    <VBox alignment="TOP_CENTER" styleClass="form-container" maxWidth="500">
+        <padding>
+            <Insets top="30" right="40" bottom="30" left="40"/>
+        </padding>
+
+        <!-- Titre -->
+        <VBox alignment="CENTER" spacing="10">
+            <Label text="Edit Response" styleClass="form-title"/>
+        </VBox>
+
+        <!-- Contenu du formulaire -->
+        <GridPane hgap="15" vgap="15" style="-fx-padding: 20 0 0 0;">
+            <columnConstraints>
+                <ColumnConstraints minWidth="150" halignment="RIGHT"/>
+                <ColumnConstraints minWidth="250" hgrow="ALWAYS"/>
+            </columnConstraints>
+
+            <!-- Description -->
+            <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="form-label"/>
+            <TextArea fx:id="descriptionField" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                      styleClass="form-field,text-area" wrapText="true"/>
+
+            <!-- Boutons d'action -->
+            <HBox spacing="25" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                  style="-fx-padding: 20 0 0 0;">
+                <Button text="Save" onAction="#handleSave" styleClass="primary-button"/>
+                <Button text="Cancel" onAction="#handleCancel" styleClass="secondary-button"/>
+            </HBox>
+        </GridPane>
+    </VBox>
+</StackPane>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Style général */
 .root {
     -fx-font-family: 'Segoe UI', sans-serif;
@@ -7,10 +8,18 @@
 
 /* Titre */
 .title-label {
+=======
+.form-background {
+    -fx-background-color: #f5f7fa;
+}
+
+.header-label {
+>>>>>>> master
     -fx-font-size: 24px;
     -fx-font-weight: bold;
     -fx-text-fill: #2c3e50;
 }
+<<<<<<< HEAD
 
 /* Bouton Ajouter */
 .add-button {
@@ -115,4 +124,99 @@
 
 .delete-btn:hover {
     -fx-background-color: #c0392b;
+=======
+/* Styles pour la pagination */
+.pagination {
+    -fx-page-information-visible: false;
+    -fx-padding: 10 0 0 0;
+}
+
+.pagination .pagination-control {
+    -fx-font-size: 12px;
+}
+
+.pagination .button {
+    -fx-background-radius: 5px;
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+}
+
+.pagination .button:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+.pagination .toggle-button {
+    -fx-background-radius: 5px;
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+    -fx-background-color: #f0f0f0;
+}
+
+.pagination .toggle-button:selected {
+    -fx-background-color: #4a90e2;
+    -fx-text-fill: white;
+}
+
+/* Style pour les cartes de réclamation avec QR code */
+.reclamation-card {
+    -fx-padding: 15px;
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1);
+    -fx-border-radius: 8px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+}
+.create-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 5;
+}
+
+.create-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.search-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dfe6e9;
+    -fx-border-radius: 5;
+    -fx-padding: 8;
+    -fx-font-size: 14px;
+}
+
+.edge-to-edge {
+    -fx-background-color: transparent;
+}
+
+/* Placeholder for reclamation cards (adjust as needed) */
+.reclamation-card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dfe6e9;
+    -fx-border-radius: 5;
+    -fx-padding: 15;
+}
+
+/* Action buttons for cards (if needed) */
+.action-button {
+    -fx-padding: 5 10;
+    -fx-font-size: 12px;
+}
+
+.show-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+.edit-button {
+    -fx-background-color: #f1c40f;
+    -fx-text-fill: black;
+}
+
+.delete-button {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+>>>>>>> master
 }

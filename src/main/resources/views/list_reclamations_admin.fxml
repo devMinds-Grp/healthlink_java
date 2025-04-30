@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane stylesheets="@/reclamations.css" xmlns="http://javafx.com/javafx/22"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.healthlink.Controllers.ListReclamationsControllerAdmin">
+
+    <!-- Main Content -->
+    <center>
+        <VBox styleClass="form-background" BorderPane.alignment="TOP_CENTER">
+            <padding>
+                <Insets bottom="30" left="20" right="20" top="30" />
+            </padding>
+
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label styleClass="header-label" text="Gestion des Réclamations" />
+                <Region HBox.hgrow="ALWAYS" />
+            </HBox>
+
+            <!-- Search Field -->
+            <TextField fx:id="searchField"
+                       promptText="Rechercher par titre, description ou catégorie..."
+                       styleClass="search-field" />
+
+            <!-- Scrollable Reclamations List -->
+            <ScrollPane fitToWidth="true"
+                        vbarPolicy="AS_NEEDED"
+                        hbarPolicy="NEVER"
+                        style="-fx-background: transparent; -fx-background-color: transparent;"
+                        VBox.vgrow="ALWAYS">
+                <content>
+                    <VBox spacing="20">
+                        <FlowPane fx:id="cardsContainer"
+                                  hgap="20"
+                                  vgap="20"
+                                  prefWrapLength="960" />
+                        <Pagination fx:id="pagination" />
+                    </VBox>
+                </content>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+</BorderPane>

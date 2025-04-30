@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.layout.HBox?>
+<AnchorPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.healthlink.Controllers.User.Ajout">
+
+   <!-- Titre de la page -->
+   <Label layoutX="220.0" layoutY="30.0" text="Inscription Patient" style="-fx-font-weight: bold;">
+      <font>
+         <Font size="20.0"/>
+      </font>
+   </Label>
+
+   <!-- Formulaire -->
+   <VBox layoutX="100.0" layoutY="80.0" spacing="15.0" prefWidth="400.0">
+      <!-- Champ Nom -->
+      <VBox spacing="5.0">
+         <Label text="Nom" style="-fx-font-weight: bold;"/>
+         <TextField fx:id="nomTextField" promptText="Ex. Amení" />
+      </VBox>
+
+      <!-- Champ Prénom -->
+      <VBox spacing="5.0">
+         <Label text="Prénom" style="-fx-font-weight: bold;"/>
+         <TextField fx:id="prenomTextField" promptText="Ex. Chakroun"/>
+      </VBox>
+
+      <!-- Champ Email -->
+      <VBox spacing="5.0">
+         <Label text="Email" style="-fx-font-weight: bold;"/>
+         <TextField fx:id="emailTextField" promptText="Ex. amenichakroun62@gmail.com"/>
+      </VBox>
+
+      <!-- Champ Mot de passe -->
+      <VBox spacing="5.0">
+         <Label text="Mot de passe" style="-fx-font-weight: bold;"/>
+         <PasswordField fx:id="motdepasseTextField" promptText="Ex. Amení.123"/>
+      </VBox>
+
+      <!-- Champ Téléphone -->
+      <VBox spacing="5.0">
+         <Label text="Numéro de téléphone" style="-fx-font-weight: bold;"/>
+         <TextField fx:id="numtelTextField" promptText="Entrez le numéro de téléphone"/>
+      </VBox>
+
+      <!-- Champ Image de profil -->
+      <VBox spacing="5.0">
+         <Label text="Image de profil" style="-fx-font-weight: bold;"/>
+         <Button fx:id="choisirImageButton" text="Choisir un fichier"
+                 style="-fx-background-color: #3498db; -fx-text-fill: white;"
+                 onAction="#handleChoisirImage"/>
+         <Label fx:id="nomFichierLabel" text="Aucun fichier choisi"
+                style="-fx-font-style: italic; -fx-text-fill: #666;"/>
+      </VBox>
+
+      <!-- Boutons -->
+      <HBox spacing="20.0" alignment="CENTER_RIGHT" style="-fx-padding: 20 0 20 20;">
+         <Button text="Réinitialiser" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 4; -fx-padding: 8 20;"/>
+         <Button text="S'inscrire" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-background-radius: 4; -fx-padding: 8 20; -fx-effect: dropshadow(gaussian, rgba(46,204,113,0.3), 5, 0, 0, 1);"
+                 onAction="#addPatient"/>
+      </HBox>
+   </VBox>
+</AnchorPane>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.healthlink.Controllers.EditForumController"
+      styleClass="form-background" spacing="15">
+
+    <!-- En-tête de la page avec un fond bleu -->
+    <StackPane styleClass="header-container">
+        <Label text="Forum" styleClass="header-label-white"/>
+        <padding>
+            <Insets top="50" right="20" bottom="50" left="20"/>
+        </padding>
+    </StackPane>
+
+    <!-- Container principal du formulaire -->
+    <VBox styleClass="form-container" spacing="15">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Label text="Edit Forum" styleClass="header-label"/>
+
+        <GridPane hgap="15" vgap="8">
+            <columnConstraints>
+                <ColumnConstraints minWidth="100" prefWidth="120"/>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="300"/>
+            </columnConstraints>
+
+            <!-- Titre -->
+            <Label text="Title:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+            <TextField fx:id="titleField" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="text-field"/>
+            <Label fx:id="titleErrorLabel" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="error-label"/>
+
+            <!-- Description -->
+            <Label text="Description:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
+            <TextArea fx:id="descriptionArea" wrapText="true" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                      prefHeight="150" styleClass="text-area"/>
+            <Label fx:id="descriptionErrorLabel" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="error-label"/>
+        </GridPane>
+
+        <!-- Boutons d'action -->
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Cancel" onAction="#handleCancel" styleClass="secondary-button"/>
+            <Button text="Update" onAction="#handleSave" styleClass="primary-button"/>
+        </HBox>
+    </VBox>
+
+    <!-- Ajout d'espace en bas si nécessaire -->
+    <Pane VBox.vgrow="ALWAYS" />
+
+    <stylesheets>
+        <URL value="@/styles/forum.css"/>
+    </stylesheets>
+</VBox>

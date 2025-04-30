@@ -1,0 +1,137 @@
+/* ========== STYLES DE BASE ========== */
+/* Form Container */
+.form-container {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 20, 0, 0, 0);
+    -fx-padding: 30;
+    -fx-max-width: 600;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 1.5;
+}
+
+/* ========== TYPOGRAPHIE ========== */
+.form-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+    -fx-font-family: "Segoe UI";
+    -fx-padding: 0 0 10 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 0);
+}
+
+.form-label {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #374151;
+    -fx-font-family: "Segoe UI";
+}
+
+/* ========== FORMULAIRES ========== */
+.form-field {
+    -fx-font-size: 14px;
+    -fx-pref-height: 40px;
+    -fx-background-color: white;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-color: #d1d5db;
+    -fx-border-width: 1.5;
+    -fx-padding: 8 12;
+    -fx-font-family: "Segoe UI";
+    -fx-text-fill: #374151;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 0);
+}
+
+.form-field:focused {
+    -fx-border-color: linear-gradient(to right, #60a5fa, #3b82f6); /* Gradient border on focus */
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.3), 8, 0, 0, 0);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+/* Pour les TextArea spécifiquement */
+.form-field.text-area {
+    -fx-pref-height: 80px; /* Slightly taller for better usability */
+    -fx-pref-width: 300px;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+}
+
+/* ========== BOUTONS GENERIQUES ========== */
+.button {
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 0);
+    -fx-font-family: "Segoe UI";
+}
+
+/* Hover effect for all buttons */
+.button:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 15, 0, 0, 0);
+}
+
+/* Pressed effect for all buttons */
+.button:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 0);
+}
+
+/* ========== BOUTONS SPECIFIQUES ========== */
+/* Bouton Primaire (Save) */
+.primary-button {
+    -fx-background-color: linear-gradient(to right, #3b82f6, #1d4ed8); /* Horizontal gradient blue */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-font-family: "Segoe UI";
+    -fx-padding: 14 40;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-min-width: 200px;
+    -fx-min-height: 50px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 0);
+}
+
+.primary-button:hover {
+    -fx-background-color: linear-gradient(to right, #2563eb, #1e3a8a);
+    -fx-effet: dropshadow(gaussian, rgba(37,99,235,0.4), 15, 0, 0, 0);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.primary-button:pressed {
+    -fx-background-color: linear-gradient(to right, #1e3a8a, #1e40af);
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+/* Bouton Secondaire (Cancel) */
+.secondary-button {
+    -fx-background-color: linear-gradient(to right, #f87171, #ef4444); /* Horizontal gradient red */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-font-family: "Segoe UI";
+    -fx-padding: 14 40;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-min-width: 200px;
+    -fx-min-height: 50px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 0);
+}
+
+.secondary-button:hover {
+    -fx-background-color: linear-gradient(to right, #ef4444, #dc2626);
+    -fx-effect: dropshadow(gaussian, rgba(239,68,68,0.4), 15, 0, 0, 0);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.secondary-button:pressed {
+    -fx-background-color: linear-gradient(to right, #dc2626, #b91c1c);
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}

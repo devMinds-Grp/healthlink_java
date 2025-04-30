@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.healthlink.Controllers.User.Authentification.NonApprouveController">
+    <AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: linear-gradient(to bottom right, #D32F2F, #B71C1C);">
+        <VBox alignment="CENTER" spacing="15.0" layoutX="200.0" layoutY="130.0" prefWidth="400.0" style="-fx-background-color: rgba(0,0,0,0.8); -fx-padding: 30px; -fx-background-radius: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 4);">
+            <Label text="Compte en attente d'approbation ⏳" textFill="white" style="-fx-font-size: 22px; -fx-font-weight: bold;" wrapText="true" />
+            <Label text="Votre compte est en attente de validation par un administrateur." textFill="white" style="-fx-font-size: 14px;" wrapText="true" />
+            <Label text="Vous recevrez un e-mail dès que votre compte sera approuvé." textFill="white" style="-fx-font-size: 14px;" wrapText="true" />
+
+            <ProgressIndicator fx:id="loader" prefWidth="40" prefHeight="40" />
+
+            <Button text="Retour à la connexion" onAction="#handleRetour" style="-fx-background-color: white; -fx-text-fill: #B71C1C; -fx-font-weight: bold; -fx-padding: 10px 20px; -fx-background-radius: 5px;" />
+        </VBox>
+    </AnchorPane>
+</AnchorPane>

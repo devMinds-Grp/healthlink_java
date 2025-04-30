@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.*?>
+<?import java.net.URL?>
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.healthlink.Controllers.CreateForumController" spacing="0"
+      prefWidth="800" prefHeight="600">
+
+    <!-- En-tête bleu -->
+    <VBox styleClass="header-container">
+        <Label text="Forum" styleClass="header-label-white"/>
+    </VBox>
+
+    <!-- Contenu principal avec centrage -->
+    <AnchorPane VBox.vgrow="ALWAYS" styleClass="form-background">
+        <StackPane AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <VBox styleClass="form-container" maxWidth="600" alignment="CENTER">
+                <Label text="Créer un nouveau Forum" styleClass="header-label"/>
+
+                <GridPane hgap="15" vgap="15" alignment="CENTER">
+                    <columnConstraints>
+                        <ColumnConstraints prefWidth="120"/>
+                        <ColumnConstraints prefWidth="400"/>
+                    </columnConstraints>
+
+                    <!-- Champ Titre -->
+                    <Label text="Title:" styleClass="form-label"
+                           GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <VBox spacing="2" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                        <TextField fx:id="titleField" promptText="Enter the title"/>
+                        <Label fx:id="titleErrorLabel" styleClass="error-label"/>
+                    </VBox>
+
+                    <!-- Champ Description -->
+                    <Label text="Description:" styleClass="form-label"
+                           GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <VBox spacing="2" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                        <TextArea fx:id="descriptionArea" promptText="Enter the description"
+                                  prefHeight="150" wrapText="true"/>
+                        <Label fx:id="descriptionErrorLabel" styleClass="error-label"/>
+                    </VBox>
+                </GridPane>
+
+                <!-- Boutons d'action -->
+                <HBox styleClass="button-bar" alignment="CENTER">
+                    <Button fx:id="submitButton" text="Save" styleClass="primary-button" defaultButton="true"/>
+                    <Button fx:id="cancelButton" text="Back to list" styleClass="secondary-button"/>
+                </HBox>
+            </VBox>
+        </StackPane>
+    </AnchorPane>
+
+    <stylesheets>
+        <URL value="@/styles/forum.css"/>
+    </stylesheets>
+</VBox>

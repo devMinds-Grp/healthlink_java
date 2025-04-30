@@ -1,0 +1,31 @@
+.dialog-container {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+}
+
+.dialog-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+/* Style pour les boutons */
+.view-btn {
+    -fx-background-color: #4a90e2;
+    -fx-text-fill: white;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 3px;
+}
+
+.view-btn:hover {
+    -fx-background-color: #3a80d2;
+}
+
+/* Style pour les zones de texte */
+.text-area {
+    -fx-font-size: 14px;
+    -fx-pref-height: 100px;
+}
