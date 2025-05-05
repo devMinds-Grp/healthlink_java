@@ -12,9 +12,6 @@
     -fx-cursor: hand;
     -fx-font-family: 'Segoe UI', Arial, sans-serif;
 }
-<<<<<<< HEAD
-
-=======
 /* Styles existants... */
 
 /* Styles pour le CAPTCHA */
@@ -47,7 +44,6 @@
     -fx-pref-width: 200px;
     -fx-font-size: 14px;
 }
->>>>>>> master
 /* Cellule affichée dans le ComboBox */
 .combo-box .list-cell {
     -fx-padding: 8px 12px;

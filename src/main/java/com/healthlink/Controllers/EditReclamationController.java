@@ -3,62 +3,42 @@ package com.healthlink.Controllers;
 import com.healthlink.Entites.Reclamation;
 import com.healthlink.Services.ReclamationService;
 import javafx.fxml.FXML;
-<<<<<<< HEAD
-=======
 import javafx.scene.control.Alert;
->>>>>>> master
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 public class EditReclamationController {
+
     @FXML private TextField titleField;
     @FXML private TextArea descArea;
 
     private Reclamation reclamation;
-    private ReclamationService service = new ReclamationService();
+    private final ReclamationService service = new ReclamationService();
 
     public void setReclamationData(Reclamation r) {
         this.reclamation = r;
         titleField.setText(r.getTitre());
         descArea.setText(r.getDescription());
-<<<<<<< HEAD
-=======
         setupFieldValidation();
     }
 
     private void setupFieldValidation() {
-        // Limiter la longueur du titre à 100 caractères
         titleField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal.length() > 100) {
                 titleField.setText(oldVal);
             }
         });
 
-        // Limiter la longueur de la description à 500 caractères
         descArea.textProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal.length() > 500) {
                 descArea.setText(oldVal);
             }
         });
->>>>>>> master
     }
 
     @FXML
     private void handleUpdate() {
-<<<<<<< HEAD
-        String newTitle = titleField.getText().trim();
-        String newDesc = descArea.getText().trim();
-
-        if (!newTitle.isEmpty() && !newDesc.isEmpty()) {
-            reclamation.setTitre(newTitle);
-            reclamation.setDescription(newDesc);
-            if (service.updateReclamation(reclamation)) {
-                closeWindow();
-            }
-        }
-    }
-
-=======
         if (!validateInputs()) {
             return;
         }
@@ -104,7 +84,6 @@ public class EditReclamationController {
         return true;
     }
 
->>>>>>> master
     @FXML
     private void handleCancel() {
         closeWindow();
@@ -113,15 +92,12 @@ public class EditReclamationController {
     private void closeWindow() {
         titleField.getScene().getWindow().hide();
     }
-<<<<<<< HEAD
-=======
 
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
->>>>>>> master
 }

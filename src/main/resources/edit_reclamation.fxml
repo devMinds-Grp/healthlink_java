@@ -11,17 +11,10 @@
     <Label text="Modifier Réclamation" styleClass="dialog-title"/>
 
     <GridPane hgap="10" vgap="15">
-<<<<<<< HEAD
-        <Label text="Titre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <TextField fx:id="titleField" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"/>
-
-        <Label text="Description:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-=======
         <Label text="Titre (5-100 caractères):" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
         <TextField fx:id="titleField" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"/>
 
         <Label text="Description (20-500 caractères):" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
->>>>>>> master
         <TextArea fx:id="descArea" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
                   GridPane.vgrow="ALWAYS" wrapText="true"/>
     </GridPane>

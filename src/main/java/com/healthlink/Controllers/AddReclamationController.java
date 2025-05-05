@@ -5,25 +5,16 @@ import com.healthlink.Entites.Reclamation;
 import com.healthlink.Services.CategorieService;
 import com.healthlink.Services.ReclamationService;
 import javafx.collections.FXCollections;
-<<<<<<< HEAD
-=======
 import javafx.embed.swing.SwingFXUtils;
->>>>>>> master
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-<<<<<<< HEAD
-import javafx.stage.Stage;
-
-import java.util.List;
-=======
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -32,34 +23,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
->>>>>>> master
 
 public class AddReclamationController {
 
     @FXML private TextField titleField;
     @FXML private TextArea descArea;
-<<<<<<< HEAD
-    @FXML private ComboBox<Categorie> categoryComboBox; // ComboBox pour les catégories
-
-    private final ReclamationService reclamationService = new ReclamationService();
-    private final CategorieService categorieService = new CategorieService();
-
-    private List<Categorie> categories;
-
-    @FXML
-    public void initialize() {
-        loadCategories();  // Charger les catégories au démarrage
-    }
-
-    private void loadCategories() {
-        categories = categorieService.getAllCategories();  // Charger les catégories depuis le service
-        if (categories.isEmpty()) {
-            showAlert(AlertType.WARNING, "Aucune catégorie disponible", "Il n'y a aucune catégorie disponible pour ajouter une réclamation.");
-            return;
-        }
-
-        // Remplir le ComboBox avec les catégories
-=======
     @FXML private ComboBox<Categorie> categoryComboBox;
     @FXML private ImageView captchaImage;
     @FXML private TextField captchaInput;
@@ -84,21 +52,12 @@ public class AddReclamationController {
             return;
         }
 
->>>>>>> master
         categoryComboBox.setItems(FXCollections.observableArrayList(categories));
         categoryComboBox.setCellFactory(param -> new javafx.scene.control.ListCell<>() {
             @Override
             protected void updateItem(Categorie item, boolean empty) {
                 super.updateItem(item, empty);
-<<<<<<< HEAD
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getNom());  // Afficher le nom de la catégorie
-                }
-=======
                 setText(empty || item == null ? null : item.getNom());
->>>>>>> master
             }
         });
 
@@ -106,22 +65,6 @@ public class AddReclamationController {
             @Override
             protected void updateItem(Categorie item, boolean empty) {
                 super.updateItem(item, empty);
-<<<<<<< HEAD
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getNom());  // Afficher le nom dans le bouton
-                }
-            }
-        });
-
-        // Sélectionner la première catégorie par défaut
-        categoryComboBox.getSelectionModel().selectFirst();
-    }
-
-    @FXML
-    private void handleSave() {
-=======
                 setText(empty || item == null ? null : item.getNom());
             }
         });
@@ -155,31 +98,10 @@ public class AddReclamationController {
             return;
         }
 
->>>>>>> master
         String titre = titleField.getText().trim();
         String description = descArea.getText().trim();
         Categorie selectedCategorie = categoryComboBox.getValue();
 
-<<<<<<< HEAD
-        if (titre.isEmpty() || description.isEmpty() || selectedCategorie == null) {
-            showAlert(AlertType.ERROR, "Champs incomplets", "Veuillez remplir tous les champs.");
-        } else {
-            Reclamation newRec = new Reclamation(titre, description, selectedCategorie.getId());
-            try {
-                if (reclamationService.addReclamation(newRec)) {
-                    showAlert(AlertType.INFORMATION, "Réclamation ajoutée", "Votre réclamation a été ajoutée avec succès.");
-                    closeWindow();
-                } else {
-                    showAlert(AlertType.ERROR, "Erreur", "Échec de l'ajout de la réclamation.");
-                }
-            } catch (Exception e) {
-                showAlert(AlertType.ERROR, "Erreur technique", "Une erreur technique est survenue : " + e.getMessage());
-                e.printStackTrace();
-            }
-        }
-    }
-
-=======
         Reclamation newRec = new Reclamation(titre, description, selectedCategorie.getId());
         try {
             if (reclamationService.addReclamation(newRec)) {
@@ -246,29 +168,23 @@ public class AddReclamationController {
     }
 
     private void generateCaptcha() {
-        // Générer un texte aléatoire pour le CAPTCHA
         currentCaptchaText = generateRandomString(6);
 
-        // Créer une image CAPTCHA
         BufferedImage bufferedImage = new BufferedImage(150, 50, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = bufferedImage.createGraphics();
 
-        // Remplir le fond
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, 150, 50);
 
-        // Dessiner le texte
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Arial", Font.BOLD, 20));
 
-        // Ajouter des distorsions
         for (int i = 0; i < currentCaptchaText.length(); i++) {
             int x = 20 + i * 20;
             int y = 30 + random.nextInt(10) - 5;
             g2d.drawString(String.valueOf(currentCaptchaText.charAt(i)), x, y);
         }
 
-        // Ajouter des lignes de bruit
         g2d.setColor(Color.GRAY);
         for (int i = 0; i < 5; i++) {
             int x1 = random.nextInt(150);
@@ -280,7 +196,6 @@ public class AddReclamationController {
 
         g2d.dispose();
 
-        // Convertir en image JavaFX
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage, "png", out);
@@ -301,7 +216,6 @@ public class AddReclamationController {
         }
         return sb.toString();
     }
->>>>>>> master
 
     @FXML
     private void handleCancel() {
@@ -313,10 +227,6 @@ public class AddReclamationController {
         stage.close();
     }
 
-<<<<<<< HEAD
-    // Méthode pour afficher des alertes
-=======
->>>>>>> master
     private void showAlert(AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -324,8 +234,4 @@ public class AddReclamationController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> master

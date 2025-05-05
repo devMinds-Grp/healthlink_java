@@ -1,9 +1,5 @@
 package com.healthlink.Controllers;
 
-<<<<<<< HEAD
-import com.healthlink.Entites.Reclamation;
-import com.healthlink.Services.ReclamationService;
-=======
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
@@ -11,27 +7,18 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.healthlink.Entites.Reclamation;
 import com.healthlink.Services.ReclamationService;
-import com.healthlink.utils.TranslationService;
->>>>>>> master
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-<<<<<<< HEAD
-=======
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
->>>>>>> master
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-<<<<<<< HEAD
-=======
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
->>>>>>> master
 import java.io.IOException;
 import java.util.List;
 
@@ -39,43 +26,21 @@ public class ListReclamationsController {
 
     @FXML private FlowPane cardsContainer;
     @FXML private TextField searchField;
-<<<<<<< HEAD
-
-    private final ReclamationService service = new ReclamationService();
-=======
     @FXML private Pagination pagination;
 
     private final ReclamationService service = new ReclamationService();
-    private final TranslationService translationService = TranslationService.getInstance("votre_cle_api_deepl");
     private List<Reclamation> allReclamations;
     private static final int ITEMS_PER_PAGE = 6;
->>>>>>> master
 
     @FXML
     public void initialize() {
-        System.out.println("INITIALIZE lancé");
-<<<<<<< HEAD
-        loadReclamations();
-        setupSearch();
-    }
-
-    private void loadReclamations() {
-        cardsContainer.getChildren().clear();
-        List<Reclamation> reclamations = service.getAllReclamations();
-        System.out.println("Nombre de réclamations récupérées : " + reclamations.size());
-
-        for (Reclamation r : reclamations) {
-            VBox card = createReclamationCard(r);
-            cardsContainer.getChildren().add(card);
-        }
-=======
         loadAllReclamations();
         setupSearch();
     }
 
     private void loadAllReclamations() {
         allReclamations = service.getAllReclamations();
-        int pageCount = (int) Math.ceil((double) allReclamations.size() / ITEMS_PER_PAGE);
+        int pageCount = Math.max(1, (int) Math.ceil((double) allReclamations.size() / ITEMS_PER_PAGE));
         pagination.setPageCount(pageCount);
         pagination.setPageFactory(this::createPage);
     }
@@ -98,7 +63,6 @@ public class ListReclamationsController {
         VBox pageBox = new VBox(pageFlowPane);
         pageBox.setFillWidth(true);
         return pageBox;
->>>>>>> master
     }
 
     private VBox createReclamationCard(Reclamation r) {
@@ -118,27 +82,13 @@ public class ListReclamationsController {
         descArea.setWrapText(true);
         descArea.setPrefRowCount(3);
 
-<<<<<<< HEAD
-        HBox buttonsBox = new HBox(10);
-        Button editBtn = new Button("Modifier");
-        Button deleteBtn = new Button("Supprimer");
-
-        editBtn.getStyleClass().add("edit-btn");
-        deleteBtn.getStyleClass().add("delete-btn");
-
-        editBtn.setOnAction(e -> openEditDialog(r));
-        deleteBtn.setOnAction(e -> deleteReclamation(r));
-
-        buttonsBox.getChildren().addAll(editBtn, deleteBtn);
-=======
-        // Ajout du QR Code
         try {
             ImageView qrCodeView = generateQRCode(r);
             qrCodeView.setFitWidth(100);
             qrCodeView.setFitHeight(100);
             card.getChildren().add(qrCodeView);
         } catch (Exception e) {
-            System.err.println("Erreur lors de la génération du QR Code: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de la génération du QR Code: " + e.getMessage());
         }
 
         HBox buttonsBox = new HBox(10);
@@ -155,14 +105,11 @@ public class ListReclamationsController {
         deleteBtn.setOnAction(e -> deleteReclamation(r));
 
         buttonsBox.getChildren().addAll(viewBtn, editBtn, deleteBtn);
->>>>>>> master
         card.getChildren().addAll(categoryLabel, titleLabel, descArea, buttonsBox);
 
         return card;
     }
 
-<<<<<<< HEAD
-=======
     private ImageView generateQRCode(Reclamation reclamation) throws WriterException, IOException {
         String qrContent = String.format("Réclamation: %s\nCatégorie: %s\nDescription: %s",
                 reclamation.getTitre(),
@@ -180,7 +127,6 @@ public class ListReclamationsController {
         return new ImageView(qrImage);
     }
 
->>>>>>> master
     private void openEditDialog(Reclamation r) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/edit_reclamation.fxml"));
@@ -194,18 +140,12 @@ public class ListReclamationsController {
             stage.setScene(new Scene(root));
             stage.showAndWait();
 
-<<<<<<< HEAD
-            loadReclamations();
-=======
             loadAllReclamations();
->>>>>>> master
         } catch (IOException e) {
-            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'ouverture de la fenêtre d'édition: " + e.getMessage());
         }
     }
-<<<<<<< HEAD
 
-=======
     private void openViewDialog(Reclamation reclamation) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view_reclamation.fxml"));
@@ -220,10 +160,10 @@ public class ListReclamationsController {
             stage.setTitle("Détails de la réclamation");
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'ouverture de la fenêtre de visualisation: " + e.getMessage());
         }
     }
->>>>>>> master
+
     private void deleteReclamation(Reclamation r) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
@@ -232,11 +172,7 @@ public class ListReclamationsController {
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK && service.deleteReclamation(r.getId())) {
-<<<<<<< HEAD
-                loadReclamations();
-=======
                 loadAllReclamations();
->>>>>>> master
             }
         });
     }
@@ -252,26 +188,14 @@ public class ListReclamationsController {
             stage.setScene(new Scene(root));
             stage.showAndWait();
 
-<<<<<<< HEAD
-            loadReclamations();
-=======
             loadAllReclamations();
->>>>>>> master
         } catch (IOException e) {
-            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'ouverture de la fenêtre d'ajout: " + e.getMessage());
         }
     }
 
     private void setupSearch() {
         searchField.textProperty().addListener((obs, oldVal, newVal) -> {
-<<<<<<< HEAD
-            cardsContainer.getChildren().clear();
-            service.getAllReclamations().stream()
-                    .filter(r -> r.getTitre().toLowerCase().contains(newVal.toLowerCase()) ||
-                            r.getDescription().toLowerCase().contains(newVal.toLowerCase()) ||
-                            r.getCategorie().getNom().toLowerCase().contains(newVal.toLowerCase()))
-                    .forEach(r -> cardsContainer.getChildren().add(createReclamationCard(r)));
-=======
             allReclamations = service.getAllReclamations().stream()
                     .filter(r -> r.getTitre().toLowerCase().contains(newVal.toLowerCase()) ||
                             r.getDescription().toLowerCase().contains(newVal.toLowerCase()) ||
@@ -281,7 +205,14 @@ public class ListReclamationsController {
             int pageCount = Math.max(1, (int) Math.ceil((double) allReclamations.size() / ITEMS_PER_PAGE));
             pagination.setPageCount(pageCount);
             pagination.setPageFactory(this::createPage);
->>>>>>> master
         });
+    }
+
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

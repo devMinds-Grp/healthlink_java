@@ -2,34 +2,17 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<<<<<<< HEAD
-
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.healthlink.Controllers.AddReclamationController"
-      stylesheets="@add_reclamation.css" spacing="20" prefWidth="500" prefHeight="450"
-=======
 <?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.healthlink.Controllers.AddReclamationController"
       stylesheets="@add_reclamation.css" spacing="20" prefWidth="500" prefHeight="550"
->>>>>>> master
       styleClass="dialog-container">
 
     <Label text="Nouvelle Réclamation" styleClass="dialog-title"/>
 
     <GridPane hgap="10" vgap="15">
-<<<<<<< HEAD
-        <!-- Nouveau champ de sélection -->
-        <Label text="Catégorie:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="categoryComboBox" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"/>
-
-        <Label text="Titre:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <TextField fx:id="titleField" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"/>
-
-        <Label text="Description:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-=======
         <Label text="Catégorie:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
         <ComboBox fx:id="categoryComboBox" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"/>
 
@@ -37,13 +20,10 @@
         <TextField fx:id="titleField" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"/>
 
         <Label text="Description (20-500 caractères):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
->>>>>>> master
         <TextArea fx:id="descArea" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
                   GridPane.vgrow="ALWAYS" wrapText="true"/>
     </GridPane>
 
-<<<<<<< HEAD
-=======
     <!-- Section CAPTCHA -->
     <VBox spacing="10" styleClass="captcha-box">
         <Label text="Vérification CAPTCHA" styleClass="captcha-label"/>
@@ -54,13 +34,8 @@
         <TextField fx:id="captchaInput" promptText="Entrez le texte ci-dessus"/>
     </VBox>
 
->>>>>>> master
     <HBox spacing="10" alignment="CENTER_RIGHT">
         <Button text="Annuler" onAction="#handleCancel" styleClass="cancel-btn"/>
         <Button text="Enregistrer" onAction="#handleSave" styleClass="save-btn"/>
     </HBox>
-<<<<<<< HEAD
 </VBox>
-=======
-</VBox>
->>>>>>> master
