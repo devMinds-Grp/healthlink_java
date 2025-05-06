@@ -1,0 +1,55 @@
+.form-container {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-padding: 20;
+}
+
+.form-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.form-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555555;
+}
+
+.styled-textfield {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d1d1d1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 8;
+    -fx-font-size: 14px;
+}
+
+.styled-textfield:focused {
+    -fx-border-color: #4CAF50;
+}
+
+.primary-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-background-radius: 5;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: #45a049;
+}
+
+.map-container {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d1d1d1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.attribution-label {
+    -fx-font-size: 10px;
+    -fx-text-fill: #888888;
+}

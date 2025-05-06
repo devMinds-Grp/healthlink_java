@@ -173,6 +173,20 @@ public class AffichagePatient implements Initializable {
     private void showForumView() {
         loadView("/views/admindashboard.fxml");
     }
+    @FXML
+    private void showReclamationView() {
+        loadView2("/views/list_reclamations_admin.fxml");
+    }
+
+    @FXML
+    private void showCategorieView() {
+        loadView2("/liste_categories.fxml");
+    }
+
+    @FXML
+    private void showStatsReclamation() {
+        loadView2("/views/stats.fxml");
+    }
 
     private void loadView(String fxmlPath) {
         try {
@@ -184,6 +198,22 @@ public class AffichagePatient implements Initializable {
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void loadView2(String fxmlPath) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setMaxHeight(700); // 800 pixels ou la valeur de votre choix
+            // Optionnel: définir aussi une largeur maximale
+            stage.setMaxWidth(1200);
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger la vue: " + fxmlPath);
         }
     }
 

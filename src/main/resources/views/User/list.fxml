@@ -62,6 +62,13 @@
                     <MenuItem fx:id="forumMenuItem" text="Forum" style="-fx-text-fill: black; -fx-font-size: 14;" onAction="#showForumView"/>
                 </items>
             </MenuButton>
+            <MenuButton style="-fx-background-color: transparent; -fx-text-fill: #34495e; -fx-font-size: 14; -fx-alignment: center-left; -fx-padding: 10 25;" text="Gestion réclamations">
+                <items>
+                    <MenuItem fx:id="reclamationMenuItem" text="Réclamations" style="-fx-text-fill: black; -fx-font-size: 14;" onAction="#showReclamationView"/>
+                    <MenuItem fx:id="categorieMenuItem" text="Catégories" style="-fx-text-fill: black; -fx-font-size: 14;" onAction="#showCategorieView"/>
+                    <MenuItem fx:id="statsReclamationMenuItem" text="Statistiques" style="-fx-text-fill: black; -fx-font-size: 14;" onAction="#showStatsReclamation"/>
+                </items>
+            </MenuButton>
         </children>
     </VBox>
 

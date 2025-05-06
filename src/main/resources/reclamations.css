@@ -7,7 +7,48 @@
     -fx-font-weight: bold;
     -fx-text-fill: #2c3e50;
 }
+/* Styles pour la pagination */
+.pagination {
+    -fx-page-information-visible: false;
+    -fx-padding: 10 0 0 0;
+}
 
+.pagination .pagination-control {
+    -fx-font-size: 12px;
+}
+
+.pagination .button {
+    -fx-background-radius: 5px;
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+}
+
+.pagination .button:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+.pagination .toggle-button {
+    -fx-background-radius: 5px;
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+    -fx-background-color: #f0f0f0;
+}
+
+.pagination .toggle-button:selected {
+    -fx-background-color: #4a90e2;
+    -fx-text-fill: white;
+}
+
+/* Style pour les cartes de réclamation avec QR code */
+.reclamation-card {
+    -fx-padding: 15px;
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1);
+    -fx-border-radius: 8px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+}
 .create-button {
     -fx-background-color: #3498db;
     -fx-text-fill: white;

@@ -104,7 +104,7 @@ public class ListCareResponsesController {
                                 response.getDateRep().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "");
 
                         String imagePath = soignant != null && soignant.getImageprofile() != null && !soignant.getImageprofile().isEmpty() ?
-                                "file:C:/Users/ghass/Desktop/PIJAVA/healthlink_java/profile_images/" + soignant.getImageprofile() : null;
+                                "file:C:/Users/sofie/Desktop/PIJAVA/projet final java/profile_images/" + soignant.getImageprofile() : null;
                         System.out.println("Image Path: " + (imagePath != null ? imagePath : "null"));
                         try {
                             if (imagePath != null) {

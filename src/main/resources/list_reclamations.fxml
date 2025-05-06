@@ -29,7 +29,7 @@
             </HBox>
 
             <!-- Search Field -->
-            <TextField fx:id="searchField" promptText="Rechercher par titre, description ou catégorie..." styleClass="search-field" VBox.margin="$x1"/>
+            <TextField fx:id="searchField" promptText="Rechercher par titre, description ou catégorie..." styleClass="search-field" />
             <VBox.margin>
                 <Insets top="20"/>
             </VBox.margin>
@@ -37,7 +37,10 @@
             <!-- Reclamations List -->
             <ScrollPane fitToWidth="true" styleClass="edge-to-edge" VBox.vgrow="ALWAYS">
                 <content>
-                    <FlowPane fx:id="cardsContainer" hgap="20" vgap="20" prefWrapLength="960"/>
+                    <VBox>
+                        <FlowPane fx:id="cardsContainer" hgap="20" vgap="20" prefWrapLength="960" visible="false"/>
+                        <Pagination fx:id="pagination" VBox.vgrow="ALWAYS"/>
+                    </VBox>
                 </content>
             </ScrollPane>
         </VBox>

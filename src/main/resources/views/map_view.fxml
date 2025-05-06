@@ -1,50 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.healthlink.Controllers.Controller"
-            stylesheets="@styles.css">
-
-    <!-- ========== NAVBAR EN HAUT ========== -->
+<BorderPane fx:id="rootPane" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.healthlink.Controllers.HospitalMapController">
     <top>
-        <fx:include source="../views/Navbar.fxml"/>
+        <HBox fx:id="inputBox" spacing="10" alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <children>
+                <Label text="Latitude:"/>
+                <TextField fx:id="latField" prefWidth="100"/>
+                <Label text="Longitude:"/>
+                <TextField fx:id="lonField" prefWidth="100"/>
+                <Button fx:id="findHospitalsButton" text="Find Nearby Hospitals"/>
+            </children>
+        </HBox>
     </top>
-
-    <!-- ========== CONTENU PRINCIPAL ========== -->
     <center>
-        <StackPane alignment="CENTER" style="-fx-background-color: #f5f7fa;">
-            <VBox alignment="TOP_CENTER" styleClass="form-container" maxWidth="1100">
-                <padding>
-                    <Insets top="20" right="20" bottom="20" left="20"/>
-                </padding>
+        <BorderPane fx:id="mapPane"/>
 
-                <!-- Titre -->
-                <VBox alignment="CENTER" spacing="10" style="-fx-padding: 0 0 20 0;">
-                    <Label text="Find Nearby Hospitals" styleClass="form-title"/>
-                </VBox>
-
-                <!-- Position and Distance Input -->
-                <HBox spacing="10" alignment="CENTER">
-                    <Label fx:id="positionLabel" text="Detecting position..." styleClass="form-label"/>
-                    <Label text="Max Distance (km):" styleClass="form-label"/>
-                    <TextField fx:id="maxDistanceField" promptText="e.g., 10" prefWidth="80" styleClass="styled-textfield"/>
-                    <Button fx:id="retryButton" text="Retry Location" onAction="#retryLocation" styleClass="primary-button"/>
-                </HBox>
-
-                <!-- Action Buttons -->
-                <HBox spacing="10" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
-                    <Button fx:id="findButton" text="Find Nearby Hospitals" onAction="#findHospitals" styleClass="success-button"/>
-                    <Button fx:id="clearButton" text="Clear" onAction="#clearFields" styleClass="danger-button"/>
-                </HBox>
-
-                <!-- Hospital List -->
-                <Label text="Nearby Hospitals" styleClass="form-title" style="-fx-padding: 20 0 10 0;"/>
-                <ListView fx:id="hospitalList" prefHeight="400" prefWidth="800" styleClass="styled-listview"/>
-            </VBox>
-        </StackPane>
     </center>
+
+    <bottom>
+        <Label fx:id="attributionLabel" text="© OpenStreetMap contributors" style="-fx-font-size: 10px; -fx-padding: 5;">
+            <padding>
+                <Insets top="5" right="5" bottom="5" left="5"/>
+            </padding>
+        </Label>
+    </bottom>
+
 </BorderPane>
