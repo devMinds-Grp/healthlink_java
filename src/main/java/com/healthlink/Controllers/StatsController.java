@@ -37,5 +37,4 @@ public class StatsController implements Initializable {
         );
         categoryChart.getData().add(series);
     }
-
 }

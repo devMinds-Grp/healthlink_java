@@ -4,15 +4,17 @@ import com.healthlink.Entites.Reclamation;
 import com.healthlink.Services.ReclamationService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 public class EditReclamationController {
+
     @FXML private TextField titleField;
     @FXML private TextArea descArea;
 
     private Reclamation reclamation;
-    private ReclamationService service = new ReclamationService();
+    private final ReclamationService service = new ReclamationService();
 
     public void setReclamationData(Reclamation r) {
         this.reclamation = r;
@@ -22,14 +24,12 @@ public class EditReclamationController {
     }
 
     private void setupFieldValidation() {
-        // Limiter la longueur du titre à 100 caractères
         titleField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal.length() > 100) {
                 titleField.setText(oldVal);
             }
         });
 
-        // Limiter la longueur de la description à 500 caractères
         descArea.textProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal.length() > 500) {
                 descArea.setText(oldVal);
@@ -94,7 +94,7 @@ public class EditReclamationController {
     }
 
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);

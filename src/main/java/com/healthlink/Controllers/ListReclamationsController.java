@@ -7,7 +7,6 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.healthlink.Entites.Reclamation;
 import com.healthlink.Services.ReclamationService;
-import com.healthlink.utils.TranslationService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,7 +17,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -31,20 +29,18 @@ public class ListReclamationsController {
     @FXML private Pagination pagination;
 
     private final ReclamationService service = new ReclamationService();
-    private final TranslationService translationService = TranslationService.getInstance("votre_cle_api_deepl");
     private List<Reclamation> allReclamations;
     private static final int ITEMS_PER_PAGE = 6;
 
     @FXML
     public void initialize() {
-        System.out.println("INITIALIZE lancé");
         loadAllReclamations();
         setupSearch();
     }
 
     private void loadAllReclamations() {
         allReclamations = service.getAllReclamations();
-        int pageCount = (int) Math.ceil((double) allReclamations.size() / ITEMS_PER_PAGE);
+        int pageCount = Math.max(1, (int) Math.ceil((double) allReclamations.size() / ITEMS_PER_PAGE));
         pagination.setPageCount(pageCount);
         pagination.setPageFactory(this::createPage);
     }
@@ -86,14 +82,13 @@ public class ListReclamationsController {
         descArea.setWrapText(true);
         descArea.setPrefRowCount(3);
 
-        // Ajout du QR Code
         try {
             ImageView qrCodeView = generateQRCode(r);
             qrCodeView.setFitWidth(100);
             qrCodeView.setFitHeight(100);
             card.getChildren().add(qrCodeView);
         } catch (Exception e) {
-            System.err.println("Erreur lors de la génération du QR Code: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de la génération du QR Code: " + e.getMessage());
         }
 
         HBox buttonsBox = new HBox(10);
@@ -147,9 +142,10 @@ public class ListReclamationsController {
 
             loadAllReclamations();
         } catch (IOException e) {
-            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'ouverture de la fenêtre d'édition: " + e.getMessage());
         }
     }
+
     private void openViewDialog(Reclamation reclamation) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view_reclamation.fxml"));
@@ -164,9 +160,10 @@ public class ListReclamationsController {
             stage.setTitle("Détails de la réclamation");
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'ouverture de la fenêtre de visualisation: " + e.getMessage());
         }
     }
+
     private void deleteReclamation(Reclamation r) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
@@ -193,7 +190,7 @@ public class ListReclamationsController {
 
             loadAllReclamations();
         } catch (IOException e) {
-            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'ouverture de la fenêtre d'ajout: " + e.getMessage());
         }
     }
 
@@ -209,5 +206,13 @@ public class ListReclamationsController {
             pagination.setPageCount(pageCount);
             pagination.setPageFactory(this::createPage);
         });
+    }
+
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
