@@ -17,7 +17,6 @@
         <fx:include source="../Navbar.fxml"/>
     </top>
 
-
     <!-- ========== CONTENU PRINCIPAL ========== -->
     <center>
         <StackPane alignment="CENTER" style="-fx-background-color: #f5f7fa; -fx-padding: 30;">
@@ -51,16 +50,16 @@
 
                     <!-- Dosage -->
                     <VBox spacing="5">
-                        <Label text="Dosage" styleClass="field-label"/>
-                        <TextField fx:id="dosageField" styleClass="form-field"
-                                   promptText="Ex: 1 comprimé 3 fois/jour (min 5 caractères)"/>
+                        <Label text="Dosage (fois par jour)" styleClass="field-label"/>
+                        <ComboBox fx:id="dosageCombo" styleClass="form-field"
+                                  promptText="Sélectionnez le nombre de prises"/>
                     </VBox>
 
                     <!-- Durée -->
                     <VBox spacing="5">
-                        <Label text="Durée" styleClass="field-label"/>
-                        <TextField fx:id="dureeField" styleClass="form-field"
-                                   promptText="Ex: Pendant 7 jours (min 5 caractères)"/>
+                        <Label text="Durée (jours)" styleClass="field-label"/>
+                        <TextField fx:id="dureeDaysField" styleClass="form-field"
+                                   promptText="Ex: 7 (nombre de jours)"/>
                     </VBox>
 
                     <!-- Notes -->
@@ -73,7 +72,7 @@
 
                     <!-- Rendez-vous ID (ComboBox) -->
                     <VBox spacing="5">
-                        <Label text="date de Rendez-vous " styleClass="field-label"/>
+                        <Label text="Date de Rendez-vous" styleClass="field-label"/>
                         <ComboBox fx:id="rdvCardIdCombo" styleClass="form-field"
                                   promptText="Sélectionnez un rendez-vous"/>
                     </VBox>

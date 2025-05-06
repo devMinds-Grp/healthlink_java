@@ -21,8 +21,8 @@ import java.util.List;
 public class CreatePrescriptionController {
 
     @FXML private TextField nomMedicamentField;
-    @FXML private TextField dosageField;
-    @FXML private TextField dureeField;
+    @FXML private ComboBox<Integer> dosageCombo; // Changed to ComboBox
+    @FXML private TextField dureeDaysField; // New field for duration in days
     @FXML private TextArea notesArea;
     @FXML private ComboBox<Integer> rdvCardIdCombo;
 
@@ -33,6 +33,7 @@ public class CreatePrescriptionController {
     @FXML
     public void initialize() {
         setupRdvCardIdComboBox();
+        setupDosageComboBox();
     }
 
     private void setupRdvCardIdComboBox() {
@@ -89,6 +90,12 @@ public class CreatePrescriptionController {
         rdvCardIdCombo.getSelectionModel().selectFirst(); // Select null by default
     }
 
+    private void setupDosageComboBox() {
+        // Populate ComboBox with options 1, 2, 3
+        dosageCombo.setItems(FXCollections.observableArrayList(1, 2, 3));
+        dosageCombo.getSelectionModel().selectFirst(); // Select 1 by default
+    }
+
     @FXML
     public void handleSaveAction(ActionEvent actionEvent) {
         if (!validateForm()) {
@@ -124,24 +131,26 @@ public class CreatePrescriptionController {
         }
 
         // Validate dosage
-        String dosage = dosageField.getText();
-        if (dosage == null || dosage.trim().isEmpty()) {
-            showAlert("Champ requis", "Veuillez entrer le dosage", Alert.AlertType.WARNING);
-            return false;
-        }
-        if (dosage.trim().length() < 5) {
-            showAlert("Erreur", "Le dosage doit contenir au moins 5 caractères.", Alert.AlertType.WARNING);
+        Integer dosage = dosageCombo.getValue();
+        if (dosage == null) {
+            showAlert("Champ requis", "Veuillez sélectionner un dosage", Alert.AlertType.WARNING);
             return false;
         }
 
         // Validate duree
-        String duree = dureeField.getText();
-        if (duree == null || duree.trim().isEmpty()) {
-            showAlert("Champ requis", "Veuillez entrer la durée", Alert.AlertType.WARNING);
+        String dureeInput = dureeDaysField.getText();
+        if (dureeInput == null || dureeInput.trim().isEmpty()) {
+            showAlert("Champ requis", "Veuillez entrer la durée en jours", Alert.AlertType.WARNING);
             return false;
         }
-        if (duree.trim().length() < 5) {
-            showAlert("Erreur", "La durée doit contenir au moins 5 caractères.", Alert.AlertType.WARNING);
+        try {
+            int days = Integer.parseInt(dureeInput.trim());
+            if (days <= 0) {
+                showAlert("Erreur", "La durée doit être un nombre positif.", Alert.AlertType.WARNING);
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            showAlert("Erreur", "La durée doit être un nombre entier valide.", Alert.AlertType.WARNING);
             return false;
         }
 
@@ -168,8 +177,10 @@ public class CreatePrescriptionController {
 
     private Prescription createPrescriptionFromForm() {
         String nomMedicament = nomMedicamentField.getText().trim();
-        String dosage = dosageField.getText().trim();
-        String duree = dureeField.getText().trim();
+        Integer dosageValue = dosageCombo.getValue();
+        String dosage = dosageValue + " fois"; // Concatenate with "fois"
+        String dureeInput = dureeDaysField.getText().trim();
+        String duree = dureeInput + " jours"; // Concatenate with "jours"
         String notes = notesArea.getText().trim();
         Integer rdvCardId = rdvCardIdCombo.getValue();
 
@@ -197,7 +208,7 @@ public class CreatePrescriptionController {
 
             DialogPane dialogPane = alert.getDialogPane();
             dialogPane.getStylesheets().add(
-                    getClass().getResource("/css/Appointment.css").toExternalForm()
+                    getClass().getResource("/css/Prescription.css").toExternalForm()
             );
             dialogPane.getStyleClass().add("custom-alert");
 
