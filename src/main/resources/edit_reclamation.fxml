@@ -2,10 +2,11 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.healthlink.Controllers.EditReclamationController"
-      stylesheets="@edit_reclamation.css" spacing="20" prefWidth="500" prefHeight="400"
+      stylesheets="@edit_reclamation.css" spacing="20" prefWidth="500" prefHeight="500"
       styleClass="dialog-container">
 
     <Label text="Modifier Réclamation" styleClass="dialog-title"/>
@@ -17,6 +18,17 @@
         <Label text="Description (20-500 caractères):" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
         <TextArea fx:id="descArea" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
                   GridPane.vgrow="ALWAYS" wrapText="true"/>
+
+        <!-- Ajout pour la gestion de l'image -->
+        <Label text="Image:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <HBox GridPane.rowIndex="2" GridPane.columnIndex="1" spacing="5">
+            <TextField fx:id="imagePathField" editable="false" HBox.hgrow="ALWAYS"/>
+            <Button fx:id="browseImageBtn" text="Parcourir..."/>
+        </HBox>
+
+        <!-- Aperçu de l'image -->
+        <ImageView fx:id="imagePreview" fitWidth="200" fitHeight="150" preserveRatio="true"
+                   GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.halignment="LEFT"/>
     </GridPane>
 
     <HBox spacing="10" alignment="CENTER_RIGHT">

@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -73,54 +74,90 @@ public class ListReclamationsControllerAdmin {
 
     private VBox createReclamationCard(Reclamation r) {
         VBox card = new VBox(10);
-        card.getStyleClass().add("reclamation-card");
+        card.setStyle("-fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-padding: 10px;");
         card.setMinWidth(300);
 
         Label categoryLabel = new Label("Catégorie: " + r.getCategorie());
-        categoryLabel.getStyleClass().add("reclamation-category");
+        categoryLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #6c757d;");
 
         Label titleLabel = new Label(r.getTitre());
-        titleLabel.getStyleClass().add("reclamation-title");
+        titleLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #212529;");
+
+        // Status label with dynamic color based on status
+        Label statusLabel = new Label("Statut: " + r.getStatut());
+        statusLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #212529;");
+
+        // Set color based on status
+        switch (r.getStatut()) {
+            case "Accepté":
+                statusLabel.setStyle(statusLabel.getStyle() + " -fx-text-fill: #2ecc71;"); // Green
+                break;
+            case "Refusé":
+                statusLabel.setStyle(statusLabel.getStyle() + " -fx-text-fill: #e74c3c;"); // Red
+                break;
+            case "En attente":
+                statusLabel.setStyle(statusLabel.getStyle() + " -fx-text-fill: #f39c12;"); // Orange
+                break;
+        }
+
+        // Image preview if exists
+        ImageView imagePreview = createImagePreview(r);
+        if (imagePreview != null) {
+            imagePreview.setStyle("-fx-border-color: #dee2e6; -fx-border-width: 1px;");
+            card.getChildren().add(imagePreview);
+        }
 
         TextArea descArea = new TextArea(r.getDescription());
-        descArea.getStyleClass().add("reclamation-desc");
+        descArea.setStyle("-fx-font-size: 14px; -fx-background-color: transparent; -fx-border-color: #dee2e6;");
         descArea.setEditable(false);
         descArea.setWrapText(true);
         descArea.setPrefRowCount(3);
 
-        // Ajout du QR Code
+        // QR Code
         try {
             ImageView qrCodeView = generateQRCode(r);
             qrCodeView.setFitWidth(100);
             qrCodeView.setFitHeight(100);
+            qrCodeView.setStyle("-fx-border-color: #dee2e6; -fx-border-width: 1px;");
             card.getChildren().add(qrCodeView);
         } catch (Exception e) {
             System.err.println("Erreur lors de la génération du QR Code: " + e.getMessage());
         }
 
-        HBox buttonsBox = new HBox(10);
-        Button viewBtn = new Button("Consulter");
-        Button editBtn = new Button("Modifier");
-        Button deleteBtn = new Button("Supprimer");
+        HBox adminButtonsBox = new HBox(10);
+        adminButtonsBox.setStyle("-fx-alignment: center;");
 
-        viewBtn.getStyleClass().add("view-btn");
-        editBtn.getStyleClass().add("edit-btn");
-        deleteBtn.getStyleClass().add("delete-btn");
+        Button viewBtn = new Button("Consulter");
+        viewBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 12px;");
+
+        Button editBtn = new Button("Modifier");
+        editBtn.setStyle("-fx-background-color: #17a2b8; -fx-text-fill: white; -fx-font-size: 12px;");
+
+        Button deleteBtn = new Button("Supprimer");
+        deleteBtn.setStyle("-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-size: 12px;");
+
+        Button acceptBtn = new Button("Accepter");
+        acceptBtn.setStyle("-fx-background-color: #00ff6e; -fx-text-fill: #ffffff; -fx-font-size: 12px;");
+
+        Button rejectBtn = new Button("Refuser");
+        rejectBtn.setStyle("-fx-background-color: #ff1900; -fx-text-fill: #fbfbfb; -fx-font-size: 12px;");
 
         viewBtn.setOnAction(e -> openViewDialog(r));
         editBtn.setOnAction(e -> openEditDialog(r));
         deleteBtn.setOnAction(e -> deleteReclamation(r));
+        acceptBtn.setOnAction(e -> acceptReclamation(r));
+        rejectBtn.setOnAction(e -> rejectReclamation(r));
 
-        buttonsBox.getChildren().addAll(viewBtn, editBtn, deleteBtn);
-        card.getChildren().addAll(categoryLabel, titleLabel, descArea, buttonsBox);
+        adminButtonsBox.getChildren().addAll(viewBtn, editBtn, deleteBtn, acceptBtn, rejectBtn);
+
+
+        card.getChildren().addAll(categoryLabel, titleLabel, statusLabel, descArea, adminButtonsBox);
 
         return card;
-    }
-
-    private ImageView generateQRCode(Reclamation reclamation) throws WriterException, IOException {
+    }    private ImageView generateQRCode(Reclamation reclamation) throws WriterException, IOException {
         String qrContent = String.format("Réclamation: %s\nCatégorie: %s\nDescription: %s",
                 reclamation.getTitre(),
-                reclamation.getCategorie(),
+                reclamation.getCategoryId(),
                 reclamation.getDescription());
 
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
@@ -134,6 +171,31 @@ public class ListReclamationsControllerAdmin {
         return new ImageView(qrImage);
     }
 
+    private void acceptReclamation(Reclamation r) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Accepter la réclamation");
+        alert.setContentText("Êtes-vous sûr de vouloir accepter la réclamation '" + r.getTitre() + "'?");
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK && service.acceptReclamation(r.getId())) {
+                loadAllReclamations(); // Rafraîchir la liste
+            }
+        });
+    }
+
+    private void rejectReclamation(Reclamation r) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Refuser la réclamation");
+        alert.setContentText("Êtes-vous sûr de vouloir refuser la réclamation '" + r.getTitre() + "'?");
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK && service.rejectReclamation(r.getId())) {
+                loadAllReclamations(); // Rafraîchir la liste
+            }
+        });
+    }
     private void openEditDialog(Reclamation r) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/edit_reclamation.fxml"));
@@ -198,14 +260,34 @@ public class ListReclamationsControllerAdmin {
             e.printStackTrace();
         }
     }
+    private ImageView createImagePreview(Reclamation r) {
+        if (r.getImage() != null && !r.getImage().isEmpty()) {
+            try {
+                // Construire le chemin complet vers l'image dans le dossier resources
+                String imagePath = "src/main/resources/images/" + r.getImage();
+                File file = new File(imagePath);
 
-    private void setupSearch() {
+                if (file.exists()) {
+                    Image image = new Image(file.toURI().toString());
+                    ImageView imageView = new ImageView(image);
+                    imageView.setFitWidth(150);
+                    imageView.setFitHeight(150);
+                    imageView.setPreserveRatio(true);
+                    imageView.getStyleClass().add("reclamation-image");
+                    return imageView;
+                } else {
+                    System.err.println("Fichier image introuvable: " + imagePath);
+                }
+            } catch (Exception e) {
+                System.err.println("Erreur lors du chargement de l'image: " + e.getMessage());
+            }
+        }
+        return null;
+    }    private void setupSearch() {
         searchField.textProperty().addListener((obs, oldVal, newVal) -> {
             allReclamations = service.getAllReclamations().stream()
                     .filter(r -> r.getTitre().toLowerCase().contains(newVal.toLowerCase()) ||
-                            r.getDescription().toLowerCase().contains(newVal.toLowerCase()) ||
-                            r.getCategorie().getNom().toLowerCase().contains(newVal.toLowerCase()))
-                    .toList();
+                            r.getDescription().toLowerCase().contains(newVal.toLowerCase()) ).toList();
 
             int pageCount = Math.max(1, (int) Math.ceil((double) allReclamations.size() / ITEMS_PER_PAGE));
             pagination.setPageCount(pageCount);

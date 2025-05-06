@@ -9,11 +9,13 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
@@ -21,6 +23,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
@@ -37,12 +40,19 @@ public class AddReclamationController {
     private final ReclamationService reclamationService = new ReclamationService();
     private final CategorieService categorieService = new CategorieService();
     private final Random random = new Random();
+    @FXML private TextField imagePathField;
+    @FXML private Button browseImageBtn;
+    @FXML private ImageView imagePreview;
+
+
 
     @FXML
     public void initialize() {
         loadCategories();
         setupFieldValidation();
         generateCaptcha();
+        browseImageBtn.setOnAction(e -> handleBrowseImage());
+
     }
 
     private void loadCategories() {
@@ -86,7 +96,20 @@ public class AddReclamationController {
             }
         });
     }
-
+    private void handleBrowseImage() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Sélectionner une image");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
+        );
+        File selectedFile = fileChooser.showOpenDialog(browseImageBtn.getScene().getWindow());
+        if (selectedFile != null) {
+            imagePathField.setText(selectedFile.getAbsolutePath());
+            // Afficher un aperçu de l'image
+            Image image = new Image(selectedFile.toURI().toString());
+            imagePreview.setImage(image);
+        }
+    }
     @FXML
     private void handleSave() {
         if (!validateInputs()) {
@@ -94,7 +117,7 @@ public class AddReclamationController {
         }
 
         if (!validateCaptcha()) {
-            showAlert(AlertType.ERROR, "Erreur CAPTCHA", "Le texte CAPTCHA saisi est incorrect. Veuillez réessayer.");
+            showAlert(Alert.AlertType.ERROR, "Erreur CAPTCHA", "Le texte CAPTCHA saisi est incorrect. Veuillez réessayer.");
             refreshCaptcha();
             return;
         }
@@ -104,19 +127,20 @@ public class AddReclamationController {
         Categorie selectedCategorie = categoryComboBox.getValue();
 
         Reclamation newRec = new Reclamation(titre, description, selectedCategorie.getId());
+        newRec.setImage(imagePathField.getText()); // Ajouter le chemin de l'image
+
         try {
             if (reclamationService.addReclamation(newRec)) {
-                showAlert(AlertType.INFORMATION, "Succès", "Réclamation ajoutée avec succès");
+                showAlert(Alert.AlertType.INFORMATION, "Succès", "Réclamation ajoutée avec succès");
                 closeWindow();
             } else {
-                showAlert(AlertType.ERROR, "Erreur", "Échec de l'ajout de la réclamation");
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Échec de l'ajout de la réclamation");
             }
         } catch (Exception e) {
-            showAlert(AlertType.ERROR, "Erreur technique", "Erreur: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Erreur technique", "Erreur: " + e.getMessage());
             e.printStackTrace();
         }
     }
-
     private boolean validateInputs() {
         if (titleField.getText().trim().isEmpty()) {
             showAlert(AlertType.ERROR, "Erreur", "Le titre est obligatoire");

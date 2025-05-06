@@ -7,7 +7,7 @@
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.healthlink.Controllers.AddReclamationController"
-      stylesheets="@add_reclamation.css" spacing="20" prefWidth="500" prefHeight="550"
+      stylesheets="@add_reclamation.css" spacing="20" prefWidth="550" prefHeight="650"
       styleClass="dialog-container">
 
     <Label text="Nouvelle Réclamation" styleClass="dialog-title"/>
@@ -22,6 +22,17 @@
         <Label text="Description (20-500 caractères):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
         <TextArea fx:id="descArea" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
                   GridPane.vgrow="ALWAYS" wrapText="true"/>
+
+        <!-- Nouvelle section pour l'image -->
+        <Label text="Image (optionnel):" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <HBox GridPane.rowIndex="3" GridPane.columnIndex="1" spacing="5">
+            <TextField fx:id="imagePathField" editable="false" HBox.hgrow="ALWAYS"/>
+            <Button fx:id="browseImageBtn" text="Parcourir..."/>
+        </HBox>
+
+        <!-- Aperçu de l'image -->
+        <ImageView fx:id="imagePreview" fitWidth="200" fitHeight="150" preserveRatio="true"
+                   GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.halignment="LEFT"/>
     </GridPane>
 
     <!-- Section CAPTCHA -->

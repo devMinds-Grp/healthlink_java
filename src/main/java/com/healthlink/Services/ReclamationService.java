@@ -3,6 +3,11 @@ package com.healthlink.Services;
 import com.healthlink.Entites.Reclamation;
 import com.healthlink.utils.MyDB;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +20,31 @@ public class ReclamationService {
         try {
             this.connection = MyDB.getInstance().getConnection();
             ensureForeignKeyConstraint(); // Vérifie et crée les contraintes au démarrage
+            ensureImageColumnExists(); // Vérifie et ajoute la colonne image si nécessaire
         } catch (SQLException e) {
             System.err.println("Erreur DB: " + e.getMessage());
             throw new RuntimeException("Échec de l'initialisation du service", e);
         }
     }
+
+    private void ensureImageColumnExists() {
+        try {
+            DatabaseMetaData dbMetaData = connection.getMetaData();
+            ResultSet columns = dbMetaData.getColumns(null, null, "reclamation", "image");
+
+            if (!columns.next()) {
+                // La colonne n'existe pas, on l'ajoute
+                try (Statement st = connection.createStatement()) {
+                    st.executeUpdate("ALTER TABLE reclamation ADD COLUMN image VARCHAR(255)");
+                    System.out.println("Colonne 'image' ajoutée à la table reclamation");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur vérification colonne image: " + e.getMessage());
+        }
+    }
+
     private boolean validateCategory(int categoryId) {
-        // Vérifie que la catégorie existe ET que l'ID n'est pas null
         return categoryId > 0 && categorieService.categoryExists(categoryId);
     }
 
@@ -88,22 +111,34 @@ public class ReclamationService {
             return false;
         }
 
-        String req = "INSERT INTO reclamation (titre, description, category_id, statut) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement pst = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
-            pst.setString(1, r.getTitre());
-            pst.setString(2, r.getDescription());
-            pst.setInt(3, r.getCategoryId());
-            pst.setString(4, "En attente");
+        String req = "INSERT INTO reclamation (titre, description, category_id, statut, image) VALUES (?, ?, ?, ?, ?)";
+        try {
+            // Gestion de l'image si elle existe
+            String imagePath = null;
+            if (r.getImage() != null && !r.getImage().isEmpty()) {
+                String imageFileName = Paths.get(r.getImage()).getFileName().toString();
+                Path imageDestination = Paths.get("src/main/resources/images/", imageFileName);
+                Files.copy(Paths.get(r.getImage()), imageDestination, StandardCopyOption.REPLACE_EXISTING);
+                imagePath = imageFileName;
+            }
 
-            if (pst.executeUpdate() > 0) {
-                try (ResultSet rs = pst.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        r.setId(rs.getInt(1));
-                        return true;
+            try (PreparedStatement pst = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+                pst.setString(1, r.getTitre());
+                pst.setString(2, r.getDescription());
+                pst.setInt(3, r.getCategoryId());
+                pst.setString(4, "En attente");
+                pst.setString(5, imagePath);
+
+                if (pst.executeUpdate() > 0) {
+                    try (ResultSet rs = pst.getGeneratedKeys()) {
+                        if (rs.next()) {
+                            r.setId(rs.getInt(1));
+                            return true;
+                        }
                     }
                 }
             }
-        } catch (SQLException e) {
+        } catch (IOException | SQLException e) {
             System.err.println("Erreur ajout réclamation: " + e.getMessage());
             e.printStackTrace();
         }
@@ -128,6 +163,8 @@ public class ReclamationService {
                         rs.getString("description"),
                         rs.getInt("category_id")
                 );
+                r.setImage(rs.getString("image"));
+                r.setStatut(rs.getString("statut"));
                 list.add(r);
             }
         } catch (SQLException e) {
@@ -135,7 +172,30 @@ public class ReclamationService {
         }
         return list;
     }
+    public boolean acceptReclamation(int id) {
+        return updateReclamationStatus(id, "Acceptée");
+    }
 
+    public boolean rejectReclamation(int id) {
+        return updateReclamationStatus(id, "Rejetée");
+    }
+
+    private boolean updateReclamationStatus(int id, String status) {
+        if (!isConnectionValid()) {
+            System.err.println("Erreur: Connexion DB invalide");
+            return false;
+        }
+
+        String req = "UPDATE reclamation SET statut=? WHERE id=?";
+        try (PreparedStatement pst = connection.prepareStatement(req)) {
+            pst.setString(1, status);
+            pst.setInt(2, id);
+            return pst.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Erreur mise à jour statut réclamation: " + e.getMessage());
+        }
+        return false;
+    }
     public boolean updateReclamation(Reclamation r) {
         if (!isConnectionValid()) {
             System.err.println("Erreur: Connexion DB invalide");
@@ -155,14 +215,26 @@ public class ReclamationService {
             return false;
         }
 
-        String req = "UPDATE reclamation SET titre=?, description=?, category_id=? WHERE id=?";
-        try (PreparedStatement pst = connection.prepareStatement(req)) {
-            pst.setString(1, r.getTitre());
-            pst.setString(2, r.getDescription());
-            pst.setInt(3, r.getCategoryId());
-            pst.setInt(4, r.getId());
-            return pst.executeUpdate() > 0;
-        } catch (SQLException e) {
+        String req = "UPDATE reclamation SET titre=?, description=?, category_id=?, image=? WHERE id=?";
+        try {
+            // Gestion de l'image si elle existe
+            String imagePath = null;
+            if (r.getImage() != null && !r.getImage().isEmpty()) {
+                String imageFileName = Paths.get(r.getImage()).getFileName().toString();
+                Path imageDestination = Paths.get("src/main/resources/images/", imageFileName);
+                Files.copy(Paths.get(r.getImage()), imageDestination, StandardCopyOption.REPLACE_EXISTING);
+                imagePath = imageFileName;
+            }
+
+            try (PreparedStatement pst = connection.prepareStatement(req)) {
+                pst.setString(1, r.getTitre());
+                pst.setString(2, r.getDescription());
+                pst.setInt(3, r.getCategoryId());
+                pst.setString(4, imagePath);
+                pst.setInt(5, r.getId());
+                return pst.executeUpdate() > 0;
+            }
+        } catch (IOException | SQLException e) {
             System.err.println("Erreur mise à jour réclamation: " + e.getMessage());
         }
         return false;
