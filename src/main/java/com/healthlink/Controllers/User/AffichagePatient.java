@@ -188,21 +188,6 @@ public class AffichagePatient implements Initializable {
         loadView2("/views/stats.fxml");
     }
 
-    @FXML
-    private void showReclamationView() {
-        loadView2("/views/list_reclamations_admin.fxml");
-    }
-
-    @FXML
-    private void showCategorieView() {
-        loadView2("/liste_categories.fxml");
-    }
-
-    @FXML
-    private void showStatsReclamation() {
-        loadView2("/views/stats.fxml");
-    }
-
     private void loadView(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));

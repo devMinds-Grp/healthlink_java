@@ -6,6 +6,7 @@ import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.AuthService;
 import com.healthlink.Services.CareResponseService;
 import com.healthlink.Services.ChatService;
+import com.healthlink.Services.SMSService;
 import com.healthlink.utils.MyDB;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -104,7 +105,7 @@ public class ListCareResponsesController {
                                 response.getDateRep().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "");
 
                         String imagePath = soignant != null && soignant.getImageprofile() != null && !soignant.getImageprofile().isEmpty() ?
-                                "file:C:/Users/sofie/Desktop/PIJAVA/projet final java/profile_images/" + soignant.getImageprofile() : null;
+                                "file:C:/Users/ghass/Desktop/PIJAVA/healthlink_java/profile_images/" + soignant.getImageprofile() : null;
                         System.out.println("Image Path: " + (imagePath != null ? imagePath : "null"));
                         try {
                             if (imagePath != null) {
@@ -312,6 +313,9 @@ public class ListCareResponsesController {
             sendButton.setGraphic(sendIconView);
             sendButton.getStyleClass().add("send-button");
 
+            Button notifySMSButton = new Button("Notify via SMS");
+            notifySMSButton.getStyleClass().add("notify-sms-button");
+
             sendButton.setOnAction(event -> {
                 System.out.println("Send button clicked for instance " + instanceId);
                 String messageContent = messageField.getText();
@@ -326,7 +330,12 @@ public class ListCareResponsesController {
                 }
             });
 
-            inputBox.getChildren().addAll(messageField, sendButton);
+            notifySMSButton.setOnAction(event -> {
+                System.out.println("Notify via SMS button clicked for otherUserId=" + otherUserId);
+                sendMessageNotificationSMS(otherUserId);
+            });
+
+            inputBox.getChildren().addAll(messageField, sendButton, notifySMSButton);
             chatPane.getChildren().addAll(chatMessages, inputBox);
 
             Scene scene = new Scene(chatPane, 450, 500);
@@ -337,6 +346,50 @@ public class ListCareResponsesController {
             System.err.println("Error opening chat for instance " + instanceId + ": " + e.getMessage());
             e.printStackTrace();
             showAlert("Error", "Failed to open chat: " + e.getMessage());
+        }
+    }
+
+    private void sendMessageNotificationSMS(int otherUserId) {
+        try {
+            Utilisateur user = chatService.getUserById(otherUserId);
+            if (user == null) {
+                showAlert("Error", "User information is not available.");
+                return;
+            }
+
+            System.out.println("User ID: " + user.getId() + ", Name: " + user.getPrenom() + " " + user.getNom());
+            System.out.println("User object: num_tel = " + user.getNum_tel() + ", email = " + user.getEmail());
+            long phoneNumber = user.getNum_tel();
+            System.out.println("Retrieved phone number for user ID " + user.getId() + ": " + phoneNumber);
+
+            if (phoneNumber == 0) {
+                showAlert("Error", "No phone number available for user. Please ensure the user's phone number is set correctly in the database.");
+                return;
+            }
+
+            String phoneNumberStr = String.valueOf(phoneNumber);
+            System.out.println("Phone number as string: " + phoneNumberStr);
+            if (phoneNumberStr.length() != 8) {
+                showAlert("Error", "Invalid phone number format. Tunisian numbers should be 8 digits long (without country code). Found: " + phoneNumberStr);
+                return;
+            }
+
+            String formattedPhoneNumber = "+216" + phoneNumberStr;
+            System.out.println("Formatted phone number for SMS: " + formattedPhoneNumber);
+
+            String senderName = (currentUser.getPrenom() != null ? currentUser.getPrenom() : "") + " " +
+                    (currentUser.getNom() != null ? currentUser.getNom() : "");
+            senderName = senderName.trim().isEmpty() ? "Anonymous" : senderName.trim();
+            String receiverName = (user.getPrenom() != null ? user.getPrenom() : "") + " " +
+                    (user.getNom() != null ? user.getNom() : "");
+            receiverName = receiverName.trim().isEmpty() ? "Friend" : receiverName.trim();
+            String message = "Hey Mr " + receiverName + ", You have received a new message from " + senderName + ". Please check your app.";
+            SMSService.sendSMS(formattedPhoneNumber, message);
+
+            showAlert("Success", "SMS notification sent to user successfully.");
+        } catch (Exception e) {
+            System.err.println("Failed to send SMS notification: " + e.getMessage());
+            showAlert("Error", "Failed to send SMS notification: " + e.getMessage());
         }
     }
 

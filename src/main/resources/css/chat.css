@@ -38,3 +38,10 @@
     -fx-font-family: "Arial";
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 1);
 }
+.notify-sms-button {
+    -fx-background-color: #4CAF50; /* Green for notification */
+    -fx-text-fill: white;
+    -fx-padding: 5px 10px;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+}

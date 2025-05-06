@@ -6,6 +6,7 @@ import com.healthlink.Entities.Notification;
 import com.healthlink.Services.AuthService;
 import com.healthlink.Services.ChatService;
 import com.healthlink.Services.NotificationService;
+import com.healthlink.Services.SMSService;
 import com.healthlink.utils.MyDB;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,6 +31,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+import javafx.scene.control.Alert;
 
 public class NavbarController {
 
@@ -207,7 +209,7 @@ public class NavbarController {
             System.out.println("Notifications fetched: " + notifications.size());
             if (notifications.isEmpty()) {
                 System.out.println("No notifications found");
-                showAlert("Information", "Aucune notification disponible.");
+                showAlert(Alert.AlertType.INFORMATION, "Information", "Aucune notification disponible.");
                 return;
             }
 
@@ -268,7 +270,7 @@ public class NavbarController {
         } catch (Exception e) {
             System.err.println("Error in showNotifications: " + e.getMessage());
             e.printStackTrace();
-            showAlert("Error", "Failed to show notifications: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to show notifications: " + e.getMessage());
         }
     }
 
@@ -300,9 +302,19 @@ public class NavbarController {
                     updatedNotifications.forEach(n -> addNotificationToPane(notificationPane, n));
                 }
             } else {
-                showAlert("Error", "Unable to open chat: Patient ID could not be extracted.");
+                showAlert(Alert.AlertType.ERROR, "Error", "Unable to open chat: Patient ID could not be extracted.");
             }
         });
+
+        // Handle SMS reply if message indicates an SMS response
+        if (notification.getMessage().startsWith("SMS Reply: ")) {
+            int patientId = extractPatientIdFromMessage(notification.getMessage().replace("SMS Reply: ", ""));
+            if (patientId != -1) {
+                ChatMessage chatMessage = new ChatMessage(patientId, currentUser.getId(), notification.getMessage().replace("SMS Reply: ", ""));
+                chatService.sendMessage(chatMessage);
+                notificationService.markAsRead(notification.getId());
+            }
+        }
 
         notificationBox.getChildren().addAll(messageLabel, viewChatButton);
         notificationPane.getChildren().add(notificationBox);
@@ -414,6 +426,9 @@ public class NavbarController {
             sendButton.setGraphic(sendIconView);
             sendButton.getStyleClass().add("send-button");
 
+            Button notifySMSButton = new Button("Notify via SMS");
+            notifySMSButton.getStyleClass().add("notify-sms-button");
+
             sendButton.setOnAction(event -> {
                 System.out.println("Send button clicked");
                 String messageContent = messageField.getText();
@@ -428,7 +443,12 @@ public class NavbarController {
                 }
             });
 
-            inputBox.getChildren().addAll(messageField, sendButton);
+            notifySMSButton.setOnAction(event -> {
+                System.out.println("Notify via SMS button clicked for patientUserId=" + patientUserId);
+                sendMessageNotificationSMS(patientUserId);
+            });
+
+            inputBox.getChildren().addAll(messageField, sendButton, notifySMSButton);
             chatPane.getChildren().addAll(chatMessages, inputBox);
 
             Scene scene = new Scene(chatPane, 450, 500);
@@ -437,7 +457,51 @@ public class NavbarController {
             chatStage.show();
         } catch (Exception e) {
             System.err.println("Error opening chat: " + e.getMessage());
-            showAlert("Error", "Failed to open chat: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to open chat: " + e.getMessage());
+        }
+    }
+
+    private void sendMessageNotificationSMS(int patientUserId) {
+        try {
+            Utilisateur patient = chatService.getUserById(patientUserId);
+            if (patient == null) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Patient information is not available.");
+                return;
+            }
+
+            System.out.println("Patient ID: " + patient.getId() + ", Name: " + patient.getPrenom() + " " + patient.getNom());
+            System.out.println("Patient object: num_tel = " + patient.getNum_tel() + ", email = " + patient.getEmail());
+            long phoneNumber = patient.getNum_tel();
+            System.out.println("Retrieved phone number for patient ID " + patient.getId() + ": " + phoneNumber);
+
+            if (phoneNumber == 0) {
+                showAlert(Alert.AlertType.ERROR, "Error", "No phone number available for patient. Please ensure the patient's phone number is set correctly in the database.");
+                return;
+            }
+
+            String phoneNumberStr = String.valueOf(phoneNumber);
+            System.out.println("Phone number as string: " + phoneNumberStr);
+            if (phoneNumberStr.length() != 8) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Invalid phone number format. Tunisian numbers should be 8 digits long (without country code). Found: " + phoneNumberStr);
+                return;
+            }
+
+            String formattedPhoneNumber = "+216" + phoneNumberStr;
+            System.out.println("Formatted phone number for SMS: " + formattedPhoneNumber);
+
+            String senderName = (currentUser.getPrenom() != null ? currentUser.getPrenom() : "") + " " +
+                    (currentUser.getNom() != null ? currentUser.getNom() : "");
+            senderName = senderName.trim().isEmpty() ? "Anonymous" : senderName.trim();
+            String receiverName = (patient.getPrenom() != null ? patient.getPrenom() : "") + " " +
+                    (patient.getNom() != null ? patient.getNom() : "");
+            receiverName = receiverName.trim().isEmpty() ? "Friend" : receiverName.trim();
+            String message = "Hey Mr " + receiverName + ", You have received a new message from " + senderName + ". Please check your app.";
+            SMSService.sendSMS(formattedPhoneNumber, message);
+
+            showAlert(Alert.AlertType.INFORMATION, "Success", "SMS notification sent to patient successfully.");
+        } catch (Exception e) {
+            System.err.println("Failed to send SMS notification: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to send SMS notification: " + e.getMessage());
         }
     }
 
@@ -468,7 +532,7 @@ public class NavbarController {
     private void navigateTo(String targetKey) {
         NavigationTarget target = NAVIGATION_MAP.get(targetKey);
         if (target == null) {
-            showAlert("Erreur", "Cible de navigation inconnue.");
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Cible de navigation inconnue.");
             return;
         }
         navigateTo(target.fxmlPath, target.title);
@@ -494,7 +558,7 @@ public class NavbarController {
             stage.setResizable(true);
             stage.show();
         } catch (IOException e) {
-            showAlert("Erreur", "Impossible de charger la page : " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger la page : " + e.getMessage());
         }
     }
 
@@ -521,9 +585,9 @@ public class NavbarController {
         navigateTo("disconnect");
     }
 
-    // Utility method to show error alerts
-    private void showAlert(String title, String message) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+    // Utility method to show alerts with customizable type
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);

@@ -99,4 +99,30 @@ public class ChatService {
         }
         return messages;
     }
+
+    public Utilisateur getUserById(int userId) {
+        String sql = "SELECT u.id, u.prenom, u.nom, u.num_tel, u.email, u.imageprofile, u.role_id " +
+                "FROM utilisateur u WHERE u.id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                Utilisateur user = new Utilisateur();
+                user.setId(rs.getInt("id"));
+                user.setPrenom(rs.getString("prenom"));
+                user.setNom(rs.getString("nom"));
+                user.setNum_tel(rs.getInt("num_tel"));
+                user.setEmail(rs.getString("email"));
+                user.setImageprofile(rs.getString("imageprofile"));
+                Role role = new Role();
+                role.setId(rs.getInt("role_id"));
+                user.setRole(role);
+                return user;
+            }
+        } catch (SQLException e) {
+            System.err.println("Failed to fetch user by ID " + userId + ": " + e.getMessage());
+            throw new RuntimeException("Failed to fetch user by ID", e);
+        }
+        return null;
+    }
 }

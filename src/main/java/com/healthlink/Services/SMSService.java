@@ -7,21 +7,25 @@ import com.twilio.type.PhoneNumber;
 
 public class SMSService {
     // Replace with your actual Twilio credentials
-    private static final String ACCOUNT_SID = "ACb3df1055486b72f98c41f4d8105c7d1a"; // Update with your Twilio Account SID
-    private static final String AUTH_TOKEN = "89cbe63807c23cc16f49c9794aa5b2c9";   // Update with your Twilio Auth Token
-    private static final String TWILIO_PHONE_NUMBER = "+13527079042"; // Update with your Twilio phone number (e.g., +1234567890)
+    private static final String ACCOUNT_SID = "ACb3df1055486b72f98c41f4d8105c7d1a";
+    private static final String AUTH_TOKEN = "89cbe63807c23cc16f49c9794aa5b2c9";
+    private static final String TWILIO_PHONE_NUMBER = "+13527079042";
 
     private static final int MAX_RETRIES = 3;
     private static final long RETRY_DELAY_MS = 2000;
 
-    public SMSService() {
+    static {
         try {
             Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-            System.out.println("Twilio client initialized successfully");
+            System.out.println("Twilio client initialized successfully with Account SID: " + ACCOUNT_SID);
         } catch (Exception e) {
             System.err.println("Failed to initialize Twilio client: " + e.getMessage());
             e.printStackTrace();
+            throw new RuntimeException("Twilio initialization failed", e);
         }
+    }
+
+    public SMSService() {
     }
 
     public void sendConfirmationMessage(String toPhoneNumber, String doctorName, String date) {
@@ -30,6 +34,22 @@ public class SMSService {
                 doctorName, date
         );
         sendMessage(toPhoneNumber, messageBody);
+    }
+
+    public static void sendSMS(String to, String message) {
+        try {
+            System.out.println("Sending SMS to: " + to + " with message: " + message);
+            Message twilioMessage = Message.creator(
+                    new PhoneNumber(to),
+                    new PhoneNumber(TWILIO_PHONE_NUMBER),
+                    message
+            ).create();
+            System.out.println("SMS sent successfully to " + to + " with SID: " + twilioMessage.getSid());
+        } catch (Exception e) {
+            System.err.println("Failed to send SMS to " + to + ": " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Failed to send SMS", e);
+        }
     }
 
     public void sendCancellationMessage(String toPhoneNumber, String doctorName, String date) {
