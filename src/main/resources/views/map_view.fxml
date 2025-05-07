@@ -5,34 +5,57 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="rootPane" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.healthlink.Controllers.HospitalMapController">
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.healthlink.Controllers.HospitalMapController"
+            stylesheets="@hospital_map.css">
+
+    <!-- ========== NAVBAR EN HAUT ========== -->
     <top>
-        <HBox fx:id="inputBox" spacing="10" alignment="CENTER_LEFT">
-            <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
-            </padding>
-            <children>
-                <Label text="Latitude:"/>
-                <TextField fx:id="latField" prefWidth="100"/>
-                <Label text="Longitude:"/>
-                <TextField fx:id="lonField" prefWidth="100"/>
-                <Button fx:id="findHospitalsButton" text="Find Nearby Hospitals"/>
-            </children>
-        </HBox>
+        <fx:include source="../views/Navbar.fxml"/>
     </top>
+
+    <!-- ========== CONTENU PRINCIPAL ========== -->
     <center>
-        <BorderPane fx:id="mapPane"/>
+        <StackPane alignment="CENTER" style="-fx-background-color: #f5f7fa;">
+            <VBox alignment="TOP_CENTER" styleClass="form-container" maxWidth="1100">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
 
+                <!-- Titre -->
+                <VBox alignment="CENTER" spacing="10" style="-fx-padding: 0 0 20 0;">
+                    <Label text="Hospital Finder" styleClass="form-title"/>
+                </VBox>
+
+                <!-- Inputs and Buttons -->
+                <HBox fx:id="inputBox" spacing="10" alignment="CENTER">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+                    <children>
+                        <Label text="Latitude:" styleClass="form-label"/>
+                        <TextField fx:id="latField" prefWidth="100" styleClass="styled-textfield"/>
+                        <Label text="Longitude:" styleClass="form-label"/>
+                        <TextField fx:id="lonField" prefWidth="100" styleClass="styled-textfield"/>
+                        <Button fx:id="getPositionButton" text="Get My Position" styleClass="primary-button"/>
+                        <Button fx:id="findHospitalsButton" text="Find Nearby Hospitals" styleClass="primary-button"/>
+                    </children>
+                </HBox>
+
+                <!-- Map -->
+                <BorderPane fx:id="mapPane" prefHeight="400" prefWidth="1100" styleClass="map-container"/>
+
+                <!-- Attribution -->
+                <Label fx:id="attributionLabel" text="© OpenStreetMap contributors" styleClass="attribution-label">
+                    <padding>
+                        <Insets top="10" right="0" bottom="0" left="0"/>
+                    </padding>
+                </Label>
+            </VBox>
+        </StackPane>
     </center>
-
-    <bottom>
-        <Label fx:id="attributionLabel" text="© OpenStreetMap contributors" style="-fx-font-size: 10px; -fx-padding: 5;">
-            <padding>
-                <Insets top="5" right="5" bottom="5" left="5"/>
-            </padding>
-        </Label>
-    </bottom>
-
 </BorderPane>

@@ -40,6 +40,9 @@
                             onAction="#handleChoisirImage"/>
                     <Label fx:id="nomFichierLabel" text="Aucun fichier choisi"
                            style="-fx-font-style: italic; -fx-text-fill: #666;"/>
+                    <Button fx:id="captureImageButton" text="Capturer via Webcam"
+                            style="-fx-background-color: #3498db; -fx-text-fill: white;"
+                            onAction="#captureImage"/>
                 </VBox>
 
                 <!-- Boutons -->

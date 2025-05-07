@@ -1,5 +1,6 @@
 package com.healthlink.Services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Entites.Role;
 import com.healthlink.utils.MyDB;
@@ -10,13 +11,20 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
 
 
 import java.sql.*;
 import java.util.ArrayList;
 
+import static java.lang.System.out;
+
 public class AuthService  {
+
     private static Utilisateur connectedUtilisateur;
 
     public static void setConnectedUtilisateur(Utilisateur utilisateur) {
@@ -27,6 +35,10 @@ public class AuthService  {
         return connectedUtilisateur;
     }
     private Connection connection;
+
+    private static final String TRAIN_API_URL = "http://localhost:5000/train";
+    private static final HttpClient client = HttpClient.newHttpClient();
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     public AuthService() {
         try {
@@ -118,47 +130,71 @@ public class AuthService  {
     }
 
 
-    public void addPatient(Utilisateur utilisateur) {
+    public int addPatient(Utilisateur utilisateur) throws SQLException {
+        // Vérifier si l'email existe déjà
+        String checkEmailQuery = "SELECT COUNT(*) FROM utilisateur WHERE email = ?";
+        try (PreparedStatement checkStmt = connection.prepareStatement(checkEmailQuery)) {
+            checkStmt.setString(1, utilisateur.getEmail());
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                throw new SQLException("L'email " + utilisateur.getEmail() + " est déjà utilisé.");
+            }
+        }
+
         String req = "INSERT INTO utilisateur (role_id, nom, prenom, email, mot_de_passe, num_tel, statut, adresse, speciality, categorie_soin, image, imageprofile, reset_code) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pst = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
-            // Hacher le mot de passe
             String hashedPassword = BCrypt.hashpw(utilisateur.getMot_de_passe(), BCrypt.gensalt(13));
 
-            pst.setInt(1, utilisateur.getRole().getId()); // Rôle du patient (3)
+            pst.setInt(1, utilisateur.getRole().getId());
             pst.setString(2, utilisateur.getNom());
             pst.setString(3, utilisateur.getPrenom());
             pst.setString(4, utilisateur.getEmail());
-            pst.setString(5, hashedPassword); // Utiliser le mot de passe haché
+            pst.setString(5, hashedPassword);
             pst.setInt(6, utilisateur.getNum_tel());
             pst.setString(7, "approuvé");
             pst.setString(8, "");
             pst.setString(9, "");
             pst.setString(10, "");
             pst.setInt(11, 0);
-            if (utilisateur.getImageprofile() != null) {
-                pst.setString(12, utilisateur.getImageprofile());
-            } else {
-                String initials = (utilisateur.getNom().substring(0, 1) + utilisateur.getPrenom().substring(0, 1)).toUpperCase();
-                String generatedImagePath = generateProfileImage(initials);
-                pst.setString(12, generatedImagePath);
-            }
+            pst.setString(12, utilisateur.getImageprofile() != null ? utilisateur.getImageprofile() : generateProfileImage(
+                    (utilisateur.getNom().substring(0, 1) + utilisateur.getPrenom().substring(0, 1)).toUpperCase()));
             pst.setInt(13, 0);
 
             int affectedRows = pst.executeUpdate();
             if (affectedRows > 0) {
                 try (ResultSet rs = pst.getGeneratedKeys()) {
                     if (rs.next()) {
-                        utilisateur.setId(rs.getInt(1));
+                        return rs.getInt(1);
                     }
                 }
             }
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de l'ajout du patient : " + e.getMessage());
+            return -1;
         }
     }
+    public boolean registerUserImage(int userId, String base64Image) throws IOException, InterruptedException {
+        String jsonBody = String.format("{\"user_id\": %d, \"image\": \"%s\"}", userId, base64Image);
+        out.println("Envoi à l'URL : http://localhost:5000/train");
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:5000/train"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                .build();
 
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        out.println("Réponse Flask /train : " + response.body() + " (Statut : " + response.statusCode() + ")");
+        if (response.statusCode() >= 400) {
+            throw new IOException("Échec de la requête : " + response.statusCode());
+        }
+
+        // Parser manuellement la réponse JSON
+        String responseBody = response.body();
+        if (responseBody.contains("\"status\":\"success\"")) {
+            return true;
+        }
+        return false;
+    }
     public void addMedecin(Utilisateur utilisateur) {
         String req = "INSERT INTO utilisateur (role_id, nom, prenom, email, mot_de_passe, num_tel, statut, adresse, speciality, categorie_soin, image, imageprofile, reset_code) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -178,11 +214,21 @@ public class AuthService  {
             pst.setString(9, utilisateur.getSpeciality());
             pst.setString(10, "");
             pst.setString(11, utilisateur.getImage());
+//            if (utilisateur.getImageprofile() != null) {
+//                pst.setString(12, utilisateur.getImageprofile());
+//            } else {
+//                String initials = (utilisateur.getNom().substring(0, 1) + utilisateur.getPrenom().substring(0, 1)).toUpperCase();
+//                String generatedImagePath = generateProfileImage(initials);
+//                pst.setString(12, generatedImagePath);
+//            }
             if (utilisateur.getImageprofile() != null) {
                 pst.setString(12, utilisateur.getImageprofile());
             } else {
                 String initials = (utilisateur.getNom().substring(0, 1) + utilisateur.getPrenom().substring(0, 1)).toUpperCase();
                 String generatedImagePath = generateProfileImage(initials);
+                if (generatedImagePath == null) {
+                    throw new RuntimeException("Échec de la génération de l'image de profil par défaut.");
+                }
                 pst.setString(12, generatedImagePath);
             }
             pst.setInt(13, 0);
@@ -219,11 +265,21 @@ public class AuthService  {
             pst.setString(9, "");
             pst.setString(10, utilisateur.getCategorie_soin());
             pst.setString(11, utilisateur.getImage());
+//            if (utilisateur.getImageprofile() != null) {
+//                pst.setString(12, utilisateur.getImageprofile());
+//            } else {
+//                String initials = (utilisateur.getNom().substring(0, 1) + utilisateur.getPrenom().substring(0, 1)).toUpperCase();
+//                String generatedImagePath = generateProfileImage(initials);
+//                pst.setString(12, generatedImagePath);
+//            }
             if (utilisateur.getImageprofile() != null) {
                 pst.setString(12, utilisateur.getImageprofile());
             } else {
                 String initials = (utilisateur.getNom().substring(0, 1) + utilisateur.getPrenom().substring(0, 1)).toUpperCase();
                 String generatedImagePath = generateProfileImage(initials);
+                if (generatedImagePath == null) {
+                    throw new RuntimeException("Échec de la génération de l'image de profil par défaut.");
+                }
                 pst.setString(12, generatedImagePath);
             }
             pst.setInt(13, 0);
@@ -276,7 +332,36 @@ public class AuthService  {
         }
     }
 
-    public  List<Utilisateur> getAllUsersWithImageProfile() throws SQLException {
+    //    public  List<Utilisateur> getAllUsersWithImageProfile() throws SQLException {
+//        List<Utilisateur> users = new ArrayList<>();
+//        String query = "SELECT u.*, r.id as role_id, r.nom as role_nom " +
+//                "FROM utilisateur u " +
+//                "JOIN role r ON u.role_id = r.id " +
+//                "WHERE u.imageprofile IS NOT NULL";
+//
+//        try (PreparedStatement ps = connection.prepareStatement(query)) {
+//            ResultSet rs = ps.executeQuery();
+//            while (rs.next()) {
+//                Utilisateur user = new Utilisateur();
+//                user.setId(rs.getInt("id"));
+//                user.setNom(rs.getString("nom"));
+//                user.setPrenom(rs.getString("prenom"));
+//                user.setEmail(rs.getString("email"));
+//                user.setMot_de_passe(rs.getString("mot_de_passe"));
+//                user.setImageprofile(rs.getString("imageprofile"));
+//                user.setStatut(rs.getString("statut"));
+//
+//                Role role = new Role();
+//                role.setId(rs.getInt("role_id"));
+//                role.setNom(rs.getString("role_nom"));
+//                user.setRole(role);
+//
+//                users.add(user);
+//            }
+//        }
+//        return users;
+//    }
+    public List<Utilisateur> getAllUsersWithImageProfile() throws SQLException {
         List<Utilisateur> users = new ArrayList<>();
         String query = "SELECT u.*, r.id as role_id, r.nom as role_nom " +
                 "FROM utilisateur u " +

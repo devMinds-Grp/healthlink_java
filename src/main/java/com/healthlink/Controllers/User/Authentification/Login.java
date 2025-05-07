@@ -1,5 +1,7 @@
 package com.healthlink.Controllers.User.Authentification;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
@@ -13,13 +15,10 @@ import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.AuthService;
 import com.healthlink.Services.GoogleAuthService;
 import com.healthlink.Services.UserService;
-import com.healthlink.utils.FaceRecognitionUtils;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -27,30 +26,36 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.Node;
+import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.Java2DFrameConverter;
+import org.bytedeco.javacv.OpenCVFrameGrabber;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.videoio.VideoCapture;
 import javafx.scene.control.Alert;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.net.http.HttpClient;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
 
 //ajouter par majd
-import com.healthlink.Services.UserService;
 import java.sql.Connection; // Pour la connexion à la base de données
 import java.sql.PreparedStatement; // Pour les requêtes préparées
 import java.sql.ResultSet; // Pour les résultats des requêtes
 import java.sql.SQLException; // Pour gérer les exceptions SQL
 import java.sql.Timestamp; // Pour gérer banned_until
 import com.healthlink.utils.MyDB; // Import pour MyDB
+
+import javax.imageio.ImageIO;
 
 public class Login {
 
@@ -77,7 +82,7 @@ public class Login {
         this.googleAuthService = new GoogleAuthService();
 
     }
-//    @FXML
+    //    @FXML
 //    private WebView recaptchaWebView;
 //
 //    private RecaptchaHandler recaptchaHandler;
@@ -102,7 +107,7 @@ public class Login {
             showAlert(Alert.AlertType.WARNING, "Champs vides", "Veuillez remplir tous les champs.");
             return;
         }
-         try {
+        try {
             Utilisateur utilisateur = AuthService.login(email, password);
             if (utilisateur != null) {
                 //ajouter par majd
@@ -158,13 +163,13 @@ public class Login {
     }
 
 
-    private void showAlert(AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+    //    private void showAlert(AlertType alertType, String title, String message) {
+//        Alert alert = new Alert(alertType);
+//        alert.setTitle(title);
+//        alert.setHeaderText(null);
+//        alert.setContentText(message);
+//        alert.showAndWait();
+//    }
     @FXML
     private void handleRegisterLink(ActionEvent event) {
         loadView("/views/User/Auth/register.fxml", event);
@@ -475,104 +480,51 @@ public class Login {
     @FXML
     private Button faceLoginButton;
 
+    private static final String API_URL = "http://localhost:5000/recognize";
+    private static final HttpClient client = HttpClient.newHttpClient();
+    private static final ObjectMapper mapper = new ObjectMapper();
+
     @FXML
     private void handleFaceLogin(ActionEvent event) throws IOException {
         System.out.println("Démarrage du processus de connexion par visage");
         try {
-            // Charger le classifieur en cascade
-            System.out.println("Chargement du fichier XML de détection de visage");
-            CascadeClassifier faceDetector = new CascadeClassifier("C:\\opencv\\sources\\data\\haarcascades\\haarcascade_frontalface_default.xml");
-            if (faceDetector.empty()) {
-                showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger le fichier haarcascade.");
+            String base64Image = captureWebcamImage();
+            if (base64Image == null) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de capturer une image depuis la webcam.");
                 return;
             }
 
-            // Capturer l'image de la webcam
-            System.out.println("Ouverture de la webcam");
-            VideoCapture camera = new VideoCapture(0);
-            if (!camera.isOpened()) {
-                showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir la webcam.");
+            String jsonBody = String.format("{\"image\": \"%s\"}", base64Image);
+            java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder()
+                    .uri(URI.create(API_URL))
+                    .header("Content-Type", "application/json")
+                    .POST(java.net.http.HttpRequest.BodyPublishers.ofString(jsonBody))
+                    .build();
+
+            java.net.http.HttpResponse<String> response = client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() >= 400) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Échec de la requête API : " + response.statusCode());
                 return;
             }
 
-            Mat frame = new Mat();
-            MatOfRect faceDetections = new MatOfRect();
-            boolean faceDetected = false;
-            int maxAttempts = 10; // Nombre maximum de tentatives
-            for (int i = 0; i < maxAttempts; i++) {
-                camera.read(frame);
-                System.out.println("Tentative de capture " + (i + 1));
+            String responseBody = response.body();
+            ObjectNode jsonResponse = mapper.readValue(responseBody, ObjectNode.class);
 
-                // Sauvegarder l'image pour débogage
-                Imgcodecs.imwrite("debug_captured_frame_" + i + ".jpg", frame);
-                System.out.println("Image capturée sauvegardée pour débogage : debug_captured_frame_" + i + ".jpg");
+            if ("success".equals(jsonResponse.get("status").asText())) {
+                int userId = jsonResponse.get("user_id").asInt();
 
-                // Convertir en niveaux de gris et normaliser
-                Mat grayFrame = new Mat();
-                Imgproc.cvtColor(frame, grayFrame, Imgproc.COLOR_BGR2GRAY);
-                Imgproc.equalizeHist(grayFrame, grayFrame);
+                List<Utilisateur> users = new AuthService().getAllUsersWithImageProfile();
+                Utilisateur matchedUser = users.stream()
+                        .filter(user -> user.getId() == userId)
+                        .findFirst()
+                        .orElse(null);
 
-                // Détection de visages
-                faceDetector.detectMultiScale(
-                        grayFrame,
-                        faceDetections,
-                        1.1,
-                        3,
-                        0,
-                        new Size(30, 30),
-                        new Size(300, 300)
-                );
-
-                if (faceDetections.toArray().length > 0) {
-                    faceDetected = true;
-                    break;
+                if (matchedUser == null) {
+                    showAlert(Alert.AlertType.ERROR, "Échec", "Utilisateur non trouvé.");
+                    return;
                 }
 
-                // Attendre un court instant avant la prochaine capture
-                Thread.sleep(500); // 500 ms entre chaque tentative
-            }
-
-            camera.release();
-            System.out.println("Image webcam capturée");
-            System.out.println("Nombre de visages détectés : " + faceDetections.toArray().length);
-
-            if (!faceDetected) {
-                showAlert(Alert.AlertType.ERROR, "Échec", "Aucun visage détecté après plusieurs tentatives. Essayez encore.");
-                return;
-            }
-
-            // Sauvegarder l'image capturée
-            Imgcodecs.imwrite("captured_face.jpg", frame);
-            System.out.println("Image capturée sauvegardée");
-
-            // Récupérer tous les utilisateurs avec une image de profil
-            List<Utilisateur> users = AuthService.getAllUsersWithImageProfile();
-            if (users.isEmpty()) {
-                showAlert(Alert.AlertType.ERROR, "Erreur", "Aucun utilisateur avec une image de profil n'a été trouvé.");
-                return;
-            }
-
-            // Comparer avec toutes les images de profil et trouver la différence minimale
-            Utilisateur matchedUser = null;
-            double minDiff = Double.MAX_VALUE;
-            double threshold = 6000000.0; // Seuil maximal pour une correspondance valide
-
-            for (Utilisateur user : users) {
-                String referenceImagePath = "profile_images/" + user.getImageprofile();
-                System.out.println("Comparaison avec l'image de profil : " + referenceImagePath);
-                double diff = FaceRecognitionUtils.compareFacesWithOpenCV("captured_face.jpg", referenceImagePath);
-                if (diff < minDiff) {
-                    minDiff = diff;
-                    matchedUser = user;
-                }
-            }
-
-            // Vérifier si la différence minimale est acceptable
-            if (matchedUser != null && minDiff < threshold) {
-                System.out.println("Utilisateur correspondant trouvé avec une différence de : " + minDiff);
-                // Vérifier le statut de l'utilisateur
                 if (!"approuvé".equalsIgnoreCase(matchedUser.getStatut())) {
-                    // Afficher une page ou alerte pour statut non approuvé
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/Auth/NonApprouve.fxml"));
                     Parent root = loader.load();
                     Stage stage = (Stage) faceLoginButton.getScene().getWindow();
@@ -581,21 +533,16 @@ public class Login {
                     return;
                 }
 
-                // Stocker l'utilisateur connecté dans le service
                 AuthService.setConnectedUtilisateur(matchedUser);
-
-                // Afficher un message de bienvenue
                 showAlert(Alert.AlertType.INFORMATION, "Connexion réussie", "Bienvenue " + matchedUser.getPrenom() + " !");
 
-                // Redirection vers la page d'accueil
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Home.fxml"));
                 Parent root = loader.load();
                 Stage stage = (Stage) faceLoginButton.getScene().getWindow();
                 stage.setScene(new Scene(root));
                 stage.show();
             } else {
-                System.out.println("Aucune correspondance trouvée avec une différence acceptable (minDiff = " + minDiff + ")");
-                showAlert(Alert.AlertType.ERROR, "Échec de connexion", "Visage non reconnu.");
+                showAlert(Alert.AlertType.ERROR, "Échec", jsonResponse.get("message").asText());
             }
         } catch (Exception e) {
             System.err.println("Erreur dans la connexion par visage : " + e.getMessage());
@@ -603,4 +550,35 @@ public class Login {
             showAlert(Alert.AlertType.ERROR, "Erreur", "Une erreur est survenue : " + e.getMessage());
         }
     }
+
+    private String captureWebcamImage() {
+        try (OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0)) {
+            grabber.start();
+            Frame frame = grabber.grab();
+            if (frame == null) {
+                return null;
+            }
+
+            Java2DFrameConverter converter = new Java2DFrameConverter();
+            BufferedImage bufferedImage = converter.convert(frame);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "jpg", baos);
+            byte[] imageBytes = baos.toByteArray();
+            return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(imageBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
 }

@@ -28,56 +28,56 @@
                         <Label text="Mot de passe" style="-fx-font-weight: bold;" />
                         <PasswordField fx:id="passwordField" promptText="Mot de passe"
                                        style="-fx-background-color: white; -fx-border-color: #c5cae9; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 8;" />
-                        <!-- Juste après le PasswordField
-   <WebView fx:id="recaptchaWebView" prefHeight="100" prefWidth="300" />-->
-  <HBox spacing="10" alignment="TOP_RIGHT">
-      <children>
-          <Button fx:id="loginButton" text="Se connecter"
-                  style="-fx-background-color: #3f51b5; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" />
-          <Button fx:id="resetButton" text="Réinitialiser"
-                  style="-fx-background-color: #e0e0e0; -fx-text-fill: #3f51b5; -fx-font-weight: bold; -fx-background-radius: 5;" />
-      </children>
-  </HBox>
+
+
                         <HBox spacing="10" alignment="TOP_RIGHT">
-                        <Button fx:id="faceLoginButton" text="Déverrouiller avec Face ID"
-                                onAction="#handleFaceLogin"
-                                style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" />
+                            <children>
+                                <Button fx:id="loginButton" text="Se connecter"
+                                        style="-fx-background-color: #3f51b5; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" />
+                                <Button fx:id="resetButton" text="Réinitialiser"
+                                        style="-fx-background-color: #e0e0e0; -fx-text-fill: #3f51b5; -fx-font-weight: bold; -fx-background-radius: 5;" />
+                            </children>
+                        </HBox>
+                        <HBox spacing="10" alignment="TOP_RIGHT">
+                            <Button fx:id="faceLoginButton" text="Déverrouiller avec Face ID"
+                                    onAction="#handleFaceLogin"
+                                    style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" />
                         </HBox>
 
 
-  <Separator />
+                        <Separator />
 
-  <HBox spacing="10" alignment="CENTER">
-      <children>
-          <Label text="G" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
-          <Button text="Se connecter avec Google" fx:id="googleLoginButton" onAction="#handleGoogleLogin" style="-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 5;-fx-font-weight: bold;" />
-      </children>
-  </HBox>
+                        <HBox spacing="10" alignment="CENTER">
+                            <children>
+                                <Label text="G" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
+                                <Button text="Se connecter avec Google" fx:id="googleLoginButton" onAction="#handleGoogleLogin" style="-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 5;-fx-font-weight: bold;" />
+                            </children>
+                        </HBox>
 
-  <HBox spacing="5" alignment="CENTER">
-      <children>
-          <Label text="Mot de passe oublié ?" />
-          <Hyperlink fx:id="forgotPasswordLink" text="Récupérer mot de passe."
-                     style="-fx-text-fill: #3f51b5; -fx-font-weight: bold;" />
-      </children>
-  </HBox>
+                        <HBox spacing="5" alignment="CENTER">
+                            <children>
+                                <Label text="Mot de passe oublié ?" />
+                                <Hyperlink fx:id="forgotPasswordLink" text="Récupérer mot de passe."
+                                           style="-fx-text-fill: #3f51b5; -fx-font-weight: bold;" />
+                            </children>
+                        </HBox>
 
-  <HBox spacing="5" alignment="CENTER">
-      <children>
-          <Label text="Pas encore inscrit ?" />
-          <Hyperlink text="Inscrivez-vous." style="-fx-text-fill: #3f51b5; -fx-font-weight: bold;" onAction="#handleRegisterLink"/>
-      </children>
-  </HBox>
-</children>
-</VBox>
-</children>
-<padding>
-<Insets top="50" bottom="30"/>
-</padding>
-</VBox>
-</left>
+                        <HBox spacing="5" alignment="CENTER">
+                            <children>
+                                <Label text="Pas encore inscrit ?" />
+                                <Hyperlink text="Inscrivez-vous." style="-fx-text-fill: #3f51b5; -fx-font-weight: bold;" onAction="#handleRegisterLink"/>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+            <padding>
+                <Insets top="50" bottom="30"/>
+            </padding>
+        </VBox>
+    </left>
 
-<!-- Partie droite : fond bleu -->
+    <!-- Partie droite : fond bleu -->
     <center>
         <Pane prefWidth="600.0" style="-fx-background-color: linear-gradient(to bottom right, #283593, #3f51b5);" />
     </center>

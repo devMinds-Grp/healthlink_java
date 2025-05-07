@@ -11,6 +11,7 @@ import com.healthlink.Entites.Role;
 import com.healthlink.Entites.Utilisateur;
 import com.healthlink.Services.AuthService;
 //import com.healthlink.Services.UserService;
+import com.healthlink.Services.EmailVerifier;
 import com.healthlink.Services.GoogleAuthService;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.auth.oauth2.TokenResponseException;
@@ -27,14 +28,22 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.Java2DFrameConverter;
+import org.bytedeco.javacv.OpenCVFrameGrabber;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -112,15 +121,13 @@ public class Register {
                 !validatePhone(numtelTextField.getText())) {
             return;
         }
+
         // Vérification avec QuickEmailVerification
-        if (!com.healthlink.Services.EmailVerifier.verifierEmail(emailTextField.getText())) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur d'email");
-            alert.setHeaderText(null);
-            alert.setContentText("L'adresse email est invalide, temporaire ou n'existe pas !");
-            alert.show();
+        if (!EmailVerifier.verifierEmail(emailTextField.getText())) {
+            showAlert(Alert.AlertType.ERROR, "Erreur d'email", "L'adresse email est invalide, temporaire ou n'existe pas !");
             return;
         }
+
         try {
             Utilisateur utilisateur = new Utilisateur();
             utilisateur.setNom(nomTextField.getText());
@@ -130,39 +137,98 @@ public class Register {
             utilisateur.setNum_tel(Integer.parseInt(numtelTextField.getText()));
 
             // Gestion de l'image de profil
-            if (fichierImage != null) {
-                // Sauvegarder le chemin de l'image
-                utilisateur.setImageprofile(fichierImage.getAbsolutePath());
+            String imageProfilePath = null;
+            String imageBase64 = null;
 
-                // Optionnel: Copier l'image dans un dossier spécifique
-                String destinationPath = saveProfileImage(fichierImage);
-                utilisateur.setImageprofile(destinationPath);
+            if (capturedImageBase64 != null) {
+                // Utiliser l'image webcam
+                imageBase64 = capturedImageBase64;
+                imageProfilePath = saveProfileImage(capturedImageBase64);
+            } else if (fichierImage != null) {
+                // Utiliser l'image choisie via FileChooser
+                imageBase64 = convertFileToBase64(fichierImage);
+                imageProfilePath = saveProfileImage(imageBase64);
             }
+
+            if (imageProfilePath == null && imageBase64 != null) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Échec de la sauvegarde de l'image.");
+                return;
+            }
+            utilisateur.setImageprofile(imageProfilePath);
+
             // Affecter le rôle "Patient"
             Role rolePatient = new Role();
             rolePatient.setId(3);
             utilisateur.setRole(rolePatient);
 
-            AuthService AuthService = new AuthService();
-            AuthService.addPatient(utilisateur);
+            AuthService authService = new AuthService();
+            int userId = authService.addPatient(utilisateur);
+            if (userId == -1) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Échec de l'ajout du patient dans la base de données.");
+                return;
+            }
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Succès");
-            alert.setHeaderText(null);
-            alert.setContentText("Patient ajouté avec succès !");
-            alert.show();
+            // Envoyer l'image à l'API Flask pour l'entraînement
+            if (imageBase64 != null) {
+                boolean trained = authService.registerUserImage(userId, imageBase64);
+                if (!trained) {
+                    showAlert(Alert.AlertType.ERROR, "Erreur", "Register effectué avec succée!");
+                    return;
+                }
+            }
+
+            showAlert(Alert.AlertType.INFORMATION, "Succès", "Patient ajouté et image entraînée avec succès !");
         } catch (Exception e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText(null);
-            alert.setContentText("Erreur lors de l'ajout du patient.");
-            alert.show();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'ajout du patient : " + e.getMessage());
+        }
+    }
+    private String capturedImageBase64;
+    @FXML
+    void captureImage(ActionEvent event) {
+        capturedImageBase64 = captureWebcamImage();
+        if (capturedImageBase64 == null) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de capturer l'image depuis la webcam.");
+        } else {
+            nomFichierLabel.setText("Image webcam capturée");
+            showAlert(Alert.AlertType.INFORMATION, "Succès", "Image capturée avec succès !");
+        }
+    }
+    private String captureWebcamImage() {
+        try (OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0)) {
+            grabber.start();
+            Frame frame = grabber.grab();
+            if (frame == null) {
+                return null;
+            }
+
+            Java2DFrameConverter converter = new Java2DFrameConverter();
+            BufferedImage bufferedImage = converter.convert(frame);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "jpg", baos);
+            byte[] imageBytes = baos.toByteArray();
+            return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(imageBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
+    private String convertFileToBase64(File file) {
+        try {
+            byte[] fileBytes = Files.readAllBytes(file.toPath());
+            return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(fileBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
     // Ajoutez cette méthode pour sauvegarder l'image
-    private String saveProfileImage(File imageFile) {
+    private String saveProfileImage1(File imageFile) {
         try {
             // Créer un dossier images s'il n'existe pas
             File dossierImages = new File("profile_images");
@@ -187,6 +253,30 @@ public class Register {
             return null;
         }
     }
+    private String saveProfileImage(String base64Image) {
+        try {
+            // Décoder l'image base64
+            String base64Data = base64Image.replace("data:image/jpeg;base64,", "");
+            byte[] imageBytes = Base64.getDecoder().decode(base64Data);
+
+            // Créer un dossier images s'il n'existe pas
+            File dossierImages = new File("profile_images");
+            if (!dossierImages.exists()) {
+                dossierImages.mkdirs();
+            }
+
+            // Générer un nom unique pour le fichier
+            String nomFichier = System.currentTimeMillis() + "_profile.jpg";
+            Path destination = new File(dossierImages, nomFichier).toPath();
+
+            // Sauvegarder l'image
+            Files.write(destination, imageBytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            return nomFichier;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     @FXML
     void addMedecin(ActionEvent event) {
@@ -198,8 +288,8 @@ public class Register {
                 !validatePhone(numtelTextField.getText()) ||
                 !validateRequiredField(adresseTextField.getText(), "adresse") ||
                 !validateRequiredField(specialiteTextField.getText(), "spécialité") ||
-                !validateDiplome(fichierDiplome) ||
-                !validateImage(fichierImage)) {
+                !validateDiplome(fichierDiplome)
+        ) {
             return;
         }
         // Vérification avec QuickEmailVerification
@@ -227,7 +317,7 @@ public class Register {
                 utilisateur.setImageprofile(fichierImage.getAbsolutePath());
 
                 // Optionnel: Copier l'image dans un dossier spécifique
-                String destinationPath = saveProfileImage(fichierImage);
+                String destinationPath = saveProfileImage1(fichierImage);
                 utilisateur.setImageprofile(destinationPath);
             }
             if (fichierDiplome != null) {
@@ -279,8 +369,7 @@ public class Register {
                 !validateEmail(emailTextField.getText()) ||
                 !validatePassword(motdepasseTextField.getText()) ||
                 !validateRequiredField(specialiteComboBox.getValue(), "catégorie de soin") ||
-                !validateDiplome(fichierDiplome) ||
-                !validateImage(fichierImage)) {
+                !validateDiplome(fichierDiplome) ) {
             return;
         }
         // Vérification avec QuickEmailVerification
@@ -308,7 +397,7 @@ public class Register {
                 utilisateur.setImageprofile(fichierImage.getAbsolutePath());
 
                 // Optionnel: Copier l'image dans un dossier spécifique
-                String destinationPath = saveProfileImage(fichierImage);
+                String destinationPath = saveProfileImage1(fichierImage);
                 utilisateur.setImageprofile(destinationPath);
             }
 
@@ -414,18 +503,17 @@ public class Register {
             return null;
         }
     }
-    private boolean validateRequiredField(String field, String fieldName) {
-        if (field == null || field.trim().isEmpty()) {
-            showAlert("Erreur de saisie", "Le champ " + fieldName + " est obligatoire");
+    private boolean validateRequiredField(String value, String fieldName) {
+        if (value == null || value.trim().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Le champ " + fieldName + " est requis.");
             return false;
         }
         return true;
     }
 
     private boolean validateEmail(String email) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        if (email == null || !email.matches(emailRegex)) {
-            showAlert("Erreur de saisie", "Email invalide");
+        if (email == null || !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "L'adresse email est invalide.");
             return false;
         }
         return true;
@@ -435,7 +523,7 @@ public class Register {
         // Au moins 8 caractères, une majuscule, une minuscule, un chiffre
         String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
         if (password == null || !password.matches(passwordRegex)) {
-            showAlert("Erreur de saisie", "Le mot de passe doit contenir:\n- Au moins 8 caractères\n- Une majuscule\n- Une minuscule\n- Un chiffre");
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Le mot de passe doit contenir:\n- Au moins 8 caractères\n- Une majuscule\n- Une minuscule\n- Un chiffre");
             return false;
         }
         return true;
@@ -444,20 +532,20 @@ public class Register {
     private boolean validatePhone(String phone) {
         try {
             if (phone == null || phone.length() != 8) {
-                showAlert("Erreur de saisie", "Le numéro de téléphone doit contenir 8 chiffres");
+                showAlert(Alert.AlertType.ERROR,"Erreur de saisie", "Le numéro de téléphone doit contenir 8 chiffres");
                 return false;
             }
             Integer.parseInt(phone);
             return true;
         } catch (NumberFormatException e) {
-            showAlert("Erreur de saisie", "Le numéro de téléphone ne doit contenir que des chiffres");
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Le numéro de téléphone ne doit contenir que des chiffres");
             return false;
         }
     }
 
     private boolean validateImage(File imageFile) {
         if (imageFile == null) {
-            showAlert("Erreur de saisie", "Une image de profil est requise");
+            showAlert(Alert.AlertType.ERROR,"Erreur de saisie", "Une image de profil est requise");
             return false;
         }
         return true;
@@ -465,14 +553,14 @@ public class Register {
 
     private boolean validateDiplome(File diplomeFile) {
         if (diplomeFile == null) {
-            showAlert("Erreur de saisie", "Un fichier de diplôme est requis");
+            showAlert(Alert.AlertType.ERROR,"Erreur de saisie", "Un fichier de diplôme est requis");
             return false;
         }
         return true;
     }
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
@@ -639,7 +727,7 @@ public class Register {
         });
     }
 
-//    private void saveProfileImageFromUrl(String imageUrl) {
+    //    private void saveProfileImageFromUrl(String imageUrl) {
 //        try {
 //            URL url = new URL(imageUrl);
 //            BufferedImage image = ImageIO.read(url);
