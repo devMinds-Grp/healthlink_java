@@ -7,8 +7,8 @@ import com.twilio.type.PhoneNumber;
 
 public class SMSService {
     // Replace with your actual Twilio credentials
-    private static final String ACCOUNT_SID = "ACb3df1055486b72f98c41f4d8105c7d1a";
-    private static final String AUTH_TOKEN = "89cbe63807c23cc16f49c9794aa5b2c9";
+    private static final String ACCOUNT_SID = "pour des raisons de sécurité majd na7ahom";
+    private static final String AUTH_TOKEN = "meme chose";
     private static final String TWILIO_PHONE_NUMBER = "+13527079042";
 
     private static final int MAX_RETRIES = 3;
